@@ -1,0 +1,153 @@
+/* Radio Buttons */
+.eco-radio {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--neutral-900);
+}
+
+.eco-radio__input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+  appearance: none;
+  border: 2px solid var(--neutral-300);
+  border-radius: var(--radius-full);
+  background: white;
+  position: relative;
+  transition: all var(--duration-fast) var(--easing-ease-out);
+  flex-shrink: 0;
+}
+
+.eco-radio__input:hover {
+  border-color: var(--brand-blue-500);
+}
+
+.eco-radio__input:checked {
+  border-color: var(--brand-blue-600);
+  background: var(--brand-blue-600);
+}
+
+.eco-radio__input:checked::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-full);
+  background: white;
+}
+
+.eco-radio__input:focus {
+  outline: 2px solid var(--brand-blue-600);
+  outline-offset: 2px;
+}
+
+.eco-radio__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.eco-radio--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Checkboxes */
+.eco-checkbox {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  color: var(--neutral-900);
+}
+
+.eco-checkbox__input {
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  cursor: pointer;
+  appearance: none;
+  border: 2px solid var(--neutral-300);
+  border-radius: var(--radius-sm);
+  background: white;
+  position: relative;
+  transition: all var(--duration-fast) var(--easing-ease-out);
+  flex-shrink: 0;
+}
+
+.eco-checkbox__input:hover {
+  border-color: var(--brand-blue-500);
+}
+
+.eco-checkbox__input:checked {
+  border-color: var(--brand-blue-600);
+  background: var(--brand-blue-600);
+}
+
+.eco-checkbox__input:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 14px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.eco-checkbox__input:indeterminate {
+  border-color: var(--brand-blue-600);
+  background: var(--brand-blue-600);
+}
+
+.eco-checkbox__input:indeterminate::after {
+  content: '−';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 16px;
+  font-weight: var(--font-weight-bold);
+  line-height: 1;
+}
+
+.eco-checkbox__input:focus {
+  outline: 2px solid var(--brand-blue-600);
+  outline-offset: 2px;
+}
+
+.eco-checkbox__input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.eco-checkbox--disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Radio and Checkbox Groups */
+.eco-radio-group,
+.eco-checkbox-group {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.eco-radio-group--inline,
+.eco-checkbox-group--inline {
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+

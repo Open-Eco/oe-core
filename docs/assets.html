@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Assets - EcoKit</title>
+    <link rel="icon" type="image/png" href="assets/ecokit.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/EcoKit/ecokit.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">EcoKit</a>
-            <ul class="nav-links">
+            <a href="index.html" class="logo">
+                <img src="assets/ecokit.png" alt="EcoKit" class="logo-icon" />
+                <span>EcoKit</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="main-nav">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="components.html">Components</a></li>
                 <li><a href="tokens.html">Design Tokens</a></li>
+                <li><a href="utilities.html">Utilities</a></li>
                 <li><a href="assets.html">Assets</a></li>
                 <li><a href="guidelines.html">Guidelines</a></li>
             </ul>
@@ -33,18 +44,27 @@
                 
                 <div class="asset-grid">
                     <div class="asset-item">
-                        <h3>Logo</h3>
+                        <h3>EcoKit Logo</h3>
+                        <p>Design system logo</p>
+                        <img src="assets/ecokit.png" alt="EcoKit Logo" class="asset-image" />
+                        <code>../EcoKit/ecokit.png</code>
+                    </div>
+                    <div class="asset-item">
+                        <h3>OpenEco Logo</h3>
                         <p>Primary logo file</p>
+                        <img src="assets/logo.png" alt="Logo" class="asset-image" />
                         <code>../EcoKit/logo.png</code>
                     </div>
                     <div class="asset-item">
                         <h3>Wordmark</h3>
                         <p>Text-based brand mark</p>
+                        <img src="assets/wordmark.png" alt="Wordmark" class="asset-image" />
                         <code>../EcoKit/wordmark.png</code>
                     </div>
                     <div class="asset-item">
                         <h3>Favicon</h3>
                         <p>Site favicon</p>
+                        <img src="assets/favicon.png" alt="Favicon" class="asset-image" />
                         <code>../EcoKit/favicon.png</code>
                     </div>
                 </div>
@@ -65,6 +85,48 @@ import logo from '../../EcoKit/logo.png';
             <p><a href="index.html">← Back to Home</a></p>
         </footer>
     </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle) {
+                navLinks.classList.toggle('active');
+                toggle.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', navLinks.classList.contains('active'));
+            }
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !toggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.getElementById('main-nav');
+                const toggle = document.querySelector('.nav-toggle');
+                
+                if (navLinks && toggle) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

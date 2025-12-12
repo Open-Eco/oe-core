@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EcoKit - Design System</title>
+    <link rel="icon" type="image/png" href="assets/ecokit.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/EcoKit/ecokit.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">EcoKit</a>
-            <ul class="nav-links">
+            <a href="index.html" class="logo">
+                <img src="assets/ecokit.png" alt="EcoKit" class="logo-icon" />
+                <span>EcoKit</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="main-nav">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="components.html">Components</a></li>
                 <li><a href="tokens.html">Design Tokens</a></li>
+                <li><a href="utilities.html">Utilities</a></li>
                 <li><a href="assets.html">Assets</a></li>
                 <li><a href="guidelines.html">Guidelines</a></li>
             </ul>
@@ -23,14 +34,14 @@
     <div class="container">
         <header class="hero">
             <h1>EcoKit</h1>
-            <p class="hero-subtitle">Design System for Open Climate Transparency Platform</p>
+            <p class="hero-subtitle">UI Guidelines for the OpenEco Project</p>
             <p class="hero-description">
                 A comprehensive design system with components, tokens, and guidelines for building 
                 beautiful, accessible, and consistent user interfaces.
             </p>
             <div class="hero-actions">
-                <a href="components.html" class="btn btn-primary">Get Started</a>
-                <a href="https://github.com/Open-Eco/oe-core/tree/main/EcoKit" class="btn btn-secondary" target="_blank">View on GitHub</a>
+                <a href="components.html" class="eco-btn">Get Started</a>
+                <a href="https://github.com/Open-Eco/oe-core/tree/main/EcoKit" class="eco-btn eco-btn--outline" target="_blank">View on GitHub</a>
             </div>
         </header>
 
@@ -38,19 +49,19 @@
             <section class="features">
                 <h2>Why EcoKit?</h2>
                 <div class="feature-grid">
-                    <div class="feature-card">
+                    <div class="eco-card feature-card">
                         <h3>🎨 Consistent Design</h3>
                         <p>Unified design language across all platforms and applications.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="eco-card feature-card">
                         <h3>♿ Accessible</h3>
                         <p>Built with accessibility in mind, following WCAG guidelines.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="eco-card feature-card">
                         <h3>🚀 Production Ready</h3>
                         <p>Battle-tested components ready for immediate use.</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="eco-card feature-card">
                         <h3>🔧 Customizable</h3>
                         <p>Flexible theming and customization options.</p>
                     </div>
@@ -60,19 +71,23 @@
             <section class="quick-links">
                 <h2>Explore EcoKit</h2>
                 <div class="link-grid">
-                    <a href="components.html" class="link-card">
+                    <a href="components.html" class="eco-card link-card">
                         <h3>Components</h3>
                         <p>Browse our component library</p>
                     </a>
-                    <a href="tokens.html" class="link-card">
+                    <a href="tokens.html" class="eco-card link-card">
                         <h3>Design Tokens</h3>
                         <p>Colors, typography, spacing</p>
                     </a>
-                    <a href="assets.html" class="link-card">
+                    <a href="utilities.html" class="eco-card link-card">
+                        <h3>Utilities</h3>
+                        <p>JavaScript utilities and CSS helpers</p>
+                    </a>
+                    <a href="assets.html" class="eco-card link-card">
                         <h3>Assets</h3>
                         <p>Logos, icons, and brand assets</p>
                     </a>
-                    <a href="guidelines.html" class="link-card">
+                    <a href="guidelines.html" class="eco-card link-card">
                         <h3>Guidelines</h3>
                         <p>Usage and best practices</p>
                     </a>
@@ -81,9 +96,51 @@
         </main>
 
         <footer>
-            <p>EcoKit is part of the <a href="https://open-eco.org">Open Climate Transparency Platform</a></p>
+            <p>EcoKit is part of the <a href="https://open-eco.org">OpenEco Project</a></p>
             <p>Status: 🚧 In Development</p>
         </footer>
     </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle) {
+                navLinks.classList.toggle('active');
+                toggle.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', navLinks.classList.contains('active'));
+            }
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !toggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.getElementById('main-nav');
+                const toggle = document.querySelector('.nav-toggle');
+                
+                if (navLinks && toggle) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

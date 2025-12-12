@@ -4,16 +4,101 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Components - EcoKit</title>
+    <link rel="icon" type="image/png" href="assets/ecokit.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/EcoKit/ecokit.css">
+    <script src="assets/EcoKit/utilities/click-off.js"></script>
+    <script src="assets/EcoKit/utilities/popper.js"></script>
+    <script src="assets/EcoKit/utilities/media-query.js"></script>
+    <script src="assets/EcoKit/utilities/modal.js"></script>
+    <script src="assets/EcoKit/utilities/resize.js"></script>
+    <script src="assets/EcoKit/utilities/collapser.js"></script>
+    <script src="assets/EcoKit/components/ratings.js"></script>
+    <script src="assets/EcoKit/components/accordions.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        .component-clickable {
+            cursor: pointer;
+            transition: all var(--duration-normal) var(--easing-ease-out);
+            position: relative;
+        }
+        .component-clickable:hover {
+            opacity: 0.9;
+        }
+        .component-clickable.active {
+            outline: 2px solid var(--brand-blue-600);
+            outline-offset: 2px;
+        }
+        .component-clickable.active::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border: 2px solid var(--brand-blue-600);
+            border-radius: var(--radius-md);
+            pointer-events: none;
+        }
+        .code-panel {
+            display: none;
+            margin-top: var(--space-6);
+            background: var(--neutral-900);
+            border-radius: var(--radius-md);
+            padding: var(--space-4);
+            color: var(--neutral-100);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            overflow-x: auto;
+            position: relative;
+        }
+        .code-panel.active {
+            display: block;
+        }
+        .code-panel pre {
+            margin: 0;
+            background: transparent;
+            color: inherit;
+        }
+        .code-panel code {
+            background: transparent;
+            color: #a8d8ff;
+        }
+        .copy-btn {
+            position: absolute;
+            top: var(--space-2);
+            right: var(--space-2);
+            padding: var(--space-2) var(--space-3);
+            background: var(--neutral-700);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            font-size: var(--text-xs);
+            font-family: var(--font-sans);
+        }
+        .copy-btn:hover {
+            background: var(--neutral-500);
+        }
+        .copy-btn.copied {
+            background: var(--success-500);
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">EcoKit</a>
-            <ul class="nav-links">
+            <a href="index.html" class="logo">
+                <img src="assets/ecokit.png" alt="EcoKit" class="logo-icon" />
+                <span>EcoKit</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="main-nav">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="components.html">Components</a></li>
                 <li><a href="tokens.html">Design Tokens</a></li>
+                <li><a href="utilities.html">Utilities</a></li>
                 <li><a href="assets.html">Assets</a></li>
                 <li><a href="guidelines.html">Guidelines</a></li>
             </ul>
@@ -21,44 +106,1582 @@
     </nav>
 
     <div class="container">
-        <header>
-            <h1>Components</h1>
-            <p class="hero-subtitle">Production-ready UI components</p>
-        </header>
+        <button class="eco-sidebar__toggle" onclick="toggleSidebar()" aria-label="Toggle navigation">
+            <svg class="eco-sidebar__toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M3 12h18M3 6h18M3 18h18"></path>
+            </svg>
+        </button>
 
-        <main>
-            <section>
+        <aside class="eco-sidebar" id="components-sidebar">
+            <button class="eco-sidebar__collapse-btn" aria-label="Toggle sidebar">
+                <svg class="eco-sidebar__collapse-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"></path>
+                </svg>
+            </button>
+            <div class="eco-sidebar__header">
+                <h3 class="eco-sidebar__title">Components</h3>
+            </div>
+            <nav>
+                <ul class="eco-sidebar__nav">
+                    <li class="eco-sidebar__nav-item"><a href="#buttons" class="eco-sidebar__nav-link">Buttons</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#cards" class="eco-sidebar__nav-link">Cards</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#inputs" class="eco-sidebar__nav-link">Inputs</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#badges" class="eco-sidebar__nav-link">Badges</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#notifications" class="eco-sidebar__nav-link">Notifications</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#alerts" class="eco-sidebar__nav-link">Alerts</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#tables" class="eco-sidebar__nav-link">Tables</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#lists" class="eco-sidebar__nav-link">Lists</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#progress" class="eco-sidebar__nav-link">Progress Bars</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#avatars" class="eco-sidebar__nav-link">Avatars</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#accordions" class="eco-sidebar__nav-link">Accordions</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#ratings" class="eco-sidebar__nav-link">Rating Scale</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#tabs" class="eco-sidebar__nav-link">Tabs</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#forms" class="eco-sidebar__nav-link">Form Elements</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#toggles" class="eco-sidebar__nav-link">Toggle Buttons</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#switches" class="eco-sidebar__nav-link">Switches</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#pagination" class="eco-sidebar__nav-link">Pagination</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#breadcrumbs" class="eco-sidebar__nav-link">Breadcrumbs</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#modals" class="eco-sidebar__nav-link">Modals</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#charts" class="eco-sidebar__nav-link">Charts</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#dividers" class="eco-sidebar__nav-link">Dividers</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="components-main">
+            <header>
+                <h1>Components</h1>
+                <p class="hero-subtitle">Production-ready UI components</p>
+            </header>
+            <section id="overview">
                 <p>Browse our component library. All components are built with accessibility and customization in mind.</p>
+            </section>
+
+            <section id="buttons">
+                <h2>Buttons</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any button to see its code</p>
                 
-                <div class="component-list">
-                    <div class="component-item">
-                        <h3>Buttons</h3>
-                        <p>Primary, secondary, and variant button components.</p>
-                        <p><em>Coming soon</em></p>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem;">
+                    <button class="eco-btn component-clickable" data-code='&lt;button class="eco-btn"&gt;Primary Button&lt;/button&gt;'>Primary Button</button>
+                    <button class="eco-btn eco-btn--secondary component-clickable" data-code='&lt;button class="eco-btn eco-btn--secondary"&gt;Secondary&lt;/button&gt;'>Secondary</button>
+                    <button class="eco-btn eco-btn--danger component-clickable" data-code='&lt;button class="eco-btn eco-btn--danger"&gt;Danger&lt;/button&gt;'>Danger</button>
+                    <button class="eco-btn eco-btn--outline component-clickable" data-code='&lt;button class="eco-btn eco-btn--outline"&gt;Outline&lt;/button&gt;'>Outline</button>
+                    <button class="eco-btn component-clickable" disabled data-code='&lt;button class="eco-btn" disabled&gt;Disabled&lt;/button&gt;'>Disabled</button>
+                </div>
+                
+                <div class="code-panel" id="button-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="button-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="cards">
+                <h2>Cards</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any card to see its code</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div class="eco-card component-clickable" data-code='&lt;div class="eco-card"&gt;&#10;  &lt;h3&gt;Card Title&lt;/h3&gt;&#10;  &lt;p&gt;Card content&lt;/p&gt;&#10;&lt;/div&gt;'>
+                        <h3 style="margin-bottom: 0.5rem;">Default Card</h3>
+                        <p>This is a default card with standard styling.</p>
                     </div>
-                    <div class="component-item">
-                        <h3>Forms</h3>
-                        <p>Input fields, textareas, selects, and form controls.</p>
-                        <p><em>Coming soon</em></p>
+                    <div class="eco-card eco-card--elevated component-clickable" data-code='&lt;div class="eco-card eco-card--elevated"&gt;&#10;  &lt;h3&gt;Card Title&lt;/h3&gt;&#10;  &lt;p&gt;Card content&lt;/p&gt;&#10;&lt;/div&gt;'>
+                        <h3 style="margin-bottom: 0.5rem;">Elevated Card</h3>
+                        <p>This card has elevated shadow for emphasis.</p>
                     </div>
-                    <div class="component-item">
-                        <h3>Cards</h3>
-                        <p>Container components for content grouping.</p>
-                        <p><em>Coming soon</em></p>
+                    <div class="eco-card eco-card--outlined component-clickable" data-code='&lt;div class="eco-card eco-card--outlined"&gt;&#10;  &lt;h3&gt;Card Title&lt;/h3&gt;&#10;  &lt;p&gt;Card content&lt;/p&gt;&#10;&lt;/div&gt;'>
+                        <h3 style="margin-bottom: 0.5rem;">Outlined Card</h3>
+                        <p>This card uses an outline instead of shadow.</p>
                     </div>
-                    <div class="component-item">
-                        <h3>Navigation</h3>
-                        <p>Navbars, menus, and navigation components.</p>
-                        <p><em>Coming soon</em></p>
+                </div>
+                
+                <div class="code-panel" id="card-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="card-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="inputs">
+                <h2>Inputs</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any input to see its code</p>
+                
+                <div style="max-width: 400px; margin-top: 1rem;">
+                    <label class="eco-label">Email Address</label>
+                    <input type="email" class="eco-input component-clickable" placeholder="you@example.com" data-code='&lt;label class="eco-label"&gt;Email&lt;/label&gt;&#10;&lt;input type="email" class="eco-input" placeholder="you@example.com" /&gt;' />
+                    
+                    <label class="eco-label" style="margin-top: 1.5rem;">Message</label>
+                    <textarea class="eco-input eco-textarea component-clickable" placeholder="Your message here..." data-code='&lt;label class="eco-label"&gt;Message&lt;/label&gt;&#10;&lt;textarea class="eco-input eco-textarea" placeholder="Your message..."&gt;&lt;/textarea&gt;'></textarea>
+                    
+                    <label class="eco-label" style="margin-top: 1.5rem;">Error State</label>
+                    <input type="text" class="eco-input eco-input--error component-clickable" placeholder="This field has an error" data-code='&lt;label class="eco-label"&gt;Error Input&lt;/label&gt;&#10;&lt;input type="text" class="eco-input eco-input--error" /&gt;' />
+                </div>
+                
+                <div class="code-panel" id="input-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="input-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="badges">
+                <h2>Badges</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any badge to see its code</p>
+                
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: center;">
+                    <span class="eco-badge eco-badge--primary component-clickable" data-code='&lt;span class="eco-badge eco-badge--primary"&gt;Primary&lt;/span&gt;'>Primary</span>
+                    <span class="eco-badge eco-badge--success component-clickable" data-code='&lt;span class="eco-badge eco-badge--success"&gt;Success&lt;/span&gt;'>Success</span>
+                    <span class="eco-badge eco-badge--warning component-clickable" data-code='&lt;span class="eco-badge eco-badge--warning"&gt;Warning&lt;/span&gt;'>Warning</span>
+                    <span class="eco-badge eco-badge--error component-clickable" data-code='&lt;span class="eco-badge eco-badge--error"&gt;Error&lt;/span&gt;'>Error</span>
+                    <span class="eco-badge eco-badge--neutral component-clickable" data-code='&lt;span class="eco-badge eco-badge--neutral"&gt;Neutral&lt;/span&gt;'>Neutral</span>
+                    <span class="eco-badge eco-badge--outline component-clickable" data-code='&lt;span class="eco-badge eco-badge--outline"&gt;Outline&lt;/span&gt;'>Outline</span>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Score Badges</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: center;">
+                    <span class="eco-badge eco-badge--score component-clickable" data-code='&lt;span class="eco-badge eco-badge--score"&gt;500&lt;/span&gt;'>500</span>
+                    <span class="eco-badge eco-badge--grade eco-badge--grade-A component-clickable" data-code='&lt;span class="eco-badge eco-badge--grade eco-badge--grade-A"&gt;A+&lt;/span&gt;'>A+</span>
+                    <span class="eco-badge eco-badge--grade eco-badge--grade-A component-clickable" data-code='&lt;span class="eco-badge eco-badge--grade eco-badge--grade-A"&gt;A&lt;/span&gt;'>A</span>
+                    <span class="eco-badge eco-badge--grade eco-badge--grade-B component-clickable" data-code='&lt;span class="eco-badge eco-badge--grade eco-badge--grade-B"&gt;B-&lt;/span&gt;'>B-</span>
+                    <span class="eco-badge eco-badge--grade eco-badge--grade-C component-clickable" data-code='&lt;span class="eco-badge eco-badge--grade eco-badge--grade-C"&gt;C&lt;/span&gt;'>C</span>
+                    <span class="eco-badge eco-badge--grade eco-badge--grade-D component-clickable" data-code='&lt;span class="eco-badge eco-badge--grade eco-badge--grade-D"&gt;D&lt;/span&gt;'>D</span>
+                </div>
+                
+                <div class="code-panel" id="badge-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="badge-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="notifications">
+                <h2>Notifications</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any notification to see its code</p>
+                
+                <div style="display: flex; gap: 2rem; flex-wrap: wrap; margin-top: 1rem; align-items: center;">
+                    <div class="eco-notification component-clickable" data-code='&lt;div class="eco-notification"&gt;&#10;  &lt;svg class="eco-notification__bell" viewBox="0 0 24 24" fill="none" stroke="currentColor"&gt;&#10;    &lt;path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"&gt;&lt;/path&gt;&#10;    &lt;path d="M13.73 21a2 2 0 0 1-3.46 0"&gt;&lt;/path&gt;&#10;  &lt;/svg&gt;&#10;  &lt;span class="eco-notification__badge eco-notification__badge--dot"&gt;&lt;/span&gt;&#10;&lt;/div&gt;'>
+                        <svg class="eco-notification__bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="eco-notification__badge eco-notification__badge--dot"></span>
                     </div>
+                    
+                    <div class="eco-notification component-clickable" data-code='&lt;div class="eco-notification"&gt;&#10;  &lt;svg class="eco-notification__bell" viewBox="0 0 24 24" fill="none" stroke="currentColor"&gt;&#10;    &lt;path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"&gt;&lt;/path&gt;&#10;    &lt;path d="M13.73 21a2 2 0 0 1-3.46 0"&gt;&lt;/path&gt;&#10;  &lt;/svg&gt;&#10;  &lt;span class="eco-notification__badge eco-notification__badge--number"&gt;5&lt;/span&gt;&#10;&lt;/div&gt;'>
+                        <svg class="eco-notification__bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="eco-notification__badge eco-notification__badge--number">5</span>
+                    </div>
+                    
+                    <div class="eco-notification component-clickable" data-code='&lt;div class="eco-notification"&gt;&#10;  &lt;svg class="eco-notification__bell" viewBox="0 0 24 24" fill="none" stroke="currentColor"&gt;&#10;    &lt;path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"&gt;&lt;/path&gt;&#10;    &lt;path d="M13.73 21a2 2 0 0 1-3.46 0"&gt;&lt;/path&gt;&#10;  &lt;/svg&gt;&#10;  &lt;span class="eco-notification__badge eco-notification__badge--max"&gt;99+&lt;/span&gt;&#10;&lt;/div&gt;'>
+                        <svg class="eco-notification__bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                        <span class="eco-notification__badge eco-notification__badge--max">99+</span>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="notification-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="notification-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="alerts">
+                <h2>Alerts</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any alert to see its code</p>
+                
+                <div style="max-width: 600px; margin-top: 1rem;">
+                    <div class="eco-alert eco-alert--info component-clickable" data-code='&lt;div class="eco-alert eco-alert--info"&gt;&#10;  &lt;div class="eco-alert__content"&gt;&#10;    &lt;div class="eco-alert__title"&gt;Info&lt;/div&gt;&#10;    &lt;div class="eco-alert__message"&gt;This is an informational message.&lt;/div&gt;&#10;  &lt;/div&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-alert__content">
+                            <div class="eco-alert__title">Info</div>
+                            <div class="eco-alert__message">This is an informational message.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="eco-alert eco-alert--success component-clickable" style="margin-top: 1rem;" data-code='&lt;div class="eco-alert eco-alert--success"&gt;&#10;  &lt;div class="eco-alert__content"&gt;&#10;    &lt;div class="eco-alert__title"&gt;Success&lt;/div&gt;&#10;    &lt;div class="eco-alert__message"&gt;Operation completed successfully.&lt;/div&gt;&#10;  &lt;/div&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-alert__content">
+                            <div class="eco-alert__title">Success</div>
+                            <div class="eco-alert__message">Operation completed successfully.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="eco-alert eco-alert--warning component-clickable" style="margin-top: 1rem;" data-code='&lt;div class="eco-alert eco-alert--warning"&gt;&#10;  &lt;div class="eco-alert__content"&gt;&#10;    &lt;div class="eco-alert__title"&gt;Warning&lt;/div&gt;&#10;    &lt;div class="eco-alert__message"&gt;Please review this information carefully.&lt;/div&gt;&#10;  &lt;/div&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-alert__content">
+                            <div class="eco-alert__title">Warning</div>
+                            <div class="eco-alert__message">Please review this information carefully.</div>
+                        </div>
+                    </div>
+                    
+                    <div class="eco-alert eco-alert--error component-clickable" style="margin-top: 1rem;" data-code='&lt;div class="eco-alert eco-alert--error"&gt;&#10;  &lt;div class="eco-alert__content"&gt;&#10;    &lt;div class="eco-alert__title"&gt;Error&lt;/div&gt;&#10;    &lt;div class="eco-alert__message"&gt;Something went wrong. Please try again.&lt;/div&gt;&#10;  &lt;/div&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-alert__content">
+                            <div class="eco-alert__title">Error</div>
+                            <div class="eco-alert__message">Something went wrong. Please try again.</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="alert-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="alert-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="tables">
+                <h2>Tables</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any table to see its code</p>
+                
+                <div style="margin-top: 1rem;">
+                    <table class="eco-table component-clickable" data-code='&lt;table class="eco-table"&gt;&#10;  &lt;thead&gt;&#10;    &lt;tr&gt;&#10;      &lt;th&gt;Name&lt;/th&gt;&#10;      &lt;th&gt;Status&lt;/th&gt;&#10;      &lt;th&gt;Value&lt;/th&gt;&#10;    &lt;/tr&gt;&#10;  &lt;/thead&gt;&#10;  &lt;tbody&gt;&#10;    &lt;tr&gt;&#10;      &lt;td&gt;Item 1&lt;/td&gt;&#10;      &lt;td&gt;Active&lt;/td&gt;&#10;      &lt;td&gt;$100&lt;/td&gt;&#10;    &lt;/tr&gt;&#10;  &lt;/tbody&gt;&#10;&lt;/table&gt;'>
+                        <thead>
+                            <tr>
+                                <th>Company</th>
+                                <th>Status</th>
+                                <th>Emissions (tCO₂e)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Acme Corp</td>
+                                <td><span class="eco-badge eco-badge--success">Verified</span></td>
+                                <td>1,250</td>
+                            </tr>
+                            <tr>
+                                <td>GreenTech Inc</td>
+                                <td><span class="eco-badge eco-badge--success">Verified</span></td>
+                                <td>890</td>
+                            </tr>
+                            <tr>
+                                <td>EcoSolutions</td>
+                                <td><span class="eco-badge eco-badge--warning">Pending</span></td>
+                                <td>2,100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="code-panel" id="table-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="table-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="lists">
+                <h2>Lists</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any list to see its code</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 1rem;">
+                    <ul class="eco-list eco-list--bordered component-clickable" data-code='&lt;ul class="eco-list eco-list--bordered"&gt;&#10;  &lt;li class="eco-list__item"&gt;Item 1&lt;/li&gt;&#10;  &lt;li class="eco-list__item"&gt;Item 2&lt;/li&gt;&#10;  &lt;li class="eco-list__item"&gt;Item 3&lt;/li&gt;&#10;&lt;/ul&gt;'>
+                        <li class="eco-list__item">Scope 1 Emissions</li>
+                        <li class="eco-list__item">Scope 2 Emissions</li>
+                        <li class="eco-list__item">Scope 3 Emissions</li>
+                    </ul>
+                    
+                    <ul class="eco-list eco-list--bordered eco-list--spaced component-clickable" data-code='&lt;ul class="eco-list eco-list--bordered eco-list--spaced"&gt;&#10;  &lt;li class="eco-list__item"&gt;Item 1&lt;/li&gt;&#10;  &lt;li class="eco-list__item"&gt;Item 2&lt;/li&gt;&#10;&lt;/ul&gt;'>
+                        <li class="eco-list__item">Annual Report 2024</li>
+                        <li class="eco-list__item">Sustainability Goals</li>
+                    </ul>
+                </div>
+                
+                <div class="code-panel" id="list-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="list-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="progress">
+                <h2>Progress Bars</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any progress bar to see its code</p>
+                
+                <div style="max-width: 400px; margin-top: 1rem;">
+                    <div class="eco-progress component-clickable" data-code='&lt;div class="eco-progress"&gt;&#10;  &lt;div class="eco-progress__bar" style="width: 60%;"&gt;&lt;/div&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-progress__bar" style="width: 60%;"></div>
+                    </div>
+                    
+                    <div class="eco-progress eco-progress--success component-clickable" style="margin-top: 1rem;" data-code='&lt;div class="eco-progress eco-progress--success"&gt;&#10;  &lt;div class="eco-progress__bar" style="width: 80%;"&gt;&lt;/div&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-progress__bar" style="width: 80%;"></div>
+                    </div>
+                    
+                    <div class="eco-progress eco-progress--warning component-clickable" style="margin-top: 1rem;" data-code='&lt;div class="eco-progress eco-progress--warning"&gt;&#10;  &lt;div class="eco-progress__bar" style="width: 45%;"&gt;&lt;/div&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-progress__bar" style="width: 45%;"></div>
+                    </div>
+                    
+                    <div class="eco-progress eco-progress--error component-clickable" style="margin-top: 1rem;" data-code='&lt;div class="eco-progress eco-progress--error"&gt;&#10;  &lt;div class="eco-progress__bar" style="width: 25%;"&gt;&lt;/div&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-progress__bar" style="width: 25%;"></div>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="progress-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="progress-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="avatars">
+                <h2>Avatars</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any avatar to see its code</p>
+                
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: center;">
+                    <div class="eco-avatar eco-avatar--sm component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--sm"&gt;JD&lt;/div&gt;'>JD</div>
+                    <div class="eco-avatar eco-avatar--md component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--md"&gt;AB&lt;/div&gt;'>AB</div>
+                    <div class="eco-avatar eco-avatar--lg component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--lg"&gt;SM&lt;/div&gt;'>SM</div>
+                    <div class="eco-avatar eco-avatar--xl component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--xl"&gt;CD&lt;/div&gt;'>CD</div>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">With Status Indicator</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: center;">
+                    <div class="eco-avatar eco-avatar--md eco-avatar--status component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--md eco-avatar--status"&gt;ON&lt;/div&gt;'>ON</div>
+                    <div class="eco-avatar eco-avatar--md eco-avatar--status eco-avatar--status-offline component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--md eco-avatar--status eco-avatar--status-offline"&gt;OF&lt;/div&gt;'>OF</div>
+                    <div class="eco-avatar eco-avatar--md eco-avatar--status eco-avatar--status-away component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--md eco-avatar--status eco-avatar--status-away"&gt;AW&lt;/div&gt;'>AW</div>
+                    <div class="eco-avatar eco-avatar--md eco-avatar--status eco-avatar--status-busy component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--md eco-avatar--status eco-avatar--status-busy"&gt;BS&lt;/div&gt;'>BS</div>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">With Image</h3>
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: center;">
+                    <div class="eco-avatar eco-avatar--md component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--md"&gt;&#10;  &lt;img src="path/to/image.jpg" alt="User" /&gt;&#10;&lt;/div&gt;'>
+                        <div style="width: 40px; height: 40px; background: var(--brand-blue-600); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">JD</div>
+                    </div>
+                    <div class="eco-avatar eco-avatar--lg eco-avatar--status component-clickable" data-code='&lt;div class="eco-avatar eco-avatar--lg eco-avatar--status"&gt;&#10;  &lt;img src="path/to/image.jpg" alt="User" /&gt;&#10;&lt;/div&gt;'>
+                        <div style="width: 56px; height: 56px; background: var(--brand-green-600); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">AB</div>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="avatar-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="avatar-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="accordions">
+                <h2>Accordions</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any accordion item to expand and see child components. Click the accordion container to see its code.</p>
+                
+                <div class="eco-accordion component-clickable" style="max-width: 600px; margin-top: 1rem;" data-code='&lt;div class="eco-accordion"&gt;&#10;  &lt;div class="eco-accordion__item"&gt;&#10;    &lt;button class="eco-accordion__trigger" aria-expanded="false"&gt;&#10;      &lt;span&gt;Accordion Item 1&lt;/span&gt;&#10;      &lt;svg class="eco-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"&gt;&#10;        &lt;path d="M6 9l6 6 6-6"&gt;&lt;/path&gt;&#10;      &lt;/svg&gt;&#10;    &lt;/button&gt;&#10;    &lt;div class="eco-accordion__content" aria-hidden="true"&gt;&#10;      &lt;div class="eco-accordion__panel"&gt;Content goes here&lt;/div&gt;&#10;    &lt;/div&gt;&#10;  &lt;/div&gt;&#10;&lt;/div&gt;'>
+                    <div class="eco-accordion__item">
+                        <button class="eco-accordion__trigger" aria-expanded="false">
+                            <span>Buttons Example</span>
+                            <svg class="eco-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"></path>
+                            </svg>
+                        </button>
+                        <div class="eco-accordion__content" aria-hidden="true">
+                            <div class="eco-accordion__panel">
+                                <p style="margin-bottom: var(--space-4);">Accordions can contain any child components. Here are some buttons:</p>
+                                <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+                                    <button class="eco-btn eco-btn--primary">Primary</button>
+                                    <button class="eco-btn eco-btn--secondary">Secondary</button>
+                                    <button class="eco-btn eco-btn--outline">Outline</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eco-accordion__item">
+                        <button class="eco-accordion__trigger" aria-expanded="false">
+                            <span>Cards Example</span>
+                            <svg class="eco-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"></path>
+                            </svg>
+                        </button>
+                        <div class="eco-accordion__content" aria-hidden="true">
+                            <div class="eco-accordion__panel">
+                                <p style="margin-bottom: var(--space-4);">You can nest cards inside accordions:</p>
+                                <div class="eco-card" style="margin-bottom: var(--space-3);">
+                                    <h4 style="margin-top: 0; margin-bottom: var(--space-2);">Card Title</h4>
+                                    <p style="margin: 0;">This is a card nested inside an accordion panel.</p>
+                                </div>
+                                <div class="eco-card eco-card--elevated">
+                                    <h4 style="margin-top: 0; margin-bottom: var(--space-2);">Elevated Card</h4>
+                                    <p style="margin: 0;">Another example with elevation.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eco-accordion__item">
+                        <button class="eco-accordion__trigger" aria-expanded="false">
+                            <span>Form Elements Example</span>
+                            <svg class="eco-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"></path>
+                            </svg>
+                        </button>
+                        <div class="eco-accordion__content" aria-hidden="true">
+                            <div class="eco-accordion__panel">
+                                <p style="margin-bottom: var(--space-4);">Forms work great inside accordions:</p>
+                                <div style="display: flex; flex-direction: column; gap: var(--space-4);">
+                                    <div>
+                                        <label class="eco-label">Email Address</label>
+                                        <input type="email" class="eco-input" placeholder="you@example.com" />
+                                    </div>
+                                    <div>
+                                        <label class="eco-label">Message</label>
+                                        <textarea class="eco-input eco-textarea" placeholder="Your message here..."></textarea>
+                                    </div>
+                                    <button class="eco-btn eco-btn--primary">Submit</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="eco-accordion__item">
+                        <button class="eco-accordion__trigger" aria-expanded="false">
+                            <span>Badges & Alerts Example</span>
+                            <svg class="eco-accordion__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M6 9l6 6 6-6"></path>
+                            </svg>
+                        </button>
+                        <div class="eco-accordion__content" aria-hidden="true">
+                            <div class="eco-accordion__panel">
+                                <p style="margin-bottom: var(--space-4);">Show status indicators and alerts:</p>
+                                <div style="display: flex; gap: var(--space-3); flex-wrap: wrap; margin-bottom: var(--space-4); align-items: center;">
+                                    <span class="eco-badge eco-badge--success">Success</span>
+                                    <span class="eco-badge eco-badge--warning">Warning</span>
+                                    <span class="eco-badge eco-badge--error">Error</span>
+                                    <span class="eco-badge eco-badge--score">500</span>
+                                </div>
+                                <div class="eco-alert eco-alert--info">
+                                    <strong>Info:</strong> This is an alert inside an accordion.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="accordion-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="accordion-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="ratings">
+                <h2>Rating Scale</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Hover over stars to preview, click to rate. Click the rating container to see its code.</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 1.5rem; margin-top: 1rem;">
+                    <div class="component-clickable" data-code='&lt;div class="eco-rating"&gt;&#10;  &lt;svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"&gt;&lt;path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"&gt;&lt;/path&gt;&lt;/svg&gt;&#10;  &lt;!-- ... 4 more stars ... --&gt;&#10;  &lt;span class="eco-rating__value"&gt;&lt;/span&gt;&#10;&lt;/div&gt;&#10;&#10;&lt;script&gt;&#10;const rating = new EcoRating(document.querySelector(".eco-rating"));&#10;&lt;/script&gt;'>
+                        <div class="eco-rating" id="rating-demo-1">
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <span class="eco-rating__value"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="component-clickable" data-code='&lt;div class="eco-rating eco-rating--sm"&gt;&#10;  &lt;svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"&gt;&lt;path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"&gt;&lt;/path&gt;&lt;/svg&gt;&#10;  &lt;!-- ... 4 more stars ... --&gt;&#10;&lt;/div&gt;&#10;&#10;&lt;script&gt;&#10;new EcoRating(document.querySelector(".eco-rating--sm"));&#10;&lt;/script&gt;'>
+                        <div class="eco-rating eco-rating--sm" id="rating-demo-2">
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                        </div>
+                    </div>
+                    
+                    <div class="component-clickable" data-code='&lt;div class="eco-rating eco-rating--readonly"&gt;&#10;  &lt;svg class="eco-rating__star eco-rating__star--filled" viewBox="0 0 24 24" fill="currentColor"&gt;&lt;path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"&gt;&lt;/path&gt;&lt;/svg&gt;&#10;  &lt;!-- ... more stars ... --&gt;&#10;  &lt;span class="eco-rating__value"&gt;4.5&lt;/span&gt;&#10;&lt;/div&gt;'>
+                        <div class="eco-rating eco-rating--readonly" id="rating-demo-3">
+                            <svg class="eco-rating__star eco-rating__star--filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star eco-rating__star--filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star eco-rating__star--filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star eco-rating__star--filled" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <svg class="eco-rating__star" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+                            <span class="eco-rating__value">4.0</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="rating-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="rating-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="tabs">
+                <h2>Tabs</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any tab to see its code</p>
+                
+                <div class="eco-tabs component-clickable" style="max-width: 600px; margin-top: 1rem;" data-code='&lt;div class="eco-tabs"&gt;&#10;  &lt;div class="eco-tabs__list" role="tablist"&gt;&#10;    &lt;button class="eco-tabs__trigger" role="tab" aria-selected="true"&gt;Tab 1&lt;/button&gt;&#10;    &lt;button class="eco-tabs__trigger" role="tab" aria-selected="false"&gt;Tab 2&lt;/button&gt;&#10;  &lt;/div&gt;&#10;  &lt;div class="eco-tabs__panel" role="tabpanel" aria-hidden="false"&gt;Content 1&lt;/div&gt;&#10;  &lt;div class="eco-tabs__panel" role="tabpanel" aria-hidden="true"&gt;Content 2&lt;/div&gt;&#10;&lt;/div&gt;'>
+                    <div class="eco-tabs__list" role="tablist">
+                        <button class="eco-tabs__trigger" role="tab" aria-selected="true">Overview</button>
+                        <button class="eco-tabs__trigger" role="tab" aria-selected="false">Details</button>
+                        <button class="eco-tabs__trigger" role="tab" aria-selected="false">Settings</button>
+                    </div>
+                    <div class="eco-tabs__panel" role="tabpanel" aria-hidden="false">
+                        <p>This is the overview content.</p>
+                    </div>
+                    <div class="eco-tabs__panel" role="tabpanel" aria-hidden="true">
+                        <p>This is the details content.</p>
+                    </div>
+                    <div class="eco-tabs__panel" role="tabpanel" aria-hidden="true">
+                        <p>This is the settings content.</p>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="tabs-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="tabs-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="forms">
+                <h2>Form Elements</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any form element to see its code</p>
+                
+                <h3 style="margin-top: 1.5rem; margin-bottom: 1rem;">Radio Buttons</h3>
+                <div class="eco-radio-group" style="margin-top: 1rem;">
+                    <label class="eco-radio component-clickable" data-code='&lt;label class="eco-radio"&gt;&#10;  &lt;input type="radio" name="option" class="eco-radio__input" /&gt;&#10;  &lt;span&gt;Option 1&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="radio" name="demo-radio" class="eco-radio__input" checked />
+                        <span>Option 1</span>
+                    </label>
+                    <label class="eco-radio component-clickable" data-code='&lt;label class="eco-radio"&gt;&#10;  &lt;input type="radio" name="option" class="eco-radio__input" /&gt;&#10;  &lt;span&gt;Option 2&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="radio" name="demo-radio" class="eco-radio__input" />
+                        <span>Option 2</span>
+                    </label>
+                    <label class="eco-radio component-clickable" data-code='&lt;label class="eco-radio eco-radio--disabled"&gt;&#10;  &lt;input type="radio" name="option" class="eco-radio__input" disabled /&gt;&#10;  &lt;span&gt;Disabled&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="radio" name="demo-radio" class="eco-radio__input" disabled />
+                        <span>Disabled</span>
+                    </label>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Checkboxes</h3>
+                <div class="eco-checkbox-group" style="margin-top: 1rem;">
+                    <label class="eco-checkbox component-clickable" data-code='&lt;label class="eco-checkbox"&gt;&#10;  &lt;input type="checkbox" class="eco-checkbox__input" /&gt;&#10;  &lt;span&gt;Checkbox 1&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="checkbox" class="eco-checkbox__input" checked />
+                        <span>Checkbox 1</span>
+                    </label>
+                    <label class="eco-checkbox component-clickable" data-code='&lt;label class="eco-checkbox"&gt;&#10;  &lt;input type="checkbox" class="eco-checkbox__input" /&gt;&#10;  &lt;span&gt;Checkbox 2&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="checkbox" class="eco-checkbox__input" />
+                        <span>Checkbox 2</span>
+                    </label>
+                    <label class="eco-checkbox component-clickable" data-code='&lt;label class="eco-checkbox"&gt;&#10;  &lt;input type="checkbox" class="eco-checkbox__input" indeterminate /&gt;&#10;  &lt;span&gt;Indeterminate&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="checkbox" class="eco-checkbox__input" />
+                        <span>Indeterminate</span>
+                    </label>
+                </div>
+                
+                <div class="code-panel" id="forms-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="forms-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="toggles">
+                <h2>Toggle Buttons</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any toggle to see its code</p>
+                
+                <div style="display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 1rem; align-items: center;">
+                    <button class="eco-toggle component-clickable" data-code='&lt;button class="eco-toggle"&gt;Toggle&lt;/button&gt;'>Toggle</button>
+                    <button class="eco-toggle eco-toggle--active component-clickable" data-code='&lt;button class="eco-toggle eco-toggle--active"&gt;Active&lt;/button&gt;'>Active</button>
+                    <button class="eco-toggle component-clickable" data-code='&lt;button class="eco-toggle" disabled&gt;Disabled&lt;/button&gt;' disabled>Disabled</button>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Toggle Group</h3>
+                <div class="eco-toggle-group component-clickable" style="margin-top: 1rem;" data-code='&lt;div class="eco-toggle-group"&gt;&#10;  &lt;button class="eco-toggle eco-toggle--active"&gt;Option 1&lt;/button&gt;&#10;  &lt;button class="eco-toggle"&gt;Option 2&lt;/button&gt;&#10;  &lt;button class="eco-toggle"&gt;Option 3&lt;/button&gt;&#10;&lt;/div&gt;'>
+                    <button class="eco-toggle eco-toggle--active">Option 1</button>
+                    <button class="eco-toggle">Option 2</button>
+                    <button class="eco-toggle">Option 3</button>
+                </div>
+                
+                <div class="code-panel" id="toggle-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="toggle-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="switches">
+                <h2>Switches</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any switch to see its code</p>
+                
+                <div style="display: flex; flex-direction: column; gap: 1rem; margin-top: 1rem;">
+                    <label class="eco-switch component-clickable" data-code='&lt;label class="eco-switch"&gt;&#10;  &lt;input type="checkbox" class="eco-switch__input" /&gt;&#10;  &lt;span&gt;Enable notifications&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="checkbox" class="eco-switch__input" />
+                        <span>Enable notifications</span>
+                    </label>
+                    
+                    <label class="eco-switch component-clickable" data-code='&lt;label class="eco-switch"&gt;&#10;  &lt;input type="checkbox" class="eco-switch__input" checked /&gt;&#10;  &lt;span&gt;Dark mode&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="checkbox" class="eco-switch__input" checked />
+                        <span>Dark mode</span>
+                    </label>
+                    
+                    <label class="eco-switch eco-switch--sm component-clickable" data-code='&lt;label class="eco-switch eco-switch--sm"&gt;&#10;  &lt;input type="checkbox" class="eco-switch__input" /&gt;&#10;  &lt;span&gt;Small switch&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="checkbox" class="eco-switch__input" />
+                        <span>Small switch</span>
+                    </label>
+                    
+                    <label class="eco-switch eco-switch--lg component-clickable" data-code='&lt;label class="eco-switch eco-switch--lg"&gt;&#10;  &lt;input type="checkbox" class="eco-switch__input" /&gt;&#10;  &lt;span&gt;Large switch&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="checkbox" class="eco-switch__input" />
+                        <span>Large switch</span>
+                    </label>
+                    
+                    <label class="eco-switch eco-switch--disabled component-clickable" data-code='&lt;label class="eco-switch eco-switch--disabled"&gt;&#10;  &lt;input type="checkbox" class="eco-switch__input" disabled /&gt;&#10;  &lt;span&gt;Disabled&lt;/span&gt;&#10;&lt;/label&gt;'>
+                        <input type="checkbox" class="eco-switch__input" disabled />
+                        <span>Disabled</span>
+                    </label>
+                </div>
+                
+                <div class="code-panel" id="switch-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="switch-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="pagination">
+                <h2>Pagination</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any pagination to see its code</p>
+                
+                <div style="margin-top: 1rem;">
+                    <nav class="component-clickable" data-code='&lt;nav&gt;&#10;  &lt;ul class="eco-pagination"&gt;&#10;    &lt;li class="eco-pagination__item"&gt;&lt;button class="eco-pagination__button eco-pagination__button--disabled"&gt;Previous&lt;/button&gt;&lt;/li&gt;&#10;    &lt;li class="eco-pagination__item"&gt;&lt;button class="eco-pagination__button eco-pagination__button--active"&gt;1&lt;/button&gt;&lt;/li&gt;&#10;    &lt;li class="eco-pagination__item"&gt;&lt;button class="eco-pagination__button"&gt;2&lt;/button&gt;&lt;/li&gt;&#10;    &lt;li class="eco-pagination__item"&gt;&lt;button class="eco-pagination__button"&gt;3&lt;/button&gt;&lt;/li&gt;&#10;    &lt;li class="eco-pagination__item"&gt;&lt;span class="eco-pagination__ellipsis"&gt;...&lt;/span&gt;&lt;/li&gt;&#10;    &lt;li class="eco-pagination__item"&gt;&lt;button class="eco-pagination__button"&gt;10&lt;/button&gt;&lt;/li&gt;&#10;    &lt;li class="eco-pagination__item"&gt;&lt;button class="eco-pagination__button"&gt;Next&lt;/button&gt;&lt;/li&gt;&#10;  &lt;/ul&gt;&#10;&lt;/nav&gt;'>
+                        <ul class="eco-pagination">
+                            <li class="eco-pagination__item"><button class="eco-pagination__button eco-pagination__button--disabled">Previous</button></li>
+                            <li class="eco-pagination__item"><button class="eco-pagination__button eco-pagination__button--active">1</button></li>
+                            <li class="eco-pagination__item"><button class="eco-pagination__button">2</button></li>
+                            <li class="eco-pagination__item"><button class="eco-pagination__button">3</button></li>
+                            <li class="eco-pagination__item"><span class="eco-pagination__ellipsis">...</span></li>
+                            <li class="eco-pagination__item"><button class="eco-pagination__button">10</button></li>
+                            <li class="eco-pagination__item"><button class="eco-pagination__button">Next</button></li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">Small Size</h3>
+                <div style="margin-top: 1rem;">
+                    <nav class="component-clickable" data-code='&lt;nav&gt;&#10;  &lt;ul class="eco-pagination eco-pagination--sm"&gt;&#10;    &lt;!-- ... --&gt;&#10;  &lt;/ul&gt;&#10;&lt;/nav&gt;'>
+                        <ul class="eco-pagination eco-pagination--sm">
+                            <li class="eco-pagination__item"><button class="eco-pagination__button">1</button></li>
+                            <li class="eco-pagination__item"><button class="eco-pagination__button eco-pagination__button--active">2</button></li>
+                            <li class="eco-pagination__item"><button class="eco-pagination__button">3</button></li>
+                        </ul>
+                    </nav>
+                </div>
+                
+                <div class="code-panel" id="pagination-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="pagination-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="modals">
+                <h2>Modals</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click the button below to see a modal in action</p>
+                
+                <div style="margin-top: 1rem;">
+                    <button class="eco-btn eco-btn--primary component-clickable" onclick="openModalDemo(); return false;" data-code='&lt;button class="eco-btn eco-btn--primary" onclick="openModal()"&gt;Open Modal&lt;/button&gt;'>Open Modal</button>
+                </div>
+                
+                <div class="code-panel" id="modal-code-panel" style="display: none; margin-top: 1rem;">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="modal-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="breadcrumbs">
+                <h2>Breadcrumbs</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">Click any breadcrumb to see its code</p>
+                
+                <div style="margin-top: 1rem;">
+                    <nav class="component-clickable" data-code='&lt;nav&gt;&#10;  &lt;ol class="eco-breadcrumb"&gt;&#10;    &lt;li class="eco-breadcrumb__item"&gt;&lt;a href="#" class="eco-breadcrumb__link"&gt;Home&lt;/a&gt;&lt;/li&gt;&#10;    &lt;li class="eco-breadcrumb__item"&gt;&lt;a href="#" class="eco-breadcrumb__link"&gt;Products&lt;/a&gt;&lt;/li&gt;&#10;    &lt;li class="eco-breadcrumb__item"&gt;&lt;span class="eco-breadcrumb__link eco-breadcrumb__link--current"&gt;Current Page&lt;/span&gt;&lt;/li&gt;&#10;  &lt;/ol&gt;&#10;&lt;/nav&gt;'>
+                        <ol class="eco-breadcrumb">
+                            <li class="eco-breadcrumb__item"><a href="#" class="eco-breadcrumb__link">Home</a></li>
+                            <li class="eco-breadcrumb__item"><a href="#" class="eco-breadcrumb__link">Products</a></li>
+                            <li class="eco-breadcrumb__item"><span class="eco-breadcrumb__link eco-breadcrumb__link--current">Current Page</span></li>
+                        </ol>
+                    </nav>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">With Chevron Separator</h3>
+                <div style="margin-top: 1rem;">
+                    <nav class="component-clickable" data-code='&lt;nav&gt;&#10;  &lt;ol class="eco-breadcrumb eco-breadcrumb--separator-chevron"&gt;&#10;    &lt;!-- ... --&gt;&#10;  &lt;/ol&gt;&#10;&lt;/nav&gt;'>
+                        <ol class="eco-breadcrumb eco-breadcrumb--separator-chevron">
+                            <li class="eco-breadcrumb__item"><a href="#" class="eco-breadcrumb__link">Home</a></li>
+                            <li class="eco-breadcrumb__item"><a href="#" class="eco-breadcrumb__link">Category</a></li>
+                            <li class="eco-breadcrumb__item"><span class="eco-breadcrumb__link eco-breadcrumb__link--current">Item</span></li>
+                        </ol>
+                    </nav>
+                </div>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem;">With Arrow Separator</h3>
+                <div style="margin-top: 1rem;">
+                    <nav class="component-clickable" data-code='&lt;nav&gt;&#10;  &lt;ol class="eco-breadcrumb eco-breadcrumb--separator-arrow"&gt;&#10;    &lt;!-- ... --&gt;&#10;  &lt;/ol&gt;&#10;&lt;/nav&gt;'>
+                        <ol class="eco-breadcrumb eco-breadcrumb--separator-arrow">
+                            <li class="eco-breadcrumb__item"><a href="#" class="eco-breadcrumb__link">Home</a></li>
+                            <li class="eco-breadcrumb__item"><a href="#" class="eco-breadcrumb__link">Section</a></li>
+                            <li class="eco-breadcrumb__item"><span class="eco-breadcrumb__link eco-breadcrumb__link--current">Page</span></li>
+                        </ol>
+                    </nav>
+                </div>
+                
+                <div class="code-panel" id="breadcrumb-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="breadcrumb-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="charts">
+                <h2>Charts</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">EcoKit provides chart components built on Recharts (React) and Chart.js (vanilla JS), fully themed with EcoKit design tokens.</p>
+                
+                <h3 style="margin-top: var(--space-6); margin-bottom: var(--space-4);">Line Chart</h3>
+                <div class="eco-card" style="margin-top: 1rem; padding: var(--space-6);">
+                    <h4 style="margin-top: 0; margin-bottom: var(--space-2);">Monthly CO2 Emissions</h4>
+                    <p style="color: var(--neutral-600); font-size: var(--text-sm); margin-bottom: var(--space-4);">Emissions tracking over 12 months</p>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="line-chart"></canvas>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: var(--space-8); margin-bottom: var(--space-4);">Bar Chart</h3>
+                <div class="eco-card" style="margin-top: 1rem; padding: var(--space-6);">
+                    <h4 style="margin-top: 0; margin-bottom: var(--space-2);">Emissions by Category</h4>
+                    <p style="color: var(--neutral-600); font-size: var(--text-sm); margin-bottom: var(--space-4);">Breakdown of emissions sources</p>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="bar-chart"></canvas>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: var(--space-8); margin-bottom: var(--space-4);">Area Chart</h3>
+                <div class="eco-card" style="margin-top: 1rem; padding: var(--space-6);">
+                    <h4 style="margin-top: 0; margin-bottom: var(--space-2);">Energy Consumption</h4>
+                    <p style="color: var(--neutral-600); font-size: var(--text-sm); margin-bottom: var(--space-4);">Renewable vs fossil fuel energy</p>
+                    <div style="position: relative; height: 300px;">
+                        <canvas id="area-chart"></canvas>
+                    </div>
+                </div>
+                
+                <h3 style="margin-top: var(--space-8); margin-bottom: var(--space-4);">Pie Chart</h3>
+                <div class="eco-card" style="margin-top: 1rem; padding: var(--space-6);">
+                    <h4 style="margin-top: 0; margin-bottom: var(--space-2);">Energy Mix Distribution</h4>
+                    <p style="color: var(--neutral-600); font-size: var(--text-sm); margin-bottom: var(--space-4);">Percentage breakdown by source</p>
+                    <div style="position: relative; height: 300px; max-width: 400px; margin: 0 auto;">
+                        <canvas id="pie-chart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="eco-card" style="margin-top: var(--space-8); padding: var(--space-6); background: var(--neutral-50);">
+                    <h3 style="margin-top: 0;">Chart Components</h3>
+                    <p>EcoKit charts are React components that wrap Recharts with EcoKit theming. They automatically use EcoKit colors, typography, and spacing tokens.</p>
+                    
+                    <h4 style="margin-top: var(--space-6);">Available Chart Types:</h4>
+                    <ul style="margin-top: var(--space-2);">
+                        <li><strong>EcoLineChart</strong> - Line charts for trends over time</li>
+                        <li><strong>EcoAreaChart</strong> - Area charts for cumulative data</li>
+                        <li><strong>EcoBarChart</strong> - Vertical and horizontal bar charts</li>
+                        <li><strong>EcoPieChart</strong> - Pie and donut charts for proportions</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: var(--space-6);">Features:</h4>
+                    <ul style="margin-top: var(--space-2);">
+                        <li>✅ Fully themed with EcoKit design tokens</li>
+                        <li>✅ Responsive and accessible</li>
+                        <li>✅ Customizable colors and styling</li>
+                        <li>✅ Multiple height presets (compact, standard, large, tall)</li>
+                        <li>✅ Built-in tooltips and legends</li>
+                    </ul>
+                    
+                    <div style="margin-top: var(--space-6); padding: var(--space-4); background: white; border-radius: var(--radius-md); border: 1px solid var(--neutral-300);">
+                        <p style="margin: 0 0 var(--space-2) 0; font-weight: var(--font-weight-medium);">Installation:</p>
+                        <code style="display: block; padding: var(--space-2); background: var(--neutral-900); color: var(--neutral-100); border-radius: var(--radius-sm); font-family: var(--font-mono);">npm install recharts</code>
+                    </div>
+                    
+                    <p style="margin-top: var(--space-4);">
+                        <a href="assets/EcoKit/components/charts-examples.md" target="_blank" class="eco-btn eco-btn--primary" style="text-decoration: none; display: inline-block;">View Documentation & Examples</a>
+                    </p>
+                </div>
+                
+                <div style="margin-top: 1rem;">
+                    <a href="#" class="show-code-link" onclick="event.preventDefault(); showChartsCode(); return false;" style="text-decoration: underline; color: var(--brand-blue-600); cursor: pointer;">Show React code example</a>
+                </div>
+                
+                <div class="code-panel" id="charts-code-panel" style="display: none; margin-top: 1rem;">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="charts-code">import { EcoLineChart } from '@/assets/EcoKit/components/charts';
+
+const data = [
+  { month: 'Jan', emissions: 4000 },
+  { month: 'Feb', emissions: 3000 },
+  { month: 'Mar', emissions: 2000 },
+];
+
+&lt;EcoLineChart
+  title="Monthly Emissions"
+  data={data}
+  dataKey="month"
+  lines={[
+    { dataKey: 'emissions', name: 'Emissions (tons)' }
+  ]}
+/&gt;</code></pre>
+                </div>
+            </section>
+
+            <section id="dividers">
+                <h2>Dividers</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">
+                    <a href="#" class="show-code-link" onclick="event.preventDefault(); showDividerCode(); return false;" style="text-decoration: underline; color: var(--brand-blue-600); cursor: pointer;">Show code</a>
+                </p>
+                
+                <div style="margin-top: 1rem; padding: 0 var(--space-4);">
+                    <p>Content above</p>
+                    <hr class="eco-divider" />
+                    <p>Content below</p>
+                </div>
+                
+                <div class="code-panel" id="divider-code-panel" style="display: none;">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="divider-code">&lt;hr class="eco-divider" /&gt;</code></pre>
                 </div>
             </section>
         </main>
+
+        <!-- Modal Demo -->
+        <div class="eco-modal" id="demo-modal">
+            <div class="eco-modal__backdrop"></div>
+            <div class="eco-modal__content">
+                <div class="eco-modal__header">
+                    <h3 class="eco-modal__title">Modal Title</h3>
+                    <button class="eco-modal__close" onclick="closeModalDemo()" aria-label="Close modal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 6L6 18M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <div class="eco-modal__body">
+                    <p>This is a modal dialog. You can add any content here.</p>
+                </div>
+                <div class="eco-modal__footer">
+                    <button class="eco-btn eco-btn--outline" onclick="closeModalDemo()">Cancel</button>
+                    <button class="eco-btn eco-btn--primary" onclick="closeModalDemo()">Confirm</button>
+                </div>
+            </div>
+        </div>
 
         <footer>
             <p><a href="index.html">← Back to Home</a></p>
         </footer>
     </div>
+
+    <script>
+        // Handle component clicks - update shared code panel
+        document.querySelectorAll('.component-clickable').forEach(component => {
+            component.addEventListener('click', function(e) {
+                e.stopPropagation(); // Prevent event from bubbling to document
+                
+                // For buttons, prevent default action
+                if (this.tagName === 'BUTTON' && !this.disabled) {
+                    e.preventDefault();
+                }
+                
+                // For links, prevent navigation
+                if (this.tagName === 'A') {
+                    e.preventDefault();
+                }
+                
+                // Don't trigger code preview if clicking inside a rating (let rating handle it)
+                if (this.closest('.eco-rating')) {
+                    return;
+                }
+                
+                const code = this.getAttribute('data-code');
+                const section = this.closest('section');
+                
+                // Find the code panel in this section
+                let codePanel, codeElement;
+                if (section.querySelector('#button-code-panel')) {
+                    codePanel = section.querySelector('#button-code-panel');
+                    codeElement = section.querySelector('#button-code');
+                } else if (section.querySelector('#card-code-panel')) {
+                    codePanel = section.querySelector('#card-code-panel');
+                    codeElement = section.querySelector('#card-code');
+                } else if (section.querySelector('#input-code-panel')) {
+                    codePanel = section.querySelector('#input-code-panel');
+                    codeElement = section.querySelector('#input-code');
+                } else if (section.querySelector('#badge-code-panel')) {
+                    codePanel = section.querySelector('#badge-code-panel');
+                    codeElement = section.querySelector('#badge-code');
+                } else if (section.querySelector('#alert-code-panel')) {
+                    codePanel = section.querySelector('#alert-code-panel');
+                    codeElement = section.querySelector('#alert-code');
+                } else if (section.querySelector('#table-code-panel')) {
+                    codePanel = section.querySelector('#table-code-panel');
+                    codeElement = section.querySelector('#table-code');
+                } else if (section.querySelector('#list-code-panel')) {
+                    codePanel = section.querySelector('#list-code-panel');
+                    codeElement = section.querySelector('#list-code');
+                } else if (section.querySelector('#progress-code-panel')) {
+                    codePanel = section.querySelector('#progress-code-panel');
+                    codeElement = section.querySelector('#progress-code');
+                } else if (section.querySelector('#divider-code-panel')) {
+                    codePanel = section.querySelector('#divider-code-panel');
+                    codeElement = section.querySelector('#divider-code');
+                } else if (section.querySelector('#notification-code-panel')) {
+                    codePanel = section.querySelector('#notification-code-panel');
+                    codeElement = section.querySelector('#notification-code');
+                } else if (section.querySelector('#avatar-code-panel')) {
+                    codePanel = section.querySelector('#avatar-code-panel');
+                    codeElement = section.querySelector('#avatar-code');
+                } else if (section.querySelector('#accordion-code-panel')) {
+                    codePanel = section.querySelector('#accordion-code-panel');
+                    codeElement = section.querySelector('#accordion-code');
+                } else if (section.querySelector('#rating-code-panel')) {
+                    codePanel = section.querySelector('#rating-code-panel');
+                    codeElement = section.querySelector('#rating-code');
+                } else if (section.querySelector('#tabs-code-panel')) {
+                    codePanel = section.querySelector('#tabs-code-panel');
+                    codeElement = section.querySelector('#tabs-code');
+                } else if (section.querySelector('#forms-code-panel')) {
+                    codePanel = section.querySelector('#forms-code-panel');
+                    codeElement = section.querySelector('#forms-code');
+                } else if (section.querySelector('#modal-code-panel')) {
+                    codePanel = section.querySelector('#modal-code-panel');
+                    codeElement = section.querySelector('#modal-code');
+                } else if (section.querySelector('#toggle-code-panel')) {
+                    codePanel = section.querySelector('#toggle-code-panel');
+                    codeElement = section.querySelector('#toggle-code');
+                } else if (section.querySelector('#switch-code-panel')) {
+                    codePanel = section.querySelector('#switch-code-panel');
+                    codeElement = section.querySelector('#switch-code');
+                } else if (section.querySelector('#pagination-code-panel')) {
+                    codePanel = section.querySelector('#pagination-code-panel');
+                    codeElement = section.querySelector('#pagination-code');
+                } else if (section.querySelector('#breadcrumb-code-panel')) {
+                    codePanel = section.querySelector('#breadcrumb-code-panel');
+                    codeElement = section.querySelector('#breadcrumb-code');
+                } else if (section.querySelector('#charts-code-panel')) {
+                    codePanel = section.querySelector('#charts-code-panel');
+                    codeElement = section.querySelector('#charts-code');
+                }
+                
+                if (codePanel && codeElement) {
+                    // Remove active from all components in this section
+                    section.querySelectorAll('.component-clickable').forEach(c => {
+                        c.classList.remove('active');
+                    });
+                    
+                    // Add active to clicked component
+                    this.classList.add('active');
+                    
+                    // Update and show code panel
+                    codeElement.textContent = code.replace(/&#10;/g, '\n');
+                    codePanel.classList.add('active');
+                }
+            });
+        });
+
+        // Click outside to deselect (using standardized pattern)
+        document.addEventListener('click', function(e) {
+            // Don't deselect if clicking on code panel, copy button, or show code link
+            if (e.target.closest('.code-panel') || e.target.closest('.copy-btn') || e.target.closest('.show-code-link')) {
+                return;
+            }
+            
+            // Don't deselect if clicking on a component (they handle their own selection)
+            if (e.target.closest('.component-clickable')) {
+                return;
+            }
+            
+            // Deselect all components and hide code panels
+            document.querySelectorAll('.component-clickable').forEach(c => {
+                c.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.code-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+        });
+
+        // Show divider code
+        function showDividerCode() {
+            const panel = document.querySelector('#divider-code-panel');
+            if (panel) {
+                if (panel.style.display === 'none' || !panel.style.display) {
+                    panel.style.display = 'block';
+                } else {
+                    panel.style.display = 'none';
+                }
+            }
+        }
+
+        // Show charts code
+        function showChartsCode() {
+            const panel = document.querySelector('#charts-code-panel');
+            if (panel) {
+                if (panel.style.display === 'none' || !panel.style.display) {
+                    panel.style.display = 'block';
+                } else {
+                    panel.style.display = 'none';
+                }
+            }
+        }
+
+        // Modal demo
+        let demoModal = null;
+        function openModalDemo() {
+            const modalEl = document.getElementById('demo-modal');
+            if (!demoModal) {
+                demoModal = new EcoModal(modalEl);
+            }
+            demoModal.open();
+            document.getElementById('modal-code-panel').style.display = 'block';
+        }
+        function closeModalDemo() {
+            if (demoModal) {
+                demoModal.close();
+            }
+        }
+
+        // Initialize ratings - the ratings.js script auto-initializes, but we ensure it happens
+        function initRatings() {
+            if (typeof EcoRating !== 'undefined') {
+                document.querySelectorAll('.eco-rating').forEach(element => {
+                    if (!element.ecoRatingInstance) {
+                        element.ecoRatingInstance = new EcoRating(element);
+                    }
+                });
+            }
+        }
+        
+        // Initialize immediately if DOM is ready, otherwise wait
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initRatings);
+        } else {
+            // Small delay to ensure scripts are loaded
+            setTimeout(initRatings, 100);
+        }
+
+        // Initialize charts
+        function initCharts() {
+            if (typeof Chart === 'undefined') return;
+
+            // EcoKit colors
+            const ecoColors = {
+                primary: '#1A6F8A',
+                secondary: '#138A4F',
+                success: '#0F9D58',
+                warning: '#F4B400',
+                error: '#DB4437',
+                neutral: '#7A8C8E',
+            };
+
+            // Line Chart
+            const lineCtx = document.getElementById('line-chart');
+            if (lineCtx) {
+                new Chart(lineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                        datasets: [{
+                            label: 'CO2 Emissions (tons)',
+                            data: [4200, 3800, 3500, 3200, 3000, 2800, 2600, 2400, 2200, 2000, 1900, 1800],
+                            borderColor: ecoColors.primary,
+                            backgroundColor: ecoColors.primary + '20',
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 12
+                                    },
+                                    color: 'var(--neutral-700)'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'white',
+                                titleColor: 'var(--neutral-900)',
+                                bodyColor: 'var(--neutral-700)',
+                                borderColor: 'var(--neutral-300)',
+                                borderWidth: 1,
+                                padding: 12,
+                                cornerRadius: 8,
+                                displayColors: true,
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 11
+                                    },
+                                    color: 'var(--neutral-600)'
+                                },
+                                grid: {
+                                    color: 'var(--neutral-200)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 11
+                                    },
+                                    color: 'var(--neutral-600)'
+                                },
+                                grid: {
+                                    color: 'var(--neutral-200)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Bar Chart
+            const barCtx = document.getElementById('bar-chart');
+            if (barCtx) {
+                new Chart(barCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Transport', 'Energy', 'Waste', 'Water', 'Materials'],
+                        datasets: [{
+                            label: 'Emissions (tons CO2)',
+                            data: [1200, 800, 400, 300, 500],
+                            backgroundColor: [
+                                ecoColors.primary,
+                                ecoColors.secondary,
+                                ecoColors.success,
+                                ecoColors.warning,
+                                ecoColors.error
+                            ],
+                            borderRadius: 4,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: false
+                            },
+                            tooltip: {
+                                backgroundColor: 'white',
+                                titleColor: 'var(--neutral-900)',
+                                bodyColor: 'var(--neutral-700)',
+                                borderColor: 'var(--neutral-300)',
+                                borderWidth: 1,
+                                padding: 12,
+                                cornerRadius: 8,
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 11
+                                    },
+                                    color: 'var(--neutral-600)'
+                                },
+                                grid: {
+                                    color: 'var(--neutral-200)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 11
+                                    },
+                                    color: 'var(--neutral-600)'
+                                },
+                                grid: {
+                                    display: false
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Area Chart
+            const areaCtx = document.getElementById('area-chart');
+            if (areaCtx) {
+                new Chart(areaCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                        datasets: [
+                            {
+                                label: 'Renewable Energy',
+                                data: [200, 350, 500, 650],
+                                borderColor: ecoColors.success,
+                                backgroundColor: ecoColors.success + '40',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                            },
+                            {
+                                label: 'Fossil Fuels',
+                                data: [800, 650, 500, 350],
+                                borderColor: ecoColors.error,
+                                backgroundColor: ecoColors.error + '40',
+                                borderWidth: 2,
+                                fill: true,
+                                tension: 0.4,
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'top',
+                                labels: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 12
+                                    },
+                                    color: 'var(--neutral-700)'
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'white',
+                                titleColor: 'var(--neutral-900)',
+                                bodyColor: 'var(--neutral-700)',
+                                borderColor: 'var(--neutral-300)',
+                                borderWidth: 1,
+                                padding: 12,
+                                cornerRadius: 8,
+                            }
+                        },
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                ticks: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 11
+                                    },
+                                    color: 'var(--neutral-600)'
+                                },
+                                grid: {
+                                    color: 'var(--neutral-200)'
+                                }
+                            },
+                            x: {
+                                ticks: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 11
+                                    },
+                                    color: 'var(--neutral-600)'
+                                },
+                                grid: {
+                                    color: 'var(--neutral-200)'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Pie Chart
+            const pieCtx = document.getElementById('pie-chart');
+            if (pieCtx) {
+                new Chart(pieCtx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Renewable', 'Coal', 'Natural Gas', 'Nuclear'],
+                        datasets: [{
+                            data: [60, 15, 20, 5],
+                            backgroundColor: [
+                                ecoColors.success,
+                                ecoColors.error,
+                                ecoColors.warning,
+                                ecoColors.primary
+                            ],
+                            borderWidth: 2,
+                            borderColor: 'white'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        family: 'var(--font-sans)',
+                                        size: 12
+                                    },
+                                    color: 'var(--neutral-700)',
+                                    padding: 12,
+                                    usePointStyle: true
+                                }
+                            },
+                            tooltip: {
+                                backgroundColor: 'white',
+                                titleColor: 'var(--neutral-900)',
+                                bodyColor: 'var(--neutral-700)',
+                                borderColor: 'var(--neutral-300)',
+                                borderWidth: 1,
+                                padding: 12,
+                                cornerRadius: 8,
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.label + ': ' + context.parsed + '%';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        // Initialize accordions (if not auto-initialized)
+        function initAccordions() {
+            if (typeof EcoAccordion !== 'undefined') {
+                document.querySelectorAll('.eco-accordion').forEach(element => {
+                    if (!element.ecoAccordionInstance) {
+                        element.ecoAccordionInstance = new EcoAccordion(element);
+                    }
+                });
+            }
+        }
+
+        // Initialize charts when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                initCharts();
+                initSidebarCollapser();
+                initSidebarResize();
+                restoreSidebarState();
+                initAccordions();
+            });
+        } else {
+            initCharts();
+            initSidebarCollapser();
+            initSidebarResize();
+            restoreSidebarState();
+            initAccordions();
+        }
+
+        // Sidebar functionality
+        function toggleSidebar() {
+            const sidebar = document.getElementById('components-sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('eco-sidebar--open');
+            }
+        }
+
+        // Sidebar collapse functionality using EcoCollapser utility
+        let sidebarCollapser = null;
+        function initSidebarCollapser() {
+            const sidebar = document.getElementById('components-sidebar');
+            const main = document.querySelector('.components-main');
+            
+            if (!sidebar || !main) return;
+
+            const collapseBtn = sidebar.querySelector('.eco-sidebar__collapse-btn');
+            if (collapseBtn) {
+                sidebarCollapser = new EcoCollapser(sidebar, {
+                    collapsedClass: 'eco-sidebar--collapsed',
+                    triggerSelector: collapseBtn,
+                    direction: 'horizontal',
+                    collapsedValue: '0',
+                    expandedValue: localStorage.getItem('sidebarWidth') || '280',
+                    persistState: true,
+                    storageKey: 'sidebarCollapsed',
+                    onCollapse: () => {
+                        main.style.marginLeft = '0';
+                        // Destroy resize utility when collapsed
+                        if (sidebarResize) {
+                            sidebarResize.destroy();
+                            sidebarResize = null;
+                        }
+                    },
+                    onExpand: () => {
+                        // Restore width and reinitialize resize
+                        const width = localStorage.getItem('sidebarWidth') || '280';
+                        sidebar.style.width = width + 'px';
+                        sidebar.style.minWidth = '200px';
+                        main.style.marginLeft = width + 'px';
+                        // Reinitialize resize utility when expanded
+                        if (!sidebarResize) {
+                            setTimeout(() => {
+                                initSidebarResize();
+                            }, 100);
+                        }
+                    }
+                });
+            }
+        }
+
+
+        // Sidebar resize functionality using EcoResize utility
+        let sidebarResize = null;
+        function initSidebarResize() {
+            const sidebar = document.getElementById('components-sidebar');
+            const main = document.querySelector('.components-main');
+            
+            if (!sidebar || !main) return;
+
+            // Initialize resize utility
+            sidebarResize = new EcoResize(sidebar, {
+                direction: 'horizontal',
+                minSize: 200,
+                maxSize: 500,
+                handleWidth: 4,
+                onResize: (width) => {
+                    // Update main content margin in real-time
+                    main.classList.add('resizing');
+                    main.style.marginLeft = width + 'px';
+                },
+                onResizeEnd: (width) => {
+                    // Save width and remove resizing class
+                    localStorage.setItem('sidebarWidth', width);
+                    main.classList.remove('resizing');
+                }
+            });
+        }
+
+        // Restore sidebar state on load (handled by EcoCollapser, but ensure width is set)
+        function restoreSidebarState() {
+            const sidebar = document.getElementById('components-sidebar');
+            const main = document.querySelector('.components-main');
+            
+            if (!sidebar || !main) return;
+
+            const isCollapsed = localStorage.getItem('sidebarCollapsed') === 'true';
+            const savedWidth = localStorage.getItem('sidebarWidth') || '280';
+            
+            if (!isCollapsed) {
+                // Only set width if not collapsed (collapser handles collapsed state)
+                sidebar.style.width = savedWidth + 'px';
+                sidebar.style.minWidth = '200px';
+                main.style.marginLeft = savedWidth + 'px';
+            }
+        }
+
+        // Update active sidebar link on scroll
+        function updateActiveSidebarLink() {
+            const sections = document.querySelectorAll('main section[id]');
+            const links = document.querySelectorAll('.eco-sidebar__nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const rect = section.getBoundingClientRect();
+                if (rect.top <= 150 && rect.bottom >= 150) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            links.forEach(link => {
+                link.classList.remove('eco-sidebar__nav-link--active');
+                if (link.getAttribute('href') === '#' + current) {
+                    link.classList.add('eco-sidebar__nav-link--active');
+                }
+            });
+        }
+
+        // Smooth scroll for sidebar links
+        document.querySelectorAll('.eco-sidebar__nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const target = document.getElementById(targetId);
+                if (target) {
+                    const offset = 100;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                    
+                    // Close sidebar on mobile after click
+                    if (window.innerWidth <= 1024) {
+                        const sidebar = document.getElementById('components-sidebar');
+                        if (sidebar) {
+                            sidebar.classList.remove('eco-sidebar--open');
+                        }
+                    }
+                }
+            });
+        });
+
+        // Update active link on scroll
+        window.addEventListener('scroll', updateActiveSidebarLink);
+        window.addEventListener('load', updateActiveSidebarLink);
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            if (window.innerWidth <= 1024) {
+                const sidebar = document.getElementById('components-sidebar');
+                const toggle = document.querySelector('.eco-sidebar__toggle');
+                if (sidebar && toggle && !sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                    sidebar.classList.remove('eco-sidebar--open');
+                }
+            }
+        });
+
+        // Copy code to clipboard
+        function copyCode(btn) {
+            const codePanel = btn.closest('.code-panel');
+            const code = codePanel.querySelector('code').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = 'Copied!';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = 'Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle) {
+                navLinks.classList.toggle('active');
+                toggle.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', navLinks.classList.contains('active'));
+            }
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !toggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.getElementById('main-nav');
+                const toggle = document.querySelector('.nav-toggle');
+                
+                if (navLinks && toggle) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

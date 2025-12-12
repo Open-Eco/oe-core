@@ -1,0 +1,58 @@
+.eco-notification {
+  position: relative;
+  display: inline-block;
+}
+
+.eco-notification__bell {
+  width: 24px;
+  height: 24px;
+  display: inline-block;
+  cursor: pointer;
+  color: var(--neutral-700);
+  transition: color var(--duration-normal) var(--easing-ease-out);
+}
+
+.eco-notification__bell:hover {
+  color: var(--brand-blue-600);
+}
+
+.eco-notification__badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 var(--space-1);
+  border-radius: var(--radius-full);
+  background: var(--error-500);
+  color: white;
+  font-size: 10px;
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-sans);
+  line-height: 1;
+  border: 2px solid white;
+  box-shadow: var(--shadow-sm);
+}
+
+.eco-notification__badge--dot {
+  width: 8px;
+  height: 8px;
+  min-width: 8px;
+  padding: 0;
+  top: -2px;
+  right: -2px;
+}
+
+.eco-notification__badge--number {
+  font-size: 11px;
+  padding: 0 var(--space-1);
+}
+
+.eco-notification__badge--max {
+  font-size: 10px;
+  padding: 0 4px;
+}
+

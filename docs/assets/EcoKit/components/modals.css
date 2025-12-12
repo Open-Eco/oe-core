@@ -1,0 +1,72 @@
+.eco-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-xl);
+  max-width: 90vw;
+  max-height: 90vh;
+  overflow: auto;
+  display: none;
+  z-index: 1000;
+}
+
+.eco-modal__header {
+  padding: var(--space-5);
+  border-bottom: 1px solid var(--neutral-200);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eco-modal__title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--neutral-900);
+  margin: 0;
+}
+
+.eco-modal__close {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-2);
+  color: var(--neutral-600);
+  transition: color var(--duration-fast) var(--easing-ease-out);
+  line-height: 1;
+}
+
+.eco-modal__close:hover {
+  color: var(--neutral-900);
+}
+
+.eco-modal__body {
+  padding: var(--space-5);
+}
+
+.eco-modal__footer {
+  padding: var(--space-5);
+  border-top: 1px solid var(--neutral-200);
+  display: flex;
+  gap: var(--space-3);
+  justify-content: flex-end;
+}
+
+.eco-modal--sm {
+  width: 400px;
+}
+
+.eco-modal--md {
+  width: 600px;
+}
+
+.eco-modal--lg {
+  width: 800px;
+}
+
+.eco-modal--xl {
+  width: 1000px;
+}
+

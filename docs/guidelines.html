@@ -4,16 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Guidelines - EcoKit</title>
+    <link rel="icon" type="image/png" href="assets/ecokit.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/EcoKit/ecokit.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">EcoKit</a>
-            <ul class="nav-links">
+            <a href="index.html" class="logo">
+                <img src="assets/ecokit.png" alt="EcoKit" class="logo-icon" />
+                <span>EcoKit</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="main-nav">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="components.html">Components</a></li>
                 <li><a href="tokens.html">Design Tokens</a></li>
+                <li><a href="utilities.html">Utilities</a></li>
                 <li><a href="assets.html">Assets</a></li>
                 <li><a href="guidelines.html">Guidelines</a></li>
             </ul>
@@ -28,29 +39,40 @@
 
         <main>
             <section>
-                <h2>Getting Started</h2>
+                <h2>Design Guidelines</h2>
                 <p>EcoKit is the design system for the Open Climate Transparency Platform. Use these guidelines to ensure consistent implementation across all applications.</p>
+                
+                <div class="link-grid" style="margin-top: 2rem;">
+                    <a href="guidelines/color.md" class="link-card">
+                        <h3>Color</h3>
+                        <p>Brand colors, neutrals, contrast requirements, dark mode</p>
+                    </a>
+                    <a href="guidelines/typography.md" class="link-card">
+                        <h3>Typography</h3>
+                        <p>Font families, sizes, weights, hierarchy</p>
+                    </a>
+                    <a href="guidelines/spacing.md" class="link-card">
+                        <h3>Spacing</h3>
+                        <p>Spacing scale, usage patterns, vertical rhythm</p>
+                    </a>
+                    <a href="guidelines/motion.md" class="link-card">
+                        <h3>Motion</h3>
+                        <p>Duration, easing, animations, accessibility</p>
+                    </a>
+                    <a href="guidelines/layout.md" class="link-card">
+                        <h3>Layout</h3>
+                        <p>Grid system, responsive breakpoints, containers</p>
+                    </a>
+                    <a href="guidelines/accessibility.md" class="link-card">
+                        <h3>Accessibility</h3>
+                        <p>WCAG compliance, keyboard navigation, screen readers</p>
+                    </a>
+                </div>
             </section>
 
             <section>
-                <h2>Accessibility</h2>
-                <p>All components follow WCAG 2.1 AA guidelines. Ensure proper:</p>
-                <ul>
-                    <li>Color contrast ratios</li>
-                    <li>Keyboard navigation</li>
-                    <li>Screen reader support</li>
-                    <li>Focus indicators</li>
-                </ul>
-            </section>
-
-            <section>
-                <h2>Best Practices</h2>
-                <ul>
-                    <li>Use design tokens for colors, spacing, and typography</li>
-                    <li>Follow component API patterns consistently</li>
-                    <li>Test components across different devices and browsers</li>
-                    <li>Maintain semantic HTML structure</li>
-                </ul>
+                <h2>Integration</h2>
+                <p>See <a href="INTEGRATION.md">INTEGRATION.md</a> for how to import and use EcoKit in your project.</p>
             </section>
         </main>
 
@@ -58,6 +80,48 @@
             <p><a href="index.html">← Back to Home</a></p>
         </footer>
     </div>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle) {
+                navLinks.classList.toggle('active');
+                toggle.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', navLinks.classList.contains('active'));
+            }
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !toggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.getElementById('main-nav');
+                const toggle = document.querySelector('.nav-toggle');
+                
+                if (navLinks && toggle) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
 

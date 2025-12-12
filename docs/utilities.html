@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utilities - EcoKit</title>
+    <link rel="icon" type="image/png" href="assets/ecokit.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/EcoKit/ecokit.css">
+    <script src="assets/EcoKit/utilities/click-off.js"></script>
+    <script src="assets/EcoKit/utilities/popper.js"></script>
+    <script src="assets/EcoKit/utilities/media-query.js"></script>
+    <script src="assets/EcoKit/utilities/modal.js"></script>
+    <script src="assets/EcoKit/utilities/resize.js"></script>
+    <script src="assets/EcoKit/utilities/collapser.js"></script>
+    <style>
+        .utility-section {
+            margin-bottom: var(--space-12);
+        }
+        .utility-card {
+            background: white;
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-md);
+            padding: var(--space-6);
+            margin-top: var(--space-4);
+        }
+        .utility-card h3 {
+            margin-top: 0;
+            margin-bottom: var(--space-2);
+            color: var(--brand-blue-600);
+        }
+        .utility-card h4 {
+            margin-top: var(--space-4);
+            margin-bottom: var(--space-2);
+            font-size: var(--text-base);
+            font-weight: var(--font-weight-semibold);
+        }
+        .code-example {
+            background: var(--neutral-900);
+            color: var(--neutral-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            overflow-x: auto;
+            margin-top: var(--space-4);
+        }
+        .code-example code {
+            background: transparent;
+            color: #a8d8ff;
+        }
+        .demo-container {
+            margin-top: var(--space-4);
+            padding: var(--space-4);
+            background: var(--neutral-50);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--neutral-200);
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="assets/ecokit.png" alt="EcoKit" class="logo-icon" />
+                <span>EcoKit</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="main-nav">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="components.html">Components</a></li>
+                <li><a href="tokens.html">Design Tokens</a></li>
+                <li><a href="utilities.html">Utilities</a></li>
+                <li><a href="assets.html">Assets</a></li>
+                <li><a href="guidelines.html">Guidelines</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Utilities</h1>
+            <p class="hero-subtitle">Reusable JavaScript utilities and CSS helpers</p>
+        </header>
+
+        <main>
+            <section class="utility-section">
+                <h2>JavaScript Utilities</h2>
+                <p class="section-intro">JavaScript utilities provide reusable functionality for common interactions and behaviors.</p>
+
+                <div class="utility-card">
+                    <h3>EcoResize</h3>
+                    <p>Provides resizable functionality for any element with drag-to-resize handles.</p>
+                    
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Horizontal and vertical resizing</li>
+                        <li>Configurable min/max sizes</li>
+                        <li>Customizable resize handle</li>
+                        <li>Callbacks for resize events</li>
+                    </ul>
+
+                    <h4>Usage</h4>
+                    <div class="code-example">
+<code>const resize = new EcoResize(element, {
+  direction: 'horizontal', // 'horizontal' or 'vertical'
+  minSize: 200,
+  maxSize: 500,
+  handleWidth: 4,
+  onResize: (size) => {
+    console.log('New size:', size);
+  },
+  onResizeEnd: (size) => {
+    console.log('Resize complete:', size);
+  }
+});</code>
+                    </div>
+
+                    <h4>Demo</h4>
+                    <div class="demo-container">
+                        <div id="resize-demo" style="width: 300px; height: 100px; background: var(--brand-blue-600); border-radius: var(--radius-md); position: relative;">
+                            <p style="color: white; padding: var(--space-4); margin: 0;">Resize me by dragging the right edge</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h3>EcoCollapser</h3>
+                    <p>Provides collapse/expand functionality for any element with state persistence.</p>
+                    
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Horizontal and vertical collapsing</li>
+                        <li>Optional localStorage persistence</li>
+                        <li>Smooth animations</li>
+                        <li>Custom callbacks</li>
+                        <li>Automatic trigger button binding</li>
+                    </ul>
+
+                    <h4>Usage</h4>
+                    <div class="code-example">
+<code>const collapser = new EcoCollapser(element, {
+  collapsedClass: 'eco-collapsed',
+  triggerSelector: '.collapse-btn',
+  direction: 'horizontal',
+  collapsedValue: '0',
+  expandedValue: null, // auto
+  persistState: true,
+  storageKey: 'sidebarCollapsed',
+  onCollapse: () => console.log('Collapsed'),
+  onExpand: () => console.log('Expanded')
+});</code>
+                    </div>
+
+                    <h4>Demo</h4>
+                    <div class="demo-container">
+                        <button id="collapse-demo-btn" class="eco-btn eco-btn--primary" style="margin-bottom: var(--space-4);">Toggle Collapse</button>
+                        <div id="collapse-demo" style="width: 200px; height: 100px; background: var(--brand-green-600); border-radius: var(--radius-md); transition: width var(--duration-normal) var(--easing-ease-out);">
+                            <p style="color: white; padding: var(--space-4); margin: 0;">Collapsible content</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h3>EcoModal</h3>
+                    <p>Manages modal dialogs with backdrop, keyboard, and focus handling.</p>
+                    
+                    <h4>Features</h4>
+                    <ul>
+                        <li>Backdrop overlay</li>
+                        <li>Keyboard navigation (ESC to close)</li>
+                        <li>Focus trapping</li>
+                        <li>Animation support</li>
+                    </ul>
+
+                    <h4>Usage</h4>
+                    <div class="code-example">
+<code>const modal = new EcoModal(modalElement);
+modal.open();
+modal.close();</code>
+                    </div>
+
+                    <h4>Demo</h4>
+                    <div class="demo-container">
+                        <button class="eco-btn eco-btn--primary" onclick="openModalDemo()">Open Modal</button>
+                        <div class="eco-modal" id="modal-demo">
+                            <div class="eco-modal__backdrop"></div>
+                            <div class="eco-modal__content">
+                                <div class="eco-modal__header">
+                                    <h3 class="eco-modal__title">Demo Modal</h3>
+                                    <button class="eco-modal__close" onclick="closeModalDemo()" aria-label="Close">×</button>
+                                </div>
+                                <div class="eco-modal__body">
+                                    <p>This is a modal dialog example.</p>
+                                </div>
+                                <div class="eco-modal__footer">
+                                    <button class="eco-btn eco-btn--outline" onclick="closeModalDemo()">Cancel</button>
+                                    <button class="eco-btn eco-btn--primary" onclick="closeModalDemo()">Confirm</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h3>Click Off</h3>
+                    <p>Standardized click-outside listener for closing dropdowns, menus, and popovers.</p>
+                    
+                    <h4>Usage</h4>
+                    <div class="code-example">
+<code>import { onClickOff } from './utilities/click-off.js';
+
+onClickOff(element, (event) => {
+  // Close the element
+  element.style.display = 'none';
+});</code>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h3>Popper</h3>
+                    <p>Positioning utility for tooltips, popovers, and dropdowns.</p>
+                    
+                    <h4>Usage</h4>
+                    <div class="code-example">
+<code>import { createPopper } from './utilities/popper.js';
+
+const popper = createPopper(triggerElement, popoverElement, {
+  placement: 'bottom',
+  offset: 8
+});</code>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h3>Media Query</h3>
+                    <p>JavaScript utility for responsive breakpoint detection.</p>
+                    
+                    <h4>Usage</h4>
+                    <div class="code-example">
+<code>import { useMediaQuery } from './utilities/media-query.js';
+
+const isMobile = useMediaQuery('(max-width: 768px)');
+
+if (isMobile) {
+  // Mobile-specific code
+}</code>
+                    </div>
+                </div>
+            </section>
+
+            <section class="utility-section">
+                <h2>CSS Utilities</h2>
+                <p class="section-intro">CSS utility classes provide common styling patterns and layout helpers.</p>
+
+                <div class="utility-card">
+                    <h3>Spacing Utilities</h3>
+                    <p>Utility classes for consistent spacing using design tokens.</p>
+                    
+                    <h4>Available Classes</h4>
+                    <div class="code-example">
+<code>/* Margin */
+.m-1, .m-2, .m-3, .m-4, .m-5, .m-6, .m-8, .m-10, .m-12, .m-16, .m-20, .m-24
+
+/* Padding */
+.p-1, .p-2, .p-3, .p-4, .p-5, .p-6, .p-8, .p-10, .p-12, .p-16, .p-20, .p-24
+
+/* Margin Top/Bottom/Left/Right */
+.mt-*, .mb-*, .ml-*, .mr-*
+.mx-* (horizontal), .my-* (vertical)
+
+/* Padding Top/Bottom/Left/Right */
+.pt-*, .pb-*, .pl-*, .pr-*
+.px-* (horizontal), .py-* (vertical)</code>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h3>Flexbox Utilities</h3>
+                    <p>Utility classes for flexbox layouts.</p>
+                    
+                    <h4>Available Classes</h4>
+                    <div class="code-example">
+<code>/* Display */
+.flex, .inline-flex
+
+/* Direction */
+.flex-row, .flex-row-reverse, .flex-col, .flex-col-reverse
+
+/* Wrap */
+.flex-wrap, .flex-nowrap, .flex-wrap-reverse
+
+/* Justify Content */
+.justify-start, .justify-end, .justify-center, .justify-between, .justify-around, .justify-evenly
+
+/* Align Items */
+.items-start, .items-end, .items-center, .items-baseline, .items-stretch
+
+/* Align Self */
+.self-start, .self-end, .self-center, .self-baseline, .self-stretch
+
+/* Gap */
+.gap-1, .gap-2, .gap-3, .gap-4, .gap-5, .gap-6, .gap-8</code>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h3>Grid Utilities</h3>
+                    <p>Utility classes for CSS Grid layouts.</p>
+                    
+                    <h4>Available Classes</h4>
+                    <div class="code-example">
+<code>/* Display */
+.grid, .inline-grid
+
+/* Columns */
+.grid-cols-1, .grid-cols-2, .grid-cols-3, .grid-cols-4, .grid-cols-5, .grid-cols-6, .grid-cols-12
+
+/* Rows */
+.grid-rows-1, .grid-rows-2, .grid-rows-3, .grid-rows-4, .grid-rows-5, .grid-rows-6
+
+/* Gap */
+.gap-1, .gap-2, .gap-3, .gap-4, .gap-5, .gap-6, .gap-8</code>
+                    </div>
+                </div>
+
+                <div class="utility-card">
+                    <h3>Typography Utilities</h3>
+                    <p>Utility classes for text styling.</p>
+                    
+                    <h4>Available Classes</h4>
+                    <div class="code-example">
+<code>/* Font Size */
+.text-xs, .text-sm, .text-base, .text-lg, .text-xl, .text-2xl
+
+/* Font Weight */
+.font-regular, .font-medium, .font-semibold, .font-bold
+
+/* Text Align */
+.text-left, .text-center, .text-right, .text-justify
+
+/* Text Transform */
+.uppercase, .lowercase, .capitalize
+
+/* Line Height */
+.leading-tight, .leading-normal, .leading-relaxed, .leading-loose</code>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← Back to Home</a></p>
+        </footer>
+    </div>
+
+    <script>
+        // Initialize resize demo
+        document.addEventListener('DOMContentLoaded', () => {
+            const resizeDemo = document.getElementById('resize-demo');
+            if (resizeDemo && typeof EcoResize !== 'undefined') {
+                new EcoResize(resizeDemo, {
+                    direction: 'horizontal',
+                    minSize: 150,
+                    maxSize: 500,
+                    handleWidth: 4
+                });
+            }
+
+            // Initialize collapse demo
+            const collapseDemo = document.getElementById('collapse-demo');
+            const collapseBtn = document.getElementById('collapse-demo-btn');
+            if (collapseDemo && typeof EcoCollapser !== 'undefined') {
+                new EcoCollapser(collapseDemo, {
+                    collapsedClass: 'eco-collapsed',
+                    triggerSelector: '#collapse-demo-btn',
+                    direction: 'horizontal',
+                    collapsedValue: '0',
+                    expandedValue: '200px'
+                });
+            }
+        });
+
+        // Modal demo
+        let modalDemo = null;
+        function openModalDemo() {
+            const modalEl = document.getElementById('modal-demo');
+            if (!modalDemo && typeof EcoModal !== 'undefined') {
+                modalDemo = new EcoModal(modalEl);
+            }
+            if (modalDemo) {
+                modalDemo.open();
+            }
+        }
+        function closeModalDemo() {
+            if (modalDemo) {
+                modalDemo.close();
+            }
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle) {
+                navLinks.classList.toggle('active');
+                toggle.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', navLinks.classList.contains('active'));
+            }
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !toggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.getElementById('main-nav');
+                const toggle = document.querySelector('.nav-toggle');
+                
+                if (navLinks && toggle) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

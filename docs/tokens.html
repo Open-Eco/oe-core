@@ -4,16 +4,190 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Design Tokens - EcoKit</title>
+    <link rel="icon" type="image/png" href="assets/ecokit.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="assets/EcoKit/ecokit.css">
+    <style>
+        .token-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+            margin-top: var(--space-4);
+        }
+        .token-card {
+            background: var(--neutral-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--neutral-300);
+        }
+        .token-card h4 {
+            margin-top: 0;
+            margin-bottom: var(--space-2);
+            color: var(--brand-blue-600);
+            font-size: var(--text-sm);
+            font-weight: var(--font-weight-bold);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .color-swatch {
+            width: 100%;
+            height: 80px;
+            border-radius: var(--radius-md);
+            margin-bottom: var(--space-2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: var(--font-weight-bold);
+            font-size: var(--text-sm);
+        }
+        .color-swatch.light-text {
+            color: white;
+        }
+        .color-swatch.dark-text {
+            color: var(--neutral-900);
+        }
+        .token-value {
+            font-family: var(--font-mono);
+            font-size: var(--text-xs);
+            color: var(--neutral-600);
+            background: var(--neutral-100);
+            padding: var(--space-1) var(--space-2);
+            border-radius: var(--radius-sm);
+            display: inline-block;
+            margin-top: var(--space-1);
+        }
+        .spacing-visual {
+            display: flex;
+            align-items: center;
+            margin: var(--space-2) 0;
+        }
+        .spacing-bar {
+            height: 24px;
+            background: var(--brand-blue-600);
+            border-radius: var(--radius-sm);
+            margin-right: var(--space-3);
+        }
+        .radius-example {
+            width: 100px;
+            height: 100px;
+            background: var(--brand-blue-600);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: var(--text-sm);
+            font-weight: var(--font-weight-bold);
+            margin: var(--space-2) 0;
+        }
+        .shadow-example {
+            width: 100%;
+            height: 120px;
+            background: white;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: var(--space-2) 0;
+        }
+        .motion-demo {
+            width: 60px;
+            height: 60px;
+            background: var(--brand-blue-600);
+            border-radius: var(--radius-md);
+            transition: all var(--duration-normal) var(--easing-ease-out);
+            margin: var(--space-2) 0;
+        }
+        .motion-demo.playing {
+            transform: translateX(100px);
+        }
+        .motion-controls {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            margin-left: var(--space-2);
+            vertical-align: middle;
+        }
+        .motion-control-btn {
+            width: 24px;
+            height: 24px;
+            padding: 0;
+            background: var(--neutral-100);
+            border: 1px solid var(--neutral-300);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--duration-fast) var(--easing-ease-out);
+            color: var(--neutral-700);
+        }
+        .motion-control-btn:hover {
+            background: var(--neutral-200);
+            border-color: var(--neutral-400);
+            color: var(--brand-blue-600);
+        }
+        .motion-control-btn:active {
+            transform: scale(0.95);
+        }
+        .motion-control-btn svg {
+            width: 14px;
+            height: 14px;
+        }
+        .token-card h4 {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .z-index-list {
+            list-style: none;
+            padding: 0;
+        }
+        .z-index-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-2) var(--space-3);
+            margin: var(--space-1) 0;
+            background: var(--neutral-100);
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--brand-blue-600);
+        }
+        .code-example {
+            background: var(--neutral-900);
+            color: var(--neutral-100);
+            padding: var(--space-4);
+            border-radius: var(--radius-md);
+            font-family: var(--font-mono);
+            font-size: var(--text-sm);
+            overflow-x: auto;
+            margin-top: var(--space-4);
+        }
+        .section-intro {
+            color: var(--neutral-600);
+            margin-bottom: var(--space-4);
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <a href="index.html" class="logo">EcoKit</a>
-            <ul class="nav-links">
+            <a href="index.html" class="logo">
+                <img src="assets/ecokit.png" alt="EcoKit" class="logo-icon" />
+                <span>EcoKit</span>
+            </a>
+            <button class="nav-toggle" onclick="toggleMobileMenu()" aria-label="Toggle navigation" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links" id="main-nav">
                 <li><a href="index.html">Home</a></li>
                 <li><a href="components.html">Components</a></li>
                 <li><a href="tokens.html">Design Tokens</a></li>
+                <li><a href="utilities.html">Utilities</a></li>
                 <li><a href="assets.html">Assets</a></li>
                 <li><a href="guidelines.html">Guidelines</a></li>
             </ul>
@@ -23,28 +197,668 @@
     <div class="container">
         <header>
             <h1>Design Tokens</h1>
-            <p class="hero-subtitle">Colors, typography, spacing, and more</p>
+            <p class="hero-subtitle">Foundation values that define our design system</p>
         </header>
 
         <main>
             <section>
                 <h2>Colors</h2>
-                <p><em>To be defined</em></p>
+                <p class="section-intro">Color tokens define the visual identity and semantic meaning throughout the design system. Use brand colors for primary actions, neutrals for text and backgrounds, and feedback colors to communicate status.</p>
+                
+                <h3>Brand Colors</h3>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>Brand Blue</h4>
+                        <div class="color-swatch light-text" style="background: var(--brand-blue-600);">#1A6F8A</div>
+                        <code class="token-value">--brand-blue-600</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Primary brand color for actions and highlights</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Brand Green</h4>
+                        <div class="color-swatch light-text" style="background: var(--brand-green-600);">#138A4F</div>
+                        <code class="token-value">--brand-green-600</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Secondary brand color for sustainability themes</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Brand Gradient</h4>
+                        <div class="color-swatch light-text" style="background: var(--gradient-brand);">Gradient</div>
+                        <code class="token-value">--gradient-brand</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Linear gradient from blue to green</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-8);">Neutral Colors</h3>
+                <p class="section-intro">Neutral colors provide the foundation for text, backgrounds, and borders. The scale ranges from darkest (900) to lightest (100).</p>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>Neutral 900</h4>
+                        <div class="color-swatch light-text" style="background: var(--neutral-900);">#0F1A1C</div>
+                        <code class="token-value">--neutral-900</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Primary text color</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Neutral 700</h4>
+                        <div class="color-swatch light-text" style="background: var(--neutral-700);">#415355</div>
+                        <code class="token-value">--neutral-700</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Secondary text, headings</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Neutral 500</h4>
+                        <div class="color-swatch light-text" style="background: var(--neutral-500);">#7A8C8E</div>
+                        <code class="token-value">--neutral-500</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Placeholder text, disabled states</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Neutral 300</h4>
+                        <div class="color-swatch dark-text" style="background: var(--neutral-300); border: 1px solid var(--neutral-400);">#D5DFE1</div>
+                        <code class="token-value">--neutral-300</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Borders, dividers</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Neutral 100</h4>
+                        <div class="color-swatch dark-text" style="background: var(--neutral-100); border: 1px solid var(--neutral-300);">#F3F6F7</div>
+                        <code class="token-value">--neutral-100</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Backgrounds, subtle highlights</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-8);">Feedback Colors</h3>
+                <p class="section-intro">Feedback colors communicate status, success, warnings, and errors to users.</p>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>Success</h4>
+                        <div class="color-swatch light-text" style="background: var(--success-500);">#0F9D58</div>
+                        <code class="token-value">--success-500</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Success messages, positive actions</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Warning</h4>
+                        <div class="color-swatch dark-text" style="background: var(--warning-500);">#F4B400</div>
+                        <code class="token-value">--warning-500</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Warnings, caution states</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Error</h4>
+                        <div class="color-swatch light-text" style="background: var(--error-500);">#DB4437</div>
+                        <code class="token-value">--error-500</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Errors, destructive actions</p>
+                    </div>
+                </div>
+
+                <div class="code-example">
+/* Usage Example */
+.button-primary {
+  background: var(--brand-blue-600);
+  color: white;
+}
+
+.text-primary {
+  color: var(--neutral-900);
+}
+
+.alert-success {
+  background: var(--success-500);
+  color: white;
+}
+                </div>
             </section>
 
             <section>
                 <h2>Typography</h2>
-                <p><em>To be defined</em></p>
+                <p class="section-intro">Typography tokens define font families, sizes, weights, and line heights for consistent text styling across the design system.</p>
+                
+                <h3>Font Families</h3>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>Sans Serif</h4>
+                        <p style="font-family: var(--font-sans); font-size: var(--text-lg); margin: var(--space-2) 0;">The quick brown fox</p>
+                        <code class="token-value">--font-sans</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Inter, system-ui, sans-serif</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Monospace</h4>
+                        <p style="font-family: var(--font-mono); font-size: var(--text-lg); margin: var(--space-2) 0;">code.example()</p>
+                        <code class="token-value">--font-mono</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">IBM Plex Mono, monospace</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-8);">Font Sizes</h3>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>XS</h4>
+                        <p style="font-size: var(--text-xs); margin: var(--space-2) 0;">Extra Small Text</p>
+                        <code class="token-value">--text-xs</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">0.75rem (12px)</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>SM</h4>
+                        <p style="font-size: var(--text-sm); margin: var(--space-2) 0;">Small Text</p>
+                        <code class="token-value">--text-sm</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">0.875rem (14px)</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>MD</h4>
+                        <p style="font-size: var(--text-md); margin: var(--space-2) 0;">Medium Text</p>
+                        <code class="token-value">--text-md</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">1rem (16px)</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>LG</h4>
+                        <p style="font-size: var(--text-lg); margin: var(--space-2) 0;">Large Text</p>
+                        <code class="token-value">--text-lg</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">1.25rem (20px)</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>XL</h4>
+                        <p style="font-size: var(--text-xl); margin: var(--space-2) 0;">Extra Large Text</p>
+                        <code class="token-value">--text-xl</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">1.5rem (24px)</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>2XL</h4>
+                        <p style="font-size: var(--text-2xl); margin: var(--space-2) 0;">2X Large Text</p>
+                        <code class="token-value">--text-2xl</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">2rem (32px)</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-8);">Font Weights</h3>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>Regular</h4>
+                        <p style="font-weight: var(--font-weight-regular); margin: var(--space-2) 0;">Regular Weight</p>
+                        <code class="token-value">--font-weight-regular</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">400</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Medium</h4>
+                        <p style="font-weight: var(--font-weight-medium); margin: var(--space-2) 0;">Medium Weight</p>
+                        <code class="token-value">--font-weight-medium</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">500</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>Bold</h4>
+                        <p style="font-weight: var(--font-weight-bold); margin: var(--space-2) 0;">Bold Weight</p>
+                        <code class="token-value">--font-weight-bold</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">600</p>
+                    </div>
+                </div>
             </section>
 
             <section>
                 <h2>Spacing</h2>
-                <p><em>To be defined</em></p>
+                <p class="section-intro">Spacing tokens create consistent rhythm and hierarchy. The scale follows a 4px base unit, providing predictable spacing throughout the interface.</p>
+                <div style="max-width: 600px;">
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-1);"></div>
+                        <div>
+                            <strong>Space 1</strong> - <code class="token-value">--space-1</code>
+                            <span style="color: var(--neutral-600);"> (4px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-2);"></div>
+                        <div>
+                            <strong>Space 2</strong> - <code class="token-value">--space-2</code>
+                            <span style="color: var(--neutral-600);"> (8px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-3);"></div>
+                        <div>
+                            <strong>Space 3</strong> - <code class="token-value">--space-3</code>
+                            <span style="color: var(--neutral-600);"> (12px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-4);"></div>
+                        <div>
+                            <strong>Space 4</strong> - <code class="token-value">--space-4</code>
+                            <span style="color: var(--neutral-600);"> (16px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-5);"></div>
+                        <div>
+                            <strong>Space 5</strong> - <code class="token-value">--space-5</code>
+                            <span style="color: var(--neutral-600);"> (20px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-6);"></div>
+                        <div>
+                            <strong>Space 6</strong> - <code class="token-value">--space-6</code>
+                            <span style="color: var(--neutral-600);"> (24px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-8);"></div>
+                        <div>
+                            <strong>Space 8</strong> - <code class="token-value">--space-8</code>
+                            <span style="color: var(--neutral-600);"> (32px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-10);"></div>
+                        <div>
+                            <strong>Space 10</strong> - <code class="token-value">--space-10</code>
+                            <span style="color: var(--neutral-600);"> (40px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-12);"></div>
+                        <div>
+                            <strong>Space 12</strong> - <code class="token-value">--space-12</code>
+                            <span style="color: var(--neutral-600);"> (48px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-16);"></div>
+                        <div>
+                            <strong>Space 16</strong> - <code class="token-value">--space-16</code>
+                            <span style="color: var(--neutral-600);"> (64px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-20);"></div>
+                        <div>
+                            <strong>Space 20</strong> - <code class="token-value">--space-20</code>
+                            <span style="color: var(--neutral-600);"> (80px)</span>
+                        </div>
+                    </div>
+                    <div class="spacing-visual">
+                        <div class="spacing-bar" style="width: var(--space-24);"></div>
+                        <div>
+                            <strong>Space 24</strong> - <code class="token-value">--space-24</code>
+                            <span style="color: var(--neutral-600);"> (96px)</span>
+                        </div>
+                    </div>
+                </div>
             </section>
 
             <section>
-                <h2>Shadows</h2>
-                <p><em>To be defined</em></p>
+                <h2>Border Radius</h2>
+                <p class="section-intro">Radius tokens define the roundness of corners, creating visual consistency across components.</p>
+                <div style="display: flex; gap: var(--space-4); flex-wrap: wrap; margin-top: var(--space-4);">
+                    <div>
+                        <div class="radius-example" style="border-radius: var(--radius-none);">None</div>
+                        <code class="token-value">--radius-none</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-1);">0</p>
+                    </div>
+                    <div>
+                        <div class="radius-example" style="border-radius: var(--radius-sm);">SM</div>
+                        <code class="token-value">--radius-sm</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-1);">4px</p>
+                    </div>
+                    <div>
+                        <div class="radius-example" style="border-radius: var(--radius-md);">MD</div>
+                        <code class="token-value">--radius-md</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-1);">8px</p>
+                    </div>
+                    <div>
+                        <div class="radius-example" style="border-radius: var(--radius-lg);">LG</div>
+                        <code class="token-value">--radius-lg</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-1);">12px</p>
+                    </div>
+                    <div>
+                        <div class="radius-example" style="border-radius: var(--radius-xl);">XL</div>
+                        <code class="token-value">--radius-xl</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-1);">16px</p>
+                    </div>
+                    <div>
+                        <div class="radius-example" style="border-radius: var(--radius-full);">Full</div>
+                        <code class="token-value">--radius-full</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-1);">9999px</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Shadows & Elevation</h2>
+                <p class="section-intro">Shadow and elevation tokens create depth and hierarchy, helping users understand the relationship between interface elements.</p>
+                
+                <h3>Shadows</h3>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>Small</h4>
+                        <div class="shadow-example" style="box-shadow: var(--shadow-sm);">
+                            <span style="color: var(--neutral-700);">Shadow SM</span>
+                        </div>
+                        <code class="token-value">--shadow-sm</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Medium</h4>
+                        <div class="shadow-example" style="box-shadow: var(--shadow-md);">
+                            <span style="color: var(--neutral-700);">Shadow MD</span>
+                        </div>
+                        <code class="token-value">--shadow-md</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Large</h4>
+                        <div class="shadow-example" style="box-shadow: var(--shadow-lg);">
+                            <span style="color: var(--neutral-700);">Shadow LG</span>
+                        </div>
+                        <code class="token-value">--shadow-lg</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Extra Large</h4>
+                        <div class="shadow-example" style="box-shadow: var(--shadow-xl);">
+                            <span style="color: var(--neutral-700);">Shadow XL</span>
+                        </div>
+                        <code class="token-value">--shadow-xl</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Inner</h4>
+                        <div class="shadow-example" style="box-shadow: var(--shadow-inner);">
+                            <span style="color: var(--neutral-700);">Shadow Inner</span>
+                        </div>
+                        <code class="token-value">--shadow-inner</code>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-8);">Elevation</h3>
+                <p class="section-intro">Elevation tokens provide a systematic approach to layering interface elements.</p>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>Elevation 0</h4>
+                        <div class="shadow-example" style="box-shadow: var(--elevation-0);">
+                            <span style="color: var(--neutral-700);">No Shadow</span>
+                        </div>
+                        <code class="token-value">--elevation-0</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Elevation 1</h4>
+                        <div class="shadow-example" style="box-shadow: var(--elevation-1);">
+                            <span style="color: var(--neutral-700);">Level 1</span>
+                        </div>
+                        <code class="token-value">--elevation-1</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Elevation 2</h4>
+                        <div class="shadow-example" style="box-shadow: var(--elevation-2);">
+                            <span style="color: var(--neutral-700);">Level 2</span>
+                        </div>
+                        <code class="token-value">--elevation-2</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Elevation 3</h4>
+                        <div class="shadow-example" style="box-shadow: var(--elevation-3);">
+                            <span style="color: var(--neutral-700);">Level 3</span>
+                        </div>
+                        <code class="token-value">--elevation-3</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Elevation 4</h4>
+                        <div class="shadow-example" style="box-shadow: var(--elevation-4);">
+                            <span style="color: var(--neutral-700);">Level 4</span>
+                        </div>
+                        <code class="token-value">--elevation-4</code>
+                    </div>
+                    <div class="token-card">
+                        <h4>Elevation 5</h4>
+                        <div class="shadow-example" style="box-shadow: var(--elevation-5);">
+                            <span style="color: var(--neutral-700);">Level 5</span>
+                        </div>
+                        <code class="token-value">--elevation-5</code>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Motion</h2>
+                <p class="section-intro">Motion tokens define timing and easing functions for animations and transitions, creating smooth and consistent interactions.</p>
+                
+                <h3>Duration</h3>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>
+                            Fast
+                            <span class="motion-controls">
+                                <button class="motion-control-btn" onclick="playMotion(this, 'fast-duration')" aria-label="Play">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="repeatMotion(this, 'fast-duration')" aria-label="Repeat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 4v6h6M23 20v-6h-6"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="stopMotion(this, 'fast-duration')" aria-label="Stop">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                    </svg>
+                                </button>
+                            </span>
+                        </h4>
+                        <div class="motion-demo" id="fast-duration" style="transition-duration: var(--duration-fast);"></div>
+                        <code class="token-value">--duration-fast</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">150ms - Quick interactions</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>
+                            Normal
+                            <span class="motion-controls">
+                                <button class="motion-control-btn" onclick="playMotion(this, 'normal-duration')" aria-label="Play">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="repeatMotion(this, 'normal-duration')" aria-label="Repeat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 4v6h6M23 20v-6h-6"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="stopMotion(this, 'normal-duration')" aria-label="Stop">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                    </svg>
+                                </button>
+                            </span>
+                        </h4>
+                        <div class="motion-demo" id="normal-duration" style="transition-duration: var(--duration-normal);"></div>
+                        <code class="token-value">--duration-normal</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">250ms - Standard transitions</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>
+                            Slow
+                            <span class="motion-controls">
+                                <button class="motion-control-btn" onclick="playMotion(this, 'slow-duration')" aria-label="Play">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="repeatMotion(this, 'slow-duration')" aria-label="Repeat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 4v6h6M23 20v-6h-6"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="stopMotion(this, 'slow-duration')" aria-label="Stop">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                    </svg>
+                                </button>
+                            </span>
+                        </h4>
+                        <div class="motion-demo" id="slow-duration" style="transition-duration: var(--duration-slow);"></div>
+                        <code class="token-value">--duration-slow</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">350ms - Deliberate animations</p>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-8);">Easing</h3>
+                <div class="token-grid">
+                    <div class="token-card">
+                        <h4>
+                            Linear
+                            <span class="motion-controls">
+                                <button class="motion-control-btn" onclick="playMotion(this, 'linear-easing')" aria-label="Play">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="repeatMotion(this, 'linear-easing')" aria-label="Repeat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 4v6h6M23 20v-6h-6"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="stopMotion(this, 'linear-easing')" aria-label="Stop">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                    </svg>
+                                </button>
+                            </span>
+                        </h4>
+                        <div class="motion-demo" id="linear-easing" style="transition-timing-function: var(--easing-linear);"></div>
+                        <code class="token-value">--easing-linear</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Constant speed</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>
+                            Ease In
+                            <span class="motion-controls">
+                                <button class="motion-control-btn" onclick="playMotion(this, 'ease-in-easing')" aria-label="Play">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="repeatMotion(this, 'ease-in-easing')" aria-label="Repeat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 4v6h6M23 20v-6h-6"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="stopMotion(this, 'ease-in-easing')" aria-label="Stop">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                    </svg>
+                                </button>
+                            </span>
+                        </h4>
+                        <div class="motion-demo" id="ease-in-easing" style="transition-timing-function: var(--easing-ease-in);"></div>
+                        <code class="token-value">--easing-ease-in</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Accelerates</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>
+                            Ease Out
+                            <span class="motion-controls">
+                                <button class="motion-control-btn" onclick="playMotion(this, 'ease-out-easing')" aria-label="Play">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="repeatMotion(this, 'ease-out-easing')" aria-label="Repeat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 4v6h6M23 20v-6h-6"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="stopMotion(this, 'ease-out-easing')" aria-label="Stop">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                    </svg>
+                                </button>
+                            </span>
+                        </h4>
+                        <div class="motion-demo" id="ease-out-easing" style="transition-timing-function: var(--easing-ease-out);"></div>
+                        <code class="token-value">--easing-ease-out</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Decelerates</p>
+                    </div>
+                    <div class="token-card">
+                        <h4>
+                            Ease In Out
+                            <span class="motion-controls">
+                                <button class="motion-control-btn" onclick="playMotion(this, 'ease-in-out-easing')" aria-label="Play">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8 5v14l11-7z"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="repeatMotion(this, 'ease-in-out-easing')" aria-label="Repeat">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M1 4v6h6M23 20v-6h-6"/>
+                                        <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+                                    </svg>
+                                </button>
+                                <button class="motion-control-btn" onclick="stopMotion(this, 'ease-in-out-easing')" aria-label="Stop">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <rect x="6" y="6" width="12" height="12"/>
+                                    </svg>
+                                </button>
+                            </span>
+                        </h4>
+                        <div class="motion-demo" id="ease-in-out-easing" style="transition-timing-function: var(--easing-ease-in-out);"></div>
+                        <code class="token-value">--easing-ease-in-out</code>
+                        <p style="font-size: var(--text-xs); color: var(--neutral-600); margin-top: var(--space-2);">Accelerates then decelerates</p>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Z-Index</h2>
+                <p class="section-intro">Z-index tokens define the stacking order of elements, ensuring proper layering of overlays, modals, and tooltips.</p>
+                <ul class="z-index-list">
+                    <li>
+                        <span><strong>Base</strong></span>
+                        <code class="token-value">--z-base</code>
+                        <span style="color: var(--neutral-600);">0</span>
+                    </li>
+                    <li>
+                        <span><strong>Dropdown</strong></span>
+                        <code class="token-value">--z-dropdown</code>
+                        <span style="color: var(--neutral-600);">1000</span>
+                    </li>
+                    <li>
+                        <span><strong>Sticky</strong></span>
+                        <code class="token-value">--z-sticky</code>
+                        <span style="color: var(--neutral-600);">1020</span>
+                    </li>
+                    <li>
+                        <span><strong>Fixed</strong></span>
+                        <code class="token-value">--z-fixed</code>
+                        <span style="color: var(--neutral-600);">1030</span>
+                    </li>
+                    <li>
+                        <span><strong>Modal Backdrop</strong></span>
+                        <code class="token-value">--z-modal-backdrop</code>
+                        <span style="color: var(--neutral-600);">1040</span>
+                    </li>
+                    <li>
+                        <span><strong>Modal</strong></span>
+                        <code class="token-value">--z-modal</code>
+                        <span style="color: var(--neutral-600);">1050</span>
+                    </li>
+                    <li>
+                        <span><strong>Popover</strong></span>
+                        <code class="token-value">--z-popover</code>
+                        <span style="color: var(--neutral-600);">1060</span>
+                    </li>
+                    <li>
+                        <span><strong>Tooltip</strong></span>
+                        <code class="token-value">--z-tooltip</code>
+                        <span style="color: var(--neutral-600);">1070</span>
+                    </li>
+                </ul>
+            </section>
+
+            <section>
+                <h2>Usage Guidelines</h2>
+                <div class="eco-card" style="margin-top: var(--space-4);">
+                    <h3>Best Practices</h3>
+                    <ul>
+                        <li><strong>Always use tokens:</strong> Never hardcode values. Use design tokens for all spacing, colors, typography, and other design properties.</li>
+                        <li><strong>Maintain consistency:</strong> Stick to the predefined scale. If you need a value that doesn't exist, consider if it should be added to the token system.</li>
+                        <li><strong>Semantic naming:</strong> Use tokens that match the semantic meaning (e.g., <code>--success-500</code> for success states, not just any green).</li>
+                        <li><strong>Responsive design:</strong> Tokens work across all screen sizes. Use them consistently for responsive layouts.</li>
+                        <li><strong>Accessibility:</strong> Color tokens are designed with contrast ratios in mind. Always test accessibility when combining colors.</li>
+                    </ul>
+                </div>
             </section>
         </main>
 
@@ -52,6 +866,128 @@
             <p><a href="index.html">← Back to Home</a></p>
         </footer>
     </div>
+
+    <script>
+        // Motion demo controls
+        const motionIntervals = {};
+        const motionLoops = {};
+
+        function playMotion(btn, demoId) {
+            const demo = document.getElementById(demoId);
+            if (!demo) return;
+
+            // Stop any existing animation
+            stopMotion(btn, demoId);
+
+            // Reset position
+            demo.classList.remove('playing');
+            void demo.offsetWidth; // Force reflow
+
+            // Play animation
+            demo.classList.add('playing');
+
+            // Get duration from the demo's transition
+            const computedStyle = window.getComputedStyle(demo);
+            const duration = parseFloat(computedStyle.transitionDuration) * 1000 || 250;
+
+            // Reset after animation completes
+            setTimeout(() => {
+                demo.classList.remove('playing');
+            }, duration);
+        }
+
+        function repeatMotion(btn, demoId) {
+            const demo = document.getElementById(demoId);
+            if (!demo) return;
+
+            // Stop any existing animation
+            stopMotion(btn, demoId);
+
+            // Get duration from the demo's transition
+            const computedStyle = window.getComputedStyle(demo);
+            const duration = parseFloat(computedStyle.transitionDuration) * 1000 || 250;
+
+            // Create loop function that waits for animation to complete
+            const loop = () => {
+                // Reset position
+                demo.classList.remove('playing');
+                void demo.offsetWidth; // Force reflow
+                
+                // Start animation
+                demo.classList.add('playing');
+                
+                // Schedule next iteration after animation completes
+                motionIntervals[demoId] = setTimeout(() => {
+                    if (motionLoops[demoId]) {
+                        loop();
+                    }
+                }, duration);
+            };
+
+            // Mark as looping
+            motionLoops[demoId] = true;
+            
+            // Start the loop
+            loop();
+        }
+
+        function stopMotion(btn, demoId) {
+            const demo = document.getElementById(demoId);
+            if (!demo) return;
+
+            // Clear any intervals/timeouts
+            if (motionIntervals[demoId]) {
+                clearTimeout(motionIntervals[demoId]);
+                delete motionIntervals[demoId];
+            }
+            // Stop looping flag
+            if (motionLoops[demoId]) {
+                motionLoops[demoId] = false;
+            }
+
+            // Reset position
+            demo.classList.remove('playing');
+        }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle) {
+                navLinks.classList.toggle('active');
+                toggle.classList.toggle('active');
+                toggle.setAttribute('aria-expanded', navLinks.classList.contains('active'));
+            }
+        }
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const navLinks = document.getElementById('main-nav');
+            const toggle = document.querySelector('.nav-toggle');
+            
+            if (navLinks && toggle && navLinks.classList.contains('active')) {
+                if (!navLinks.contains(e.target) && !toggle.contains(e.target)) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            }
+        });
+
+        // Close mobile menu when clicking a link
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', function() {
+                const navLinks = document.getElementById('main-nav');
+                const toggle = document.querySelector('.nav-toggle');
+                
+                if (navLinks && toggle) {
+                    navLinks.classList.remove('active');
+                    toggle.classList.remove('active');
+                    toggle.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
-

@@ -1,0 +1,45 @@
+.eco-input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--neutral-300);
+  background: var(--neutral-100);
+  color: var(--neutral-900);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  transition: all var(--duration-normal) var(--easing-ease-out);
+}
+
+.eco-input:focus {
+  outline: none;
+  border-color: var(--brand-blue-600);
+  box-shadow: 0 0 0 3px rgba(26, 111, 138, 0.1);
+}
+
+.eco-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background: var(--neutral-300);
+}
+
+.eco-input--error {
+  border-color: var(--error-500);
+}
+
+.eco-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(219, 68, 55, 0.1);
+}
+
+.eco-label {
+  display: block;
+  font-weight: var(--font-weight-medium);
+  font-size: var(--text-sm);
+  color: var(--neutral-900);
+  margin-bottom: var(--space-2);
+}
+
+.eco-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+

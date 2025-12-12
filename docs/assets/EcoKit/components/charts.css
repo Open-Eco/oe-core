@@ -1,0 +1,131 @@
+/* Chart Container */
+.eco-chart {
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-sans);
+}
+
+.eco-chart__container {
+  position: relative;
+  width: 100%;
+}
+
+.eco-chart__title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--neutral-900);
+  margin-bottom: var(--space-4);
+}
+
+.eco-chart__subtitle {
+  font-size: var(--text-sm);
+  color: var(--neutral-600);
+  margin-bottom: var(--space-4);
+}
+
+.eco-chart__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-4);
+  margin-top: var(--space-4);
+  justify-content: center;
+}
+
+.eco-chart__legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--text-sm);
+  color: var(--neutral-700);
+}
+
+.eco-chart__legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.eco-chart__tooltip {
+  background: white;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-3);
+  font-size: var(--text-sm);
+}
+
+.eco-chart__tooltip-label {
+  font-weight: var(--font-weight-medium);
+  color: var(--neutral-900);
+  margin-bottom: var(--space-2);
+}
+
+.eco-chart__tooltip-item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin: var(--space-1) 0;
+}
+
+.eco-chart__tooltip-color {
+  width: 10px;
+  height: 10px;
+  border-radius: var(--radius-sm);
+}
+
+.eco-chart__axis {
+  font-size: var(--text-xs);
+  color: var(--neutral-600);
+}
+
+.eco-chart__grid {
+  stroke: var(--neutral-200);
+  stroke-width: 1;
+}
+
+/* Chart Variants */
+.eco-chart--compact {
+  height: 200px;
+}
+
+.eco-chart--standard {
+  height: 300px;
+}
+
+.eco-chart--large {
+  height: 400px;
+}
+
+.eco-chart--tall {
+  height: 500px;
+}
+
+/* Chart Types - Color Themes */
+.eco-chart--line .recharts-line {
+  stroke-width: 2;
+}
+
+.eco-chart--bar .recharts-bar {
+  border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+}
+
+.eco-chart--area .recharts-area {
+  opacity: 0.6;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .eco-chart--standard {
+    height: 250px;
+  }
+  
+  .eco-chart--large {
+    height: 300px;
+  }
+  
+  .eco-chart--tall {
+    height: 400px;
+  }
+}
+

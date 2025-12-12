@@ -1,0 +1,73 @@
+.eco-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--neutral-200);
+  color: var(--neutral-700);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-sans);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.eco-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Sizes */
+.eco-avatar--sm {
+  width: 32px;
+  height: 32px;
+  font-size: var(--text-sm);
+}
+
+.eco-avatar--md {
+  width: 40px;
+  height: 40px;
+  font-size: var(--text-base);
+}
+
+.eco-avatar--lg {
+  width: 56px;
+  height: 56px;
+  font-size: var(--text-lg);
+}
+
+.eco-avatar--xl {
+  width: 72px;
+  height: 72px;
+  font-size: var(--text-xl);
+}
+
+/* Status indicator */
+.eco-avatar--status {
+  position: relative;
+}
+
+.eco-avatar--status::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  border: 2px solid white;
+  background: var(--success-500);
+}
+
+.eco-avatar--status-offline::after {
+  background: var(--neutral-400);
+}
+
+.eco-avatar--status-away::after {
+  background: var(--warning-500);
+}
+
+.eco-avatar--status-busy::after {
+  background: var(--error-500);
+}
+

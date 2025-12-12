@@ -1,0 +1,107 @@
+.eco-pagination {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.eco-pagination__item {
+  display: flex;
+}
+
+.eco-pagination__link,
+.eco-pagination__button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 var(--space-3);
+  background: white;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  color: var(--neutral-700);
+  text-decoration: none;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--duration-fast) var(--easing-ease-out);
+}
+
+.eco-pagination__link:hover,
+.eco-pagination__button:hover {
+  background: var(--neutral-50);
+  border-color: var(--neutral-400);
+  color: var(--neutral-900);
+}
+
+.eco-pagination__link--active,
+.eco-pagination__button--active {
+  background: var(--brand-blue-600);
+  border-color: var(--brand-blue-600);
+  color: white;
+}
+
+.eco-pagination__link--active:hover,
+.eco-pagination__button--active:hover {
+  background: var(--brand-blue-700);
+  border-color: var(--brand-blue-700);
+}
+
+.eco-pagination__link:focus,
+.eco-pagination__button:focus {
+  outline: 2px solid var(--brand-blue-600);
+  outline-offset: 2px;
+}
+
+.eco-pagination__link--disabled,
+.eco-pagination__button--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.eco-pagination__ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  padding: 0 var(--space-2);
+  color: var(--neutral-500);
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+}
+
+/* Sizes */
+.eco-pagination--sm .eco-pagination__link,
+.eco-pagination--sm .eco-pagination__button {
+  min-width: 32px;
+  height: 32px;
+  padding: 0 var(--space-2);
+  font-size: var(--text-sm);
+}
+
+.eco-pagination--sm .eco-pagination__ellipsis {
+  min-width: 32px;
+  height: 32px;
+  font-size: var(--text-sm);
+}
+
+.eco-pagination--lg .eco-pagination__link,
+.eco-pagination--lg .eco-pagination__button {
+  min-width: 48px;
+  height: 48px;
+  padding: 0 var(--space-4);
+  font-size: var(--text-lg);
+}
+
+.eco-pagination--lg .eco-pagination__ellipsis {
+  min-width: 48px;
+  height: 48px;
+  font-size: var(--text-lg);
+}
+

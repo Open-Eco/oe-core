@@ -1,0 +1,17 @@
+.eco-divider {
+  border: none;
+  border-top: 1px solid var(--neutral-200);
+  margin: var(--space-4) 0;
+  width: calc(100% - var(--space-8));
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.eco-divider--vertical {
+  border-top: none;
+  border-left: 1px solid var(--neutral-200);
+  height: 100%;
+  margin: 0 var(--space-4);
+  display: inline-block;
+  width: 1px;
+}

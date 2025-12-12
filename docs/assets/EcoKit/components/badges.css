@@ -1,0 +1,84 @@
+.eco-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-weight-medium);
+  font-family: var(--font-sans);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.eco-badge--primary {
+  background: var(--brand-blue-600);
+  color: white;
+}
+
+.eco-badge--success {
+  background: var(--success-500);
+  color: white;
+}
+
+.eco-badge--warning {
+  background: var(--warning-500);
+  color: var(--neutral-900);
+}
+
+.eco-badge--error {
+  background: var(--error-500);
+  color: white;
+}
+
+.eco-badge--neutral {
+  background: var(--neutral-300);
+  color: var(--neutral-900);
+}
+
+.eco-badge--outline {
+  background: transparent;
+  border: 1px solid var(--neutral-300);
+  color: var(--neutral-700);
+}
+
+/* Score Badges */
+.eco-badge--score {
+  background: var(--gradient-brand);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-md);
+}
+
+.eco-badge--grade {
+  background: var(--success-500);
+  color: white;
+  font-weight: var(--font-weight-bold);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--text-lg);
+  min-width: 48px;
+  text-align: center;
+}
+
+.eco-badge--grade-A {
+  background: var(--success-500);
+}
+
+.eco-badge--grade-B {
+  background: var(--warning-500);
+  color: var(--neutral-900);
+}
+
+.eco-badge--grade-C {
+  background: #FF9800;
+  color: white;
+}
+
+.eco-badge--grade-D,
+.eco-badge--grade-F {
+  background: var(--error-500);
+}
+
