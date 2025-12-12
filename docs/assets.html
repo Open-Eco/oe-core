@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assets - EcoKit</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">EcoKit</a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="components.html">Components</a></li>
+                <li><a href="tokens.html">Design Tokens</a></li>
+                <li><a href="assets.html">Assets</a></li>
+                <li><a href="guidelines.html">Guidelines</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <header>
+            <h1>Assets</h1>
+            <p class="hero-subtitle">Logos, icons, and brand assets</p>
+        </header>
+
+        <main>
+            <section>
+                <h2>Brand Assets</h2>
+                <p>All brand assets are located in the <code>EcoKit/</code> directory at the root of the repository.</p>
+                
+                <div class="asset-grid">
+                    <div class="asset-item">
+                        <h3>Logo</h3>
+                        <p>Primary logo file</p>
+                        <code>../EcoKit/logo.png</code>
+                    </div>
+                    <div class="asset-item">
+                        <h3>Wordmark</h3>
+                        <p>Text-based brand mark</p>
+                        <code>../EcoKit/wordmark.png</code>
+                    </div>
+                    <div class="asset-item">
+                        <h3>Favicon</h3>
+                        <p>Site favicon</p>
+                        <code>../EcoKit/favicon.png</code>
+                    </div>
+                </div>
+            </section>
+
+            <section>
+                <h2>Usage</h2>
+                <p>Reference assets from the EcoKit directory:</p>
+                <pre><code>// In web/ application
+import logo from '../../EcoKit/logo.png';
+
+// In docs/ site
+&lt;img src="../EcoKit/logo.png" alt="Logo" /&gt;</code></pre>
+            </section>
+        </main>
+
+        <footer>
+            <p><a href="index.html">← Back to Home</a></p>
+        </footer>
+    </div>
+</body>
+</html>
+

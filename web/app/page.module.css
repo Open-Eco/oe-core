@@ -1,0 +1,27 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.main {
+  text-align: center;
+  padding: 2rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--foreground);
+}
+
+.description {
+  font-size: 1.25rem;
+  color: var(--foreground);
+  opacity: 0.8;
+}
+
