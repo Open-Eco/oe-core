@@ -128,7 +128,7 @@ Supabase Row-Level Security (RLS) ensures users only access records tied to thei
 - DNS TXT verification (phase 2)
 - Optional document verification for large enterprises
 
-### 4.3 Data Ingestion Service
+### 4.3 Data Ingestion Service & AI Assistant
 
 **Supported Inputs:**
 
@@ -136,19 +136,29 @@ Supabase Row-Level Security (RLS) ensures users only access records tied to thei
 - Manual form entry
 - Supplier portal submissions
 - API ingestion (ERP/accounting/travel systems)
+- **AI Assistant Conversations** (NEW)
+
+**AI Assistant for Low-Barrier Entry:**
+
+- Conversational interface for data entry
+- Volunteers or company staff can talk to AI agent
+- AI extracts and structures data from conversations
+- Handles unstructured documentation and reports
+- Automatically indexes company sustainability documentation
+- Codifies and transmits data in platform-acceptable format
+- Minimal technical knowledge required
 
 **Pipeline:**
 
-1. File stored in Supabase Storage
-2. Edge Function parses & validates input
-3. Rows normalized into raw_activity_data
-4. Calculation jobs triggered asynchronously
+1. **Traditional Input**: File stored in Supabase Storage → Edge Function parses & validates → Rows normalized → Calculation jobs triggered
+2. **AI Assistant Input**: Conversation → AI processes → Structured data extracted → Validated → Stored → Calculation jobs triggered
 
 **Validation Includes:**
 
 - Units, schema, and category checking
 - Outlier detection (phase 2)
 - Required field verification
+- AI-assisted data quality checks
 
 ### 4.4 Emissions Calculation Engine
 
@@ -238,20 +248,37 @@ Central, transparent source for all emissions factors.
 
 Provide a way for suppliers to directly contribute verified data into customers' Scope 3 accounting.
 
-### 4.8 Public Data Layer
+### 4.8 Public Data Layer & Searchable Metrics Database
 
 **Deliverables:**
 
-- Public profile pages per company
-- Public emissions datasets
-- Annual snapshots posted to:
+- **Searchable Metrics Database**: Global, queryable database of all company emissions and sustainability metrics
+- **Public Company Profile Pages**: Open-source, self-hosted profile pages that companies can curate
+- **Public Emissions Datasets**: Annual snapshots posted to:
   - Cloudflare R2
   - GitHub
   - CSV/Parquet formats
 
+**Searchable Metrics Database:**
+
+- Full-text search across all published metrics
+- Filter by industry, region, scope, year
+- Compare companies and benchmarks
+- Export search results
+- API access for researchers and analysts
+
+**Company Profile Pages:**
+
+- Open-source template system
+- Companies can host their own sustainability documentation
+- Curate articles, reports, and sustainability stories
+- Minimal setup - fork template, customize, deploy
+- Integrated with main platform metrics
+- Companies maintain full control of their content
+
 **Why:**
 
-Transparent climate data must be open, downloadable, analyzable, remixable.
+Transparent climate data must be open, downloadable, analyzable, remixable, and searchable.
 
 ## 5. Data Model (High-Level Tables)
 
@@ -268,6 +295,14 @@ Transparent climate data must be open, downloadable, analyzable, remixable.
 - suppliers
 - supplier_activity_data
 - audit_log
+
+**New Tables (v1.0+):**
+
+- **search_index** - Full-text search index for metrics database
+- **company_profiles** - Links to company-hosted profile pages
+- **ai_conversations** - Store AI assistant conversations (optional, for improvement)
+- **profile_templates** - Template metadata for company profile system
+- **metrics_queries** - Track popular searches and queries
 
 Append-only tables ensure historical integrity.
 
@@ -344,9 +379,42 @@ Append-only tables ensure historical integrity.
 - Public discussions
 - Transparent financial reporting (Open Collective)
 
-## 10. Future Enhancements (v2 and Beyond)
+## 10. Core Features (v1.0+)
 
-- AI-assisted data cleaning and categorization
+### 10.1 Searchable Metrics Database
+
+- Full-text search across all published company metrics
+- Advanced filtering (industry, region, scope, year, size)
+- Comparison tools and benchmarking
+- Export capabilities (CSV, JSON, API)
+- Real-time updates as companies publish data
+
+### 10.2 Company Profile Pages (Open Source)
+
+- **Template System**: Ready-made, customizable templates for company profiles
+- **Self-Hosted**: Companies fork template, customize, and deploy
+- **Content Curation**: Companies can add:
+  - Sustainability articles and stories
+  - Annual reports and documentation
+  - Progress updates and milestones
+  - Custom branding and messaging
+- **Integration**: Profile pages link to main platform metrics
+- **Minimal Setup**: Fork → Customize → Deploy (GitHub Pages, Vercel, etc.)
+
+### 10.3 AI Assistant for Data Entry
+
+- **Conversational Interface**: Natural language data entry
+- **Document Processing**: AI reads and extracts data from:
+  - PDF reports
+  - Sustainability documentation
+  - Spreadsheets
+  - Unstructured text
+- **Low Barrier**: Volunteers or non-technical staff can use
+- **Automatic Structuring**: AI codifies data into platform format
+- **Validation**: AI-assisted quality checks before submission
+
+### 10.4 Future Enhancements (v2 and Beyond)
+
 - Automated utility and travel integrations
 - Supplier scoring
 - Industry-specific plugin marketplace

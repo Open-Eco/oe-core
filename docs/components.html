@@ -123,6 +123,7 @@
             </div>
             <nav>
                 <ul class="eco-sidebar__nav">
+                    <li class="eco-sidebar__nav-item"><a href="#grid" class="eco-sidebar__nav-link">Grid System</a></li>
                     <li class="eco-sidebar__nav-item"><a href="#buttons" class="eco-sidebar__nav-link">Buttons</a></li>
                     <li class="eco-sidebar__nav-item"><a href="#cards" class="eco-sidebar__nav-link">Cards</a></li>
                     <li class="eco-sidebar__nav-item"><a href="#inputs" class="eco-sidebar__nav-link">Inputs</a></li>
@@ -155,6 +156,113 @@
             </header>
             <section id="overview">
                 <p>Browse our component library. All components are built with accessibility and customization in mind.</p>
+            </section>
+
+            <section id="grid">
+                <h2>Grid System</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">A flexible 12-column grid system with responsive breakpoints.</p>
+                
+                <h3>Basic Grid</h3>
+                <p style="margin-bottom: 1rem;">Use the container, row, and column classes to create layouts:</p>
+                
+                <div class="eco-container component-clickable" style="background: var(--neutral-50); padding: var(--space-4); border-radius: var(--radius-md); margin-bottom: var(--space-6);" data-code='&lt;div class="eco-container"&gt;&#10;  &lt;div class="eco-row"&gt;&#10;    &lt;div class="eco-col-12"&gt;12 columns&lt;/div&gt;&#10;  &lt;/div&gt;&#10;  &lt;div class="eco-row"&gt;&#10;    &lt;div class="eco-col-6"&gt;6 columns&lt;/div&gt;&#10;    &lt;div class="eco-col-6"&gt;6 columns&lt;/div&gt;&#10;  &lt;/div&gt;&#10;&lt;/div&gt;'>
+                    <div class="eco-row">
+                        <div class="eco-col-12" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">12 columns</div>
+                    </div>
+                    <div class="eco-row">
+                        <div class="eco-col-6" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">6 columns</div>
+                        <div class="eco-col-6" style="background: var(--brand-green-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">6 columns</div>
+                    </div>
+                    <div class="eco-row">
+                        <div class="eco-col-4" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">4 columns</div>
+                        <div class="eco-col-4" style="background: var(--brand-green-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">4 columns</div>
+                        <div class="eco-col-4" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">4 columns</div>
+                    </div>
+                    <div class="eco-row">
+                        <div class="eco-col-3" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">3 columns</div>
+                        <div class="eco-col-3" style="background: var(--brand-green-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">3 columns</div>
+                        <div class="eco-col-3" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">3 columns</div>
+                        <div class="eco-col-3" style="background: var(--brand-green-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">3 columns</div>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="grid-basic-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="grid-basic-code"></code></pre>
+                </div>
+                
+                <h3 style="margin-top: 2rem;">Responsive Grid</h3>
+                <p style="margin-bottom: 1rem;">Use responsive column classes to change layout at different breakpoints:</p>
+                
+                <div class="eco-container component-clickable" style="background: var(--neutral-50); padding: var(--space-4); border-radius: var(--radius-md); margin-bottom: var(--space-6);" data-code='&lt;div class="eco-container"&gt;&#10;  &lt;div class="eco-row"&gt;&#10;    &lt;div class="eco-col-12 eco-col-md-6 eco-col-lg-4"&gt;Responsive&lt;/div&gt;&#10;    &lt;div class="eco-col-12 eco-col-md-6 eco-col-lg-4"&gt;Responsive&lt;/div&gt;&#10;    &lt;div class="eco-col-12 eco-col-md-12 eco-col-lg-4"&gt;Responsive&lt;/div&gt;&#10;  &lt;/div&gt;&#10;&lt;/div&gt;'>
+                    <div class="eco-row">
+                        <div class="eco-col-12 eco-col-md-6 eco-col-lg-4" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">12/6/4</div>
+                        <div class="eco-col-12 eco-col-md-6 eco-col-lg-4" style="background: var(--brand-green-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">12/6/4</div>
+                        <div class="eco-col-12 eco-col-md-12 eco-col-lg-4" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">12/12/4</div>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="grid-responsive-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="grid-responsive-code"></code></pre>
+                </div>
+                
+                <h3 style="margin-top: 2rem;">Offset Columns</h3>
+                <p style="margin-bottom: 1rem;">Use offset classes to push columns to the right:</p>
+                
+                <div class="eco-container component-clickable" style="background: var(--neutral-50); padding: var(--space-4); border-radius: var(--radius-md); margin-bottom: var(--space-6);" data-code='&lt;div class="eco-container"&gt;&#10;  &lt;div class="eco-row"&gt;&#10;    &lt;div class="eco-col-6 eco-offset-3"&gt;Centered&lt;/div&gt;&#10;  &lt;/div&gt;&#10;&lt;/div&gt;'>
+                    <div class="eco-row">
+                        <div class="eco-col-6 eco-offset-3" style="background: var(--brand-blue-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">6 columns, offset 3</div>
+                    </div>
+                    <div class="eco-row">
+                        <div class="eco-col-4 eco-offset-4" style="background: var(--brand-green-600); color: white; padding: var(--space-3); border-radius: var(--radius-sm); text-align: center; margin-bottom: var(--space-2);">4 columns, offset 4</div>
+                    </div>
+                </div>
+                
+                <div class="code-panel" id="grid-offset-code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="grid-offset-code"></code></pre>
+                </div>
+                
+                <h3 style="margin-top: 2rem;">Breakpoints</h3>
+                <div class="eco-card" style="margin-top: 1rem;">
+                    <table class="eco-table">
+                        <thead>
+                            <tr>
+                                <th>Breakpoint</th>
+                                <th>Min Width</th>
+                                <th>Class Prefix</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Small</td>
+                                <td>640px</td>
+                                <td><code>eco-col-sm-*</code></td>
+                            </tr>
+                            <tr>
+                                <td>Medium</td>
+                                <td>768px</td>
+                                <td><code>eco-col-md-*</code></td>
+                            </tr>
+                            <tr>
+                                <td>Large</td>
+                                <td>1024px</td>
+                                <td><code>eco-col-lg-*</code></td>
+                            </tr>
+                            <tr>
+                                <td>Extra Large</td>
+                                <td>1280px</td>
+                                <td><code>eco-col-xl-*</code></td>
+                            </tr>
+                            <tr>
+                                <td>2X Large</td>
+                                <td>1536px</td>
+                                <td><code>eco-col-2xl-*</code></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </section>
 
             <section id="buttons">

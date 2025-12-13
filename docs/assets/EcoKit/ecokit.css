@@ -33,6 +33,7 @@
 @import './components/breadcrumbs.css';
 @import './components/charts.css';
 @import './components/sidebar.css';
+@import './components/grid.css';
 
 /* Utilities */
 @import './utilities/spacing.css';

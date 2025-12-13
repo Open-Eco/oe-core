@@ -166,6 +166,54 @@ You can connect:
 
 All integrations use secure API keys and follow zero-trust principles.
 
+## 21. How does the AI Assistant work for data entry?
+
+**The AI Assistant provides a conversational interface for entering sustainability data.**
+
+- Talk to the AI agent in natural language
+- Upload documents (PDFs, spreadsheets) for automatic extraction
+- AI structures and validates data before submission
+- No technical knowledge required
+- Volunteers can help companies onboard through the AI
+
+**Example:** "We used 50,000 kWh of electricity last year" → AI structures as Scope 2 emissions data.
+
+## 22. What are Company Profile Pages?
+
+**Open-source, self-hosted profile pages where companies curate their sustainability story.**
+
+- Fork a ready-made template
+- Customize with your branding and content
+- Add articles, reports, and sustainability stories
+- Deploy to your own hosting (GitHub Pages, Vercel, etc.)
+- Link to your metrics on the main platform
+
+Companies maintain full control while integrating with the platform's metrics database.
+
+## 23. Can I search and compare company data?
+
+**Yes. The platform includes a searchable metrics database.**
+
+- Search across all published company metrics
+- Filter by industry, region, scope, year
+- Compare companies and benchmark performance
+- Export results for analysis
+- API access for researchers and developers
+
+All published data is open and queryable.
+
+## 24. What's the barrier to entry for companies?
+
+**Minimal. The platform is designed for accessibility.**
+
+- **Free forever** - No cost, no subscriptions
+- **AI Assistant** - Conversational data entry (no technical skills)
+- **Multiple entry points** - CSV, manual entry, AI conversation, API
+- **Template system** - Ready-made company profile templates
+- **Volunteer support** - Volunteers can help companies onboard
+
+Small businesses, non-profits, and companies new to sustainability reporting can all participate easily.
+
 ## 14. How do you prevent breaking changes to our systems?
 
 Through:
