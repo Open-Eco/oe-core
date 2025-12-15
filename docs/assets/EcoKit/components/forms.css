@@ -156,75 +156,73 @@
 .eco-select {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
+  gap: 0;
   font-family: var(--font-sans);
-  font-size: var(--text-base);
-  color: var(--neutral-900);
-}
-
-.eco-select__label {
-  font-size: var(--text-sm);
-  color: var(--neutral-600);
 }
 
 .eco-select__input {
+  width: 100%;
   appearance: none;
+  padding: var(--space-3) var(--space-4);
+  padding-right: var(--space-10);
   border-radius: var(--radius-md);
   border: 1px solid var(--neutral-300);
-  padding: var(--space-2_5) var(--space-3);
-  padding-right: var(--space-8);
-  font-family: inherit;
-  font-size: inherit;
-  color: inherit;
-  background-color: white;
-  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7L10 12L15 7' stroke='%239CA3AF' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background: var(--neutral-100);
+  background-image: url("data:image/svg+xml,%3Csvg width='14' height='14' viewBox='0 0 20 20' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M5 7L10 12L15 7' stroke='%237A8C8E' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
-  background-position: right var(--space-3) center;
+  background-position: right var(--space-4) center;
   background-size: 14px 14px;
+  color: var(--neutral-900);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
   cursor: pointer;
-  transition: border-color var(--duration-fast) var(--easing-ease-out),
-    box-shadow var(--duration-fast) var(--easing-ease-out);
+  transition: all var(--duration-normal) var(--easing-ease-out);
 }
 
 .eco-select__input:hover {
-  border-color: var(--brand-blue-400);
+  border-color: var(--brand-blue-600);
 }
 
 .eco-select__input:focus {
   outline: none;
   border-color: var(--brand-blue-600);
-  box-shadow: 0 0 0 1px var(--brand-blue-600);
+  box-shadow: 0 0 0 3px rgba(26, 111, 138, 0.1);
 }
 
 .eco-select__input:disabled {
-  background-color: var(--neutral-50);
-  color: var(--neutral-500);
+  opacity: 0.5;
   cursor: not-allowed;
+  background-color: var(--neutral-300);
 }
 
 /* Date / Calendar */
 
 .eco-date-input {
   width: 100%;
+  padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   border: 1px solid var(--neutral-300);
-  padding: var(--space-2_5) var(--space-3);
-  font-family: var(--font-sans);
-  font-size: var(--text-base);
+  background: var(--neutral-100);
   color: var(--neutral-900);
-  background-color: white;
-  transition: border-color var(--duration-fast) var(--easing-ease-out),
-    box-shadow var(--duration-fast) var(--easing-ease-out);
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  transition: all var(--duration-normal) var(--easing-ease-out);
 }
 
 .eco-date-input:hover {
-  border-color: var(--brand-blue-400);
+  border-color: var(--brand-blue-600);
 }
 
 .eco-date-input:focus {
   outline: none;
   border-color: var(--brand-blue-600);
-  box-shadow: 0 0 0 1px var(--brand-blue-600);
+  box-shadow: 0 0 0 3px rgba(26, 111, 138, 0.1);
+}
+
+.eco-date-input:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--neutral-300);
 }
 
 .eco-date-range {
@@ -236,12 +234,7 @@
 .eco-date-range__field {
   display: flex;
   flex-direction: column;
-  gap: var(--space-2);
-}
-
-.eco-date-range__label {
-  font-size: var(--text-sm);
-  color: var(--neutral-600);
+  gap: 0;
 }
 
 @media (max-width: 768px) {
