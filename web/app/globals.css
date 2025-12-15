@@ -293,6 +293,127 @@ body {
   color: #4b5563;
 }
 
+/* Docs hub */
+
+.eco-docs {
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  background: #f3f4f6;
+}
+
+.eco-docs__sidebar {
+  padding: 2rem 1.75rem;
+  background: #0f172a;
+  color: #e5e7eb;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.eco-docs__sidebar-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.eco-docs__title {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.eco-docs__subtitle {
+  font-size: 0.85rem;
+  color: #9ca3af;
+}
+
+.eco-docs__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.eco-docs__nav-link {
+  display: block;
+  font-size: 0.85rem;
+  color: #e5e7eb;
+  text-decoration: none;
+  padding: 0.4rem 0.6rem;
+  border-radius: 0.45rem;
+  transition: background-color 0.15s ease;
+}
+
+.eco-docs__nav-link:hover {
+  background-color: rgba(148, 163, 184, 0.25);
+}
+
+.eco-docs__nav-link--muted {
+  color: #9ca3af;
+}
+
+.eco-docs__nav-footer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.eco-docs__cta {
+  width: 100%;
+  justify-content: center;
+}
+
+.eco-docs__content {
+  padding: 2.5rem 2.5rem 3rem;
+  max-width: 960px;
+}
+
+.eco-docs__section {
+  margin-bottom: 2.5rem;
+}
+
+.eco-docs__section h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 0.9rem;
+}
+
+.eco-docs__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.eco-docs__stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.eco-docs__list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.95rem;
+  color: #4b5563;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+@media (max-width: 900px) {
+  .eco-docs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .eco-docs__sidebar {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .eco-docs__content {
+    padding: 1.5rem 1.25rem 2.5rem;
+  }
+}
+
 /* Public landing page */
 
 .eco-landing {

@@ -28,12 +28,9 @@ export default function Home() {
           <Link href="/auth/signup" className="eco-landing__nav-link">
             Create account
           </Link>
-          <a
-            href="https://open-eco.org/docs"
-            className="eco-landing__nav-link"
-          >
+          <Link href="/docs" className="eco-landing__nav-link">
             Docs
-          </a>
+          </Link>
           <a
             href="https://github.com/Open-Eco/oe-core"
             className="eco-landing__nav-link"

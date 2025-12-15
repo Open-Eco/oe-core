@@ -32,10 +32,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
           <Link href="/emissions" className="eco-app-shell__nav-link">
             Emissions
           </Link>
-          <Link
-            href="https://open-eco.org/docs"
-            className="eco-app-shell__nav-link"
-          >
+          <Link href="/docs" className="eco-app-shell__nav-link">
             Docs
           </Link>
         </nav>
