@@ -3,8 +3,8 @@ import "./globals.css";
 import { Providers } from "./providers";
 
 export const metadata: Metadata = {
-  title: "Open Climate Transparency Platform",
-  description: "An open, transparent, nonprofit climate impact platform",
+  title: "OpenEco, an Open Climate Transparency Platform",
+  description: "An open, transparent, nonprofit climate impact platform for all organizations",
   icons: {
     icon: "/favicon.png",
   },

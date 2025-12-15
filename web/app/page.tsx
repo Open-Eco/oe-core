@@ -50,9 +50,9 @@ export default function Home() {
               Climate transparency should not be paywalled.
             </h1>
             <p className="eco-landing__subtitle">
-              OpenEco is an open-source platform for organizations to measure,
-              publish, and analyze climate impact data—self-hosted on their own
-              infrastructure.
+              OpenEco is a FREE, completely open-source platform for organizations to measure,
+              publish, and analyze climate impact data, self-hosted on their own
+              infrastructure. The future of our planet is priceless.
             </p>
             <div className="eco-landing__actions">
               <Link
