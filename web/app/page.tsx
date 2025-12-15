@@ -1,6 +1,125 @@
-import { redirect } from "next/navigation"
+import Link from "next/link";
+import Image from "next/image";
 
 export default function Home() {
-  // Redirect to dashboard (or sign in if not authenticated)
-  redirect("/dashboard")
+  return (
+    <div className="eco-landing">
+      <header className="eco-landing__header">
+        <div className="eco-landing__brand">
+          <Image
+            src="/logo.png"
+            alt="OpenEco leaf logo"
+            width={26}
+            height={26}
+            className="eco-landing__brand-logo"
+          />
+          <Image
+            src="/wordmark.png"
+            alt="OpenEco"
+            width={120}
+            height={26}
+            className="eco-landing__brand-wordmark"
+          />
+        </div>
+        <nav className="eco-landing__nav">
+          <Link href="/auth/signin" className="eco-landing__nav-link">
+            Sign in
+          </Link>
+          <Link href="/auth/signup" className="eco-landing__nav-link">
+            Create account
+          </Link>
+          <a
+            href="https://open-eco.org/docs"
+            className="eco-landing__nav-link"
+          >
+            Docs
+          </a>
+          <a
+            href="https://github.com/Open-Eco/oe-core"
+            className="eco-landing__nav-link"
+          >
+            GitHub
+          </a>
+        </nav>
+      </header>
+
+      <main className="eco-landing__main">
+        <section className="eco-landing__hero">
+          <div className="eco-landing__hero-text">
+            <h1 className="eco-landing__title">
+              Climate transparency should not be paywalled.
+            </h1>
+            <p className="eco-landing__subtitle">
+              OpenEco is an open-source platform for organizations to measure,
+              publish, and analyze climate impact data—self-hosted on their own
+              infrastructure.
+            </p>
+            <div className="eco-landing__actions">
+              <Link
+                href="/auth/signup"
+                className="eco-button eco-button--primary"
+              >
+                Get started (self-hosted)
+              </Link>
+              <a
+                href="https://open-eco.org/docs/INSTALLATION.html"
+                className="eco-button eco-button--ghost"
+              >
+                Install guide
+              </a>
+            </div>
+            <p className="eco-landing__footnote">
+              MIT-licensed, OCI containers, Podman/Buildah and OKD friendly.
+            </p>
+          </div>
+
+          <div className="eco-landing__hero-panel">
+            <div className="eco-card eco-landing__hero-card">
+              <h2 className="eco-card__title">Designed for enterprises</h2>
+              <ul className="eco-landing__list">
+                <li>Self-hosted on your own Kubernetes/OKD clusters</li>
+                <li>One isolated PostgreSQL database per company</li>
+                <li>Transparent company and supplier emissions data</li>
+                <li>Searchable metrics and reporting</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <section className="eco-landing__section">
+          <h2 className="eco-landing__section-title">What you get</h2>
+          <div className="eco-landing__grid">
+            <article className="eco-card">
+              <h3 className="eco-card__title">Measurement</h3>
+              <p className="eco-card__meta">
+                Capture activity data, emissions factors, and calculated
+                emissions across scopes and locations.
+              </p>
+            </article>
+            <article className="eco-card">
+              <h3 className="eco-card__title">Publication</h3>
+              <p className="eco-card__meta">
+                Publish climate impact data to internal stakeholders or the
+                public using a consistent, comparable data model.
+              </p>
+            </article>
+            <article className="eco-card">
+              <h3 className="eco-card__title">Analysis</h3>
+              <p className="eco-card__meta">
+                Build dashboards and reports to understand trends, hotspots, and
+                opportunities to reduce emissions.
+              </p>
+            </article>
+            <article className="eco-card">
+              <h3 className="eco-card__title">Self-hosted by design</h3>
+              <p className="eco-card__meta">
+                Install on your own infra with OCI containers, Helm charts, and
+                a clear installation guide for SRE/infra teams.
+              </p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  );
 }
