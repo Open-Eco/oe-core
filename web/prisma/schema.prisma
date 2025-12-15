@@ -1,0 +1,328 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Authentication & Users (NextAuth.js compatible)
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?   // Hashed password for email/password auth
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  organizationUsers OrganizationUser[]
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Organizations & Multi-tenancy
+model Organization {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  domain      String?  // For domain verification
+  verified    Boolean  @default(false)
+  verifiedAt  DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  users       OrganizationUser[]
+  facilities  Facility[]
+  activityData RawActivityData[]
+  emissions   EmissionResult[]
+  reports     Report[]
+  suppliers   Supplier[]
+  auditLogs   AuditLog[]
+}
+
+model OrganizationUser {
+  id             String       @id @default(cuid())
+  userId         String
+  organizationId String
+  role           String       // ORG_ADMIN, ORG_MEMBER, SUPPLIER, READ_ONLY
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+  @@index([userId])
+}
+
+// Facilities
+model Facility {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String
+  address        String?
+  city           String?
+  country        String?
+  latitude       Float?
+  longitude      Float?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  activityData   RawActivityData[]
+
+  @@index([organizationId])
+}
+
+// Raw Activity Data
+model RawActivityData {
+  id             String   @id @default(cuid())
+  organizationId String
+  facilityId     String?
+  category       String   // Scope 1, 2, or Scope 3 category
+  subcategory    String?
+  activityType   String   // e.g., "electricity", "natural_gas", "business_travel"
+  quantity       Float
+  unit           String   // e.g., "kWh", "m3", "km"
+  periodStart    DateTime
+  periodEnd      DateTime
+  source         String?  // "manual", "csv_upload", "api", "ai_assistant"
+  metadata       Json?    // Additional flexible data
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  facility       Facility?    @relation(fields: [facilityId], references: [id], onDelete: SetNull)
+  emissions      EmissionResult[]
+
+  @@index([organizationId])
+  @@index([facilityId])
+  @@index([periodStart, periodEnd])
+}
+
+// Emission Factors & Datasets
+model DatasetVersion {
+  id          String   @id @default(cuid())
+  name        String   // e.g., "DEFRA 2024", "IPCC 2023"
+  version     String
+  description String?
+  publishedAt DateTime @default(now())
+  isActive    Boolean  @default(true)
+
+  emissionFactors EmissionFactor[]
+
+  @@unique([name, version])
+  @@index([isActive])
+}
+
+model EmissionFactor {
+  id              String   @id @default(cuid())
+  datasetVersionId String
+  category        String
+  subcategory     String?
+  activityType    String
+  factor          Float    // CO2e per unit
+  unit            String   // Unit of the factor
+  region          String?  // Country or region code
+  source          String?  // Source reference
+  metadata        Json?    // Additional data
+  createdAt       DateTime @default(now())
+
+  datasetVersion  DatasetVersion @relation(fields: [datasetVersionId], references: [id], onDelete: Cascade)
+
+  @@index([datasetVersionId])
+  @@index([category, activityType])
+  @@index([region])
+}
+
+// Emissions Results (Append-only)
+model EmissionResult {
+  id              String   @id @default(cuid())
+  organizationId String
+  activityDataId  String?
+  scope           String   // "1", "2", "3"
+  category        String
+  co2e            Float    // CO2 equivalent in tonnes
+  periodStart     DateTime
+  periodEnd       DateTime
+  methodology     String   // Methodology version used
+  datasetVersion  String   // Dataset version used
+  calculationVersion String? // Calculation engine version
+  createdAt       DateTime @default(now()) // Immutable timestamp
+
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  activityData   RawActivityData? @relation(fields: [activityDataId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([periodStart, periodEnd])
+  @@index([scope, category])
+  @@index([createdAt])
+}
+
+// Reports
+model Report {
+  id             String   @id @default(cuid())
+  organizationId String
+  title          String
+  type           String   // "annual_summary", "esg_report", "csrd", "tcfd"
+  periodStart    DateTime
+  periodEnd      DateTime
+  status         String   // "draft", "generating", "completed", "published"
+  fileUrl        String?  // URL to generated PDF/HTML
+  fileFormat     String?  // "pdf", "html", "json", "csv"
+  metadata       Json?    // Report configuration and settings
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  publishedAt    DateTime?
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+
+  @@index([organizationId])
+  @@index([status])
+  @@index([periodStart, periodEnd])
+}
+
+// Suppliers
+model Supplier {
+  id             String   @id @default(cuid())
+  organizationId String   // The customer organization
+  name           String
+  email          String?
+  verified       Boolean  @default(false)
+  verifiedAt     DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  activityData   SupplierActivityData[]
+
+  @@index([organizationId])
+}
+
+model SupplierActivityData {
+  id             String   @id @default(cuid())
+  supplierId     String
+  category       String
+  activityType   String
+  quantity       Float
+  unit           String
+  periodStart    DateTime
+  periodEnd      DateTime
+  metadata       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  supplier       Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade)
+
+  @@index([supplierId])
+  @@index([periodStart, periodEnd])
+}
+
+// Audit Log (Append-only)
+model AuditLog {
+  id             String   @id @default(cuid())
+  organizationId String?
+  userId         String?
+  action         String   // "create", "update", "delete", "publish"
+  resourceType   String   // "organization", "emission", "report", etc.
+  resourceId     String?
+  changes        Json?    // Before/after data
+  ipAddress      String?
+  userAgent      String?
+  createdAt      DateTime @default(now())
+
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([resourceType, resourceId])
+  @@index([createdAt])
+}
+
+// Search Index (for metrics database)
+model SearchIndex {
+  id             String   @id @default(cuid())
+  organizationId String
+  content        String   @db.Text // Full-text searchable content
+  metadata       Json?    // Structured data for filtering
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([content])
+}
+
+// Company Profiles (links to self-hosted profile pages)
+model CompanyProfile {
+  id             String   @id @default(cuid())
+  organizationId String   @unique
+  profileUrl     String   // URL to company's self-hosted profile
+  template       String?  // Template used
+  verified       Boolean  @default(false)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+}
+
+// AI Conversations (optional, for improvement)
+model AIConversation {
+  id             String   @id @default(cuid())
+  organizationId String?
+  userId         String?
+  messages       Json     // Conversation messages
+  extractedData  Json?    // Structured data extracted
+  status         String   // "active", "completed", "failed"
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([organizationId])
+  @@index([userId])
+  @@index([status])
+}
+

@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: openeco-web
+  labels:
+    app: openeco-web
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: openeco-web
+  template:
+    metadata:
+      labels:
+        app: openeco-web
+    spec:
+      containers:
+        - name: web
+          # Replace this with your registry image, e.g. quay.io/you/openeco-web:latest
+          image: openeco-web:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: openeco-secrets
+                  key: DATABASE_URL
+            - name: NEXTAUTH_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: openeco-config
+                  key: NEXTAUTH_URL
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: openeco-secrets
+                  key: NEXTAUTH_SECRET
+            - name: NEXT_PUBLIC_APP_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: openeco-config
+                  key: NEXT_PUBLIC_APP_URL
+            - name: NEXT_PUBLIC_APP_NAME
+              value: "Open Climate Transparency Platform"
+
+

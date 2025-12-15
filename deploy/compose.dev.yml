@@ -1,0 +1,37 @@
+version: "3.9"
+
+services:
+  db:
+    image: postgres:15
+    container_name: openeco-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: openeco
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  web:
+    # This image is built from web/Containerfile using Buildah/Podman/Docker
+    image: openeco-web:dev
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://postgres:password@db:5432/openeco?schema=public
+      NEXTAUTH_URL: http://localhost:3000
+      NEXTAUTH_SECRET: change-me-in-env
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+      NEXT_PUBLIC_APP_NAME: Open Climate Transparency Platform
+    ports:
+      - "3000:3000"
+    # For local dev you can mount source, but production should use a built image only
+    # volumes:
+    #   - ../web:/app
+
+volumes:
+  db_data:
+
+
