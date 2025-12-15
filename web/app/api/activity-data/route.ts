@@ -15,7 +15,7 @@ const createActivityDataSchema = z.object({
   periodStart: z.string().datetime(),
   periodEnd: z.string().datetime(),
   source: z.enum(["manual", "csv_upload", "api", "ai_assistant"]).optional(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 })
 
 // GET /api/activity-data - List activity data for user's organizations
@@ -153,7 +153,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: "Validation error", details: error.issues },
         { status: 400 }
       )
     }

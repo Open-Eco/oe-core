@@ -4,11 +4,11 @@ import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 
 // GET /api/organizations/[id] - Get organization details
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } }
-) {
+// Note: Next.js 16 route handlers may pass params as a Promise; keep typing flexible.
+export async function GET(request: NextRequest, context: any) {
   try {
+    const { id } = await context?.params
+
     const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
@@ -19,7 +19,7 @@ export async function GET(
     const orgUser = await prisma.organizationUser.findFirst({
       where: {
         userId: session.user.id,
-        organizationId: params.id,
+        organizationId: id,
       },
       include: {
         organization: true,

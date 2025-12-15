@@ -10,7 +10,7 @@ const createReportSchema = z.object({
   type: z.enum(["annual_summary", "esg_report", "csrd", "tcfd"]),
   periodStart: z.string().datetime(),
   periodEnd: z.string().datetime(),
-  metadata: z.record(z.any()).optional(),
+  metadata: z.record(z.string(), z.any()).optional(),
 })
 
 // GET /api/reports - List reports for user's organizations
@@ -106,7 +106,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "Validation error", details: error.errors },
+        { error: "Validation error", details: error.issues },
         { status: 400 }
       )
     }
