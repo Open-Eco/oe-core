@@ -51,6 +51,3 @@ _site/
 *.tmp
 *.temp
 
-# Documentation (temporarily ignored)
-*.md
-

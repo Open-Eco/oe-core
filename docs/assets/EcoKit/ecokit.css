@@ -34,6 +34,7 @@
 @import './components/charts.css';
 @import './components/sidebar.css';
 @import './components/grid.css';
+@import './components/datagrid.css';
 
 /* Utilities */
 @import './utilities/spacing.css';

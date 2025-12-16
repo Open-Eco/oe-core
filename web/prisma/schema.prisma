@@ -75,13 +75,14 @@ model Organization {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
-  users       OrganizationUser[]
-  facilities  Facility[]
-  activityData RawActivityData[]
-  emissions   EmissionResult[]
-  reports     Report[]
-  suppliers   Supplier[]
-  auditLogs   AuditLog[]
+  users            OrganizationUser[]
+  facilities       Facility[]
+  activityData     RawActivityData[]
+  emissions        EmissionResult[]
+  reports          Report[]
+  suppliers        Supplier[]
+  auditLogs        AuditLog[]
+  reportingPeriods ReportingPeriod[]
 }
 
 model OrganizationUser {
@@ -121,28 +122,130 @@ model Facility {
 
 // Raw Activity Data
 model RawActivityData {
-  id             String   @id @default(cuid())
-  organizationId String
-  facilityId     String?
-  category       String   // Scope 1, 2, or Scope 3 category
-  subcategory    String?
-  activityType   String   // e.g., "electricity", "natural_gas", "business_travel"
-  quantity       Float
-  unit           String   // e.g., "kWh", "m3", "km"
-  periodStart    DateTime
-  periodEnd      DateTime
-  source         String?  // "manual", "csv_upload", "api", "ai_assistant"
-  metadata       Json?    // Additional flexible data
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  organizationId     String
+  facilityId         String?
+  reportingPeriodId  String?  // Link to reporting period
+  category           String   // Scope 1, 2, or Scope 3 category
+  subcategory        String?
+  activityType       String   // e.g., "electricity", "natural_gas", "business_travel"
+  quantity           Float
+  unit               String   // e.g., "kWh", "m3", "km"
+  periodStart        DateTime
+  periodEnd          DateTime
+  source             String?  // "manual", "csv_upload", "api", "ai_assistant"
+  status             String   @default("draft") // "draft", "submitted", "approved"
+  submittedAt        DateTime?
+  submittedBy        String?
+  approvedAt         DateTime?
+  approvedBy         String?
+  metadata           Json?    // Additional flexible data
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
 
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  facility       Facility?    @relation(fields: [facilityId], references: [id], onDelete: SetNull)
-  emissions      EmissionResult[]
+  organization       Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  facility           Facility?         @relation(fields: [facilityId], references: [id], onDelete: SetNull)
+  reportingPeriod    ReportingPeriod?  @relation(fields: [reportingPeriodId], references: [id], onDelete: SetNull)
+  emissions          EmissionResult[]
+  evidence           EvidenceArtifact[]
 
   @@index([organizationId])
   @@index([facilityId])
+  @@index([reportingPeriodId])
+  @@index([status])
   @@index([periodStart, periodEnd])
+}
+
+// Reporting Periods (for period-based approval and locking)
+model ReportingPeriod {
+  id             String   @id @default(cuid())
+  organizationId String
+  name           String   // e.g., "Q1 2024", "FY 2024"
+  periodStart    DateTime
+  periodEnd      DateTime
+  status         String   @default("open") // "open", "submitted", "approved", "locked"
+  submittedAt    DateTime?
+  submittedBy    String?
+  approvedAt     DateTime?
+  approvedBy     String?
+  lockedAt       DateTime?
+  lockedBy       String?
+  lockReason     String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  activityData   RawActivityData[]
+  approvals      Approval[]
+
+  @@unique([organizationId, name])
+  @@index([organizationId])
+  @@index([status])
+  @@index([periodStart, periodEnd])
+}
+
+// Evidence Artifacts (attachments for activity data)
+model EvidenceArtifact {
+  id              String   @id @default(cuid())
+  activityDataId  String
+  fileName        String
+  fileHash        String   // SHA-256 hash for integrity
+  fileType        String   // "invoice", "utility_bill", "meter_reading", "receipt", "contract", "other"
+  fileSize        Int?     // Size in bytes
+  fileUrl         String?  // URL to stored file
+  mimeType        String?
+  uploadedBy      String
+  uploadedAt      DateTime @default(now())
+  metadata        Json?
+
+  activityData    RawActivityData @relation(fields: [activityDataId], references: [id], onDelete: Cascade)
+
+  @@index([activityDataId])
+  @@index([fileHash])
+}
+
+// Change Events (append-only audit trail - more detailed than AuditLog)
+model ChangeEvent {
+  id             String   @id @default(cuid())
+  organizationId String?
+  userId         String
+  userEmail      String?
+  action         String   // "create", "update", "delete", "submit", "approve", "reject", "lock", "unlock"
+  resourceType   String   // "activity_data", "reporting_period", "emission_result", etc.
+  resourceId     String
+  changes        Json?    // {"field": {"old": x, "new": y}}
+  reason         String?  // Reason for change (especially for approvals/rejections)
+  ipAddress      String?
+  userAgent      String?
+  timestamp      DateTime @default(now())
+
+  // Note: No UPDATE or DELETE should ever be performed on this table
+  @@index([organizationId])
+  @@index([userId])
+  @@index([resourceType, resourceId])
+  @@index([timestamp])
+  @@index([action])
+}
+
+// Approvals (track who approved what)
+model Approval {
+  id                String   @id @default(cuid())
+  reportingPeriodId String?
+  resourceType      String   // "activity_data", "reporting_period", "factor_override"
+  resourceId        String
+  action            String   // "submit", "approve", "reject", "request_changes", "lock"
+  performedBy       String   // User ID
+  performedAt       DateTime @default(now())
+  comment           String?
+  previousStatus    String?
+  newStatus         String?
+
+  reportingPeriod   ReportingPeriod? @relation(fields: [reportingPeriodId], references: [id], onDelete: SetNull)
+
+  @@index([reportingPeriodId])
+  @@index([resourceType, resourceId])
+  @@index([performedBy])
+  @@index([performedAt])
 }
 
 // Emission Factors & Datasets

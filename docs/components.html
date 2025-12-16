@@ -145,6 +145,7 @@
                     <li class="eco-sidebar__nav-item"><a href="#pagination" class="eco-sidebar__nav-link">Pagination</a></li>
                     <li class="eco-sidebar__nav-item"><a href="#breadcrumbs" class="eco-sidebar__nav-link">Breadcrumbs</a></li>
                     <li class="eco-sidebar__nav-item"><a href="#modals" class="eco-sidebar__nav-link">Modals</a></li>
+                    <li class="eco-sidebar__nav-item"><a href="#datagrid" class="eco-sidebar__nav-link">Data Grid</a></li>
                     <li class="eco-sidebar__nav-item"><a href="#charts" class="eco-sidebar__nav-link">Charts</a></li>
                     <li class="eco-sidebar__nav-item"><a href="#dividers" class="eco-sidebar__nav-link">Dividers</a></li>
                 </ul>
@@ -975,6 +976,323 @@
                 <div class="code-panel" id="breadcrumb-code-panel">
                     <button class="copy-btn" onclick="copyCode(this)">Copy</button>
                     <pre><code id="breadcrumb-code"></code></pre>
+                </div>
+            </section>
+
+            <section id="datagrid">
+                <h2>Data Grid</h2>
+                <p style="color: var(--text-light); margin-bottom: 1rem;">A powerful data grid component built on TanStack Table with sorting, filtering, pagination, and custom cell renderers. Styled to match EcoKit design tokens.</p>
+                
+                <h3 style="margin-top: var(--space-6); margin-bottom: var(--space-4);">Basic Data Grid</h3>
+                <div class="eco-card" style="margin-top: 1rem; padding: var(--space-6);">
+                    <div class="eco-datagrid__wrapper">
+                        <div class="eco-datagrid__container">
+                            <table class="eco-datagrid">
+                                <thead class="eco-datagrid__head">
+                                    <tr class="eco-datagrid__row eco-datagrid__row--header">
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header eco-datagrid__cell--sortable">
+                                            <div class="eco-datagrid__header-content">
+                                                Category
+                                                <span class="eco-datagrid__sort-indicator">↕</span>
+                                            </div>
+                                        </th>
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header eco-datagrid__cell--sortable">
+                                            <div class="eco-datagrid__header-content">
+                                                Activity Type
+                                                <span class="eco-datagrid__sort-indicator">↕</span>
+                                            </div>
+                                        </th>
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header eco-datagrid__cell--sortable">
+                                            <div class="eco-datagrid__header-content">
+                                                Quantity
+                                                <span class="eco-datagrid__sort-indicator">↓</span>
+                                            </div>
+                                        </th>
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="eco-datagrid__body">
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Electricity</td>
+                                        <td class="eco-datagrid__cell">Grid electricity</td>
+                                        <td class="eco-datagrid__cell">1,250 kWh</td>
+                                        <td class="eco-datagrid__cell"><span class="eco-badge eco-badge--success">Verified</span></td>
+                                    </tr>
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Fuel</td>
+                                        <td class="eco-datagrid__cell">Diesel</td>
+                                        <td class="eco-datagrid__cell">890 L</td>
+                                        <td class="eco-datagrid__cell"><span class="eco-badge eco-badge--warning">Pending</span></td>
+                                    </tr>
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Water</td>
+                                        <td class="eco-datagrid__cell">Municipal water</td>
+                                        <td class="eco-datagrid__cell">320 m³</td>
+                                        <td class="eco-datagrid__cell"><span class="eco-badge eco-badge--success">Verified</span></td>
+                                    </tr>
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Waste</td>
+                                        <td class="eco-datagrid__cell">Landfill</td>
+                                        <td class="eco-datagrid__cell">450 kg</td>
+                                        <td class="eco-datagrid__cell"><span class="eco-badge eco-badge--error">Review</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="eco-datagrid__pagination">
+                            <div class="eco-datagrid__pagination-info">
+                                <span>Showing 1 to 4 of 4 entries</span>
+                            </div>
+                            <div class="eco-datagrid__pagination-controls">
+                                <div class="eco-datagrid__pagination-buttons">
+                                    <button class="eco-button eco-button--ghost eco-datagrid__pagination-btn" disabled>««</button>
+                                    <button class="eco-button eco-button--ghost eco-datagrid__pagination-btn" disabled>«</button>
+                                    <span class="eco-datagrid__pagination-page">Page 1 of 1</span>
+                                    <button class="eco-button eco-button--ghost eco-datagrid__pagination-btn" disabled>»</button>
+                                    <button class="eco-button eco-button--ghost eco-datagrid__pagination-btn" disabled>»»</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-8); margin-bottom: var(--space-4);">Financial Data Grid with Deltas</h3>
+                <div class="eco-card" style="margin-top: 1rem; padding: var(--space-6);">
+                    <div class="eco-datagrid__wrapper">
+                        <div class="eco-datagrid__container">
+                            <table class="eco-datagrid eco-datagrid--striped">
+                                <thead class="eco-datagrid__head">
+                                    <tr class="eco-datagrid__row eco-datagrid__row--header">
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header">Category</th>
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header" style="text-align: right;">Spend</th>
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header" style="text-align: right;">Savings</th>
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header" style="text-align: right;">Net</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="eco-datagrid__body">
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Electricity</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--currency" style="text-align: right;">$45,000</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--delta eco-datagrid__cell--negative" style="text-align: right;">-$12,000</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--delta eco-datagrid__cell--positive" style="text-align: right;">+$33,000</td>
+                                    </tr>
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Fuel</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--currency" style="text-align: right;">$32,000</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--delta eco-datagrid__cell--negative" style="text-align: right;">-$8,500</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--delta eco-datagrid__cell--positive" style="text-align: right;">+$23,500</td>
+                                    </tr>
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Supply Chain</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--currency" style="text-align: right;">$125,000</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--delta eco-datagrid__cell--negative" style="text-align: right;">-$35,000</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--delta eco-datagrid__cell--positive" style="text-align: right;">+$90,000</td>
+                                    </tr>
+                                    <tr class="eco-datagrid__row" style="font-weight: 600; border-top: 2px solid var(--neutral-300);">
+                                        <td class="eco-datagrid__cell">Total</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--currency" style="text-align: right;">$202,000</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--delta eco-datagrid__cell--negative" style="text-align: right;">-$55,500</td>
+                                        <td class="eco-datagrid__cell eco-datagrid__cell--delta eco-datagrid__cell--positive" style="text-align: right;">+$146,500</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <h3 style="margin-top: var(--space-8); margin-bottom: var(--space-4);">Compact Data Grid</h3>
+                <div class="eco-card" style="margin-top: 1rem; padding: var(--space-6);">
+                    <div class="eco-datagrid__wrapper">
+                        <div class="eco-datagrid__container">
+                            <table class="eco-datagrid eco-datagrid--compact eco-datagrid--bordered">
+                                <thead class="eco-datagrid__head">
+                                    <tr class="eco-datagrid__row eco-datagrid__row--header">
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header">Supplier</th>
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header">Emissions</th>
+                                        <th class="eco-datagrid__cell eco-datagrid__cell--header">Progress</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="eco-datagrid__body">
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Acme Logistics</td>
+                                        <td class="eco-datagrid__cell">1,250 tCO₂e</td>
+                                        <td class="eco-datagrid__cell">
+                                            <div class="eco-datagrid__progress">
+                                                <div class="eco-datagrid__progress-bar" style="width: 75%;"></div>
+                                                <span class="eco-datagrid__progress-text">75%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">Global Materials</td>
+                                        <td class="eco-datagrid__cell">890 tCO₂e</td>
+                                        <td class="eco-datagrid__cell">
+                                            <div class="eco-datagrid__progress">
+                                                <div class="eco-datagrid__progress-bar" style="width: 45%;"></div>
+                                                <span class="eco-datagrid__progress-text">45%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr class="eco-datagrid__row">
+                                        <td class="eco-datagrid__cell">EcoShip Inc</td>
+                                        <td class="eco-datagrid__cell">320 tCO₂e</td>
+                                        <td class="eco-datagrid__cell">
+                                            <div class="eco-datagrid__progress">
+                                                <div class="eco-datagrid__progress-bar" style="width: 90%;"></div>
+                                                <span class="eco-datagrid__progress-text">90%</span>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="eco-card" style="margin-top: var(--space-8); padding: var(--space-6); background: var(--neutral-50);">
+                    <h3 style="margin-top: 0;">Data Grid Features</h3>
+                    <p>The EcoDataGrid React component provides a full-featured data grid built on TanStack Table.</p>
+                    
+                    <h4 style="margin-top: var(--space-6);">Props:</h4>
+                    <ul style="margin-top: var(--space-2);">
+                        <li><code>data</code> - Array of data objects</li>
+                        <li><code>columns</code> - TanStack Table column definitions</li>
+                        <li><code>enableSorting</code> - Enable column sorting (default: true)</li>
+                        <li><code>enableFiltering</code> - Enable global search filter</li>
+                        <li><code>enablePagination</code> - Enable pagination (default: true)</li>
+                        <li><code>enableEditing</code> - Enable inline cell editing</li>
+                        <li><code>pageSize</code> - Initial page size (default: 10)</li>
+                        <li><code>striped</code> - Alternating row colors</li>
+                        <li><code>bordered</code> - Cell borders</li>
+                        <li><code>compact</code> - Reduced padding</li>
+                        <li><code>stickyHeader</code> - Fixed header on scroll</li>
+                        <li><code>onRowClick</code> - Callback when row is clicked</li>
+                        <li><code>onCellEdit</code> - Callback when cell is edited (inline editing)</li>
+                    </ul>
+                    
+                    <h4 style="margin-top: var(--space-6);">Inline Editing:</h4>
+                    <p style="margin-top: var(--space-2);">Enable <code>enableEditing</code> and define editable columns using column meta:</p>
+                    <ul style="margin-top: var(--space-2);">
+                        <li><code>meta.editable</code> - Make column editable (default: true when enableEditing is on)</li>
+                        <li><code>meta.editInputType</code> - 'text' | 'number' | 'select' | 'date' | 'checkbox'</li>
+                        <li><code>meta.selectOptions</code> - Options for select type: <code>[{ value, label }]</code></li>
+                        <li><code>meta.validate</code> - Validation function: <code>(value) => true | "Error message"</code></li>
+                        <li><code>meta.min/max/step</code> - For number inputs</li>
+                    </ul>
+                    <p style="margin-top: var(--space-2); font-size: var(--text-sm); color: var(--neutral-500);">
+                        <strong>Keyboard:</strong> Enter to save, Escape to cancel, Tab to save and move to next cell.
+                    </p>
+                    
+                    <h4 style="margin-top: var(--space-6);">Cell Renderers:</h4>
+                    <ul style="margin-top: var(--space-2);">
+                        <li><code>CellRenderers.currency(value, currency?)</code> - Format as currency</li>
+                        <li><code>CellRenderers.delta(value)</code> - Show +/- with color</li>
+                        <li><code>CellRenderers.percentage(value, decimals?)</code> - Format as percentage</li>
+                        <li><code>CellRenderers.badge(value, variant)</code> - Status badge</li>
+                        <li><code>CellRenderers.date(value, format?)</code> - Format date</li>
+                        <li><code>CellRenderers.progress(value, max?)</code> - Progress bar</li>
+                    </ul>
+                    
+                    <div style="margin-top: var(--space-6); padding: var(--space-4); background: white; border-radius: var(--radius-md); border: 1px solid var(--neutral-300);">
+                        <h4 style="margin-top: 0; font-size: var(--text-sm);">React Usage:</h4>
+                        <pre style="margin-top: var(--space-2); padding: var(--space-3); background: var(--neutral-100); border-radius: var(--radius-sm); overflow-x: auto; font-size: var(--text-sm);"><code>import { EcoDataGrid, CellRenderers } from '@/components/EcoDataGrid';
+
+const columns = [
+  { accessorKey: 'category', header: 'Category' },
+  { accessorKey: 'spend', header: 'Spend',
+    cell: ({ row }) => CellRenderers.currency(row.original.spend)
+  },
+  { accessorKey: 'savings', header: 'Savings',
+    cell: ({ row }) => CellRenderers.delta(row.original.savings)
+  },
+];
+
+&lt;EcoDataGrid
+  data={data}
+  columns={columns}
+  enableFiltering
+  striped
+/&gt;</code></pre>
+                    </div>
+
+                    <div style="margin-top: var(--space-4); padding: var(--space-4); background: white; border-radius: var(--radius-md); border: 1px solid var(--neutral-300);">
+                        <h4 style="margin-top: 0; font-size: var(--text-sm);">Inline Editing Example:</h4>
+                        <pre style="margin-top: var(--space-2); padding: var(--space-3); background: var(--neutral-100); border-radius: var(--radius-sm); overflow-x: auto; font-size: var(--text-sm);"><code>const columns = [
+  { 
+    accessorKey: 'category', 
+    header: 'Category',
+    meta: {
+      editable: true,
+      editInputType: 'select',
+      selectOptions: [
+        { value: 'electricity', label: 'Electricity' },
+        { value: 'fuel', label: 'Fuel' },
+        { value: 'water', label: 'Water' },
+      ]
+    }
+  },
+  { 
+    accessorKey: 'quantity', 
+    header: 'Quantity',
+    meta: {
+      editable: true,
+      editInputType: 'number',
+      min: 0,
+      validate: (v) => v >= 0 || 'Must be positive'
+    }
+  },
+  { 
+    accessorKey: 'verified', 
+    header: 'Verified',
+    meta: {
+      editable: true,
+      editInputType: 'checkbox'
+    }
+  },
+];
+
+&lt;EcoDataGrid
+  data={data}
+  columns={columns}
+  enableEditing
+  onCellEdit={({ rowIndex, columnId, newValue }) => {
+    // Update your data source
+    setData(prev => {
+      const updated = [...prev];
+      updated[rowIndex][columnId] = newValue;
+      return updated;
+    });
+  }}
+/&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div class="code-panel">
+                    <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    <pre><code id="datagrid-code">&lt;div class="eco-datagrid__wrapper"&gt;
+  &lt;div class="eco-datagrid__container"&gt;
+    &lt;table class="eco-datagrid eco-datagrid--striped"&gt;
+      &lt;thead class="eco-datagrid__head"&gt;
+        &lt;tr class="eco-datagrid__row eco-datagrid__row--header"&gt;
+          &lt;th class="eco-datagrid__cell eco-datagrid__cell--header eco-datagrid__cell--sortable"&gt;
+            &lt;div class="eco-datagrid__header-content"&gt;
+              Column Name
+              &lt;span class="eco-datagrid__sort-indicator"&gt;↕&lt;/span&gt;
+            &lt;/div&gt;
+          &lt;/th&gt;
+        &lt;/tr&gt;
+      &lt;/thead&gt;
+      &lt;tbody class="eco-datagrid__body"&gt;
+        &lt;tr class="eco-datagrid__row"&gt;
+          &lt;td class="eco-datagrid__cell"&gt;Cell value&lt;/td&gt;
+        &lt;/tr&gt;
+      &lt;/tbody&gt;
+    &lt;/table&gt;
+  &lt;/div&gt;
+  &lt;div class="eco-datagrid__pagination"&gt;
+    &lt;!-- Pagination controls --&gt;
+  &lt;/div&gt;
+&lt;/div&gt;</code></pre>
                 </div>
             </section>
 

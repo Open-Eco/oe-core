@@ -15,6 +15,7 @@
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
     "@prisma/client": "^6.19.1",
+    "@tanstack/react-table": "^8.21.3",
     "bcryptjs": "^3.0.3",
     "next": "^16.0.10",
     "next-auth": "^4.24.13",

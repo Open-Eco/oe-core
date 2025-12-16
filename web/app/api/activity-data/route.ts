@@ -7,6 +7,7 @@ import { z } from "zod"
 const createActivityDataSchema = z.object({
   organizationId: z.string(),
   facilityId: z.string().optional(),
+  reportingPeriodId: z.string().optional(),
   category: z.string(),
   subcategory: z.string().optional(),
   activityType: z.string(),
@@ -30,7 +31,9 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const organizationId = searchParams.get("organizationId")
     const facilityId = searchParams.get("facilityId")
+    const reportingPeriodId = searchParams.get("reportingPeriodId")
     const category = searchParams.get("category")
+    const status = searchParams.get("status")
     const startDate = searchParams.get("startDate")
     const endDate = searchParams.get("endDate")
 
@@ -59,8 +62,16 @@ export async function GET(request: NextRequest) {
       where.facilityId = facilityId
     }
 
+    if (reportingPeriodId) {
+      where.reportingPeriodId = reportingPeriodId
+    }
+
     if (category) {
       where.category = category
+    }
+
+    if (status) {
+      where.status = status
     }
 
     if (startDate || endDate) {
@@ -77,6 +88,8 @@ export async function GET(request: NextRequest) {
       where,
       include: {
         facility: true,
+        reportingPeriod: true,
+        evidence: true,
       },
       orderBy: { createdAt: "desc" },
     })
@@ -132,11 +145,43 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    // If linking to a reporting period, verify it exists and is not locked
+    if (data.reportingPeriodId) {
+      const period = await prisma.reportingPeriod.findFirst({
+        where: {
+          id: data.reportingPeriodId,
+          organizationId: data.organizationId,
+        },
+      })
+
+      if (!period) {
+        return NextResponse.json(
+          { error: "Reporting period not found" },
+          { status: 404 }
+        )
+      }
+
+      if (period.status === 'locked') {
+        return NextResponse.json(
+          { error: "Cannot add activity to a locked reporting period" },
+          { status: 400 }
+        )
+      }
+
+      if (period.status === 'approved') {
+        return NextResponse.json(
+          { error: "Cannot add activity to an approved reporting period. Please reopen or create a new period." },
+          { status: 400 }
+        )
+      }
+    }
+
     // Create activity data entry
     const activityData = await prisma.rawActivityData.create({
       data: {
         organizationId: data.organizationId,
         facilityId: data.facilityId,
+        reportingPeriodId: data.reportingPeriodId,
         category: data.category,
         subcategory: data.subcategory,
         activityType: data.activityType,
@@ -145,7 +190,21 @@ export async function POST(request: NextRequest) {
         periodStart: new Date(data.periodStart),
         periodEnd: new Date(data.periodEnd),
         source: data.source || "manual",
+        status: 'draft',
         metadata: data.metadata,
+      },
+    })
+
+    // Log the change
+    await prisma.changeEvent.create({
+      data: {
+        organizationId: data.organizationId,
+        userId: session.user.id,
+        userEmail: session.user.email || undefined,
+        action: 'create',
+        resourceType: 'activity_data',
+        resourceId: activityData.id,
+        changes: { created: data },
       },
     })
 
@@ -165,4 +224,3 @@ export async function POST(request: NextRequest) {
     )
   }
 }
-

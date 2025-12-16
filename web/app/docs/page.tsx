@@ -48,6 +48,15 @@ export default function DocsPage() {
       </aside>
 
       <main className="eco-docs__content">
+        <div style={{ marginBottom: "2rem" }}>
+          <Link
+            href="/"
+            className="eco-button eco-button--ghost"
+            style={{ padding: "0.375rem 0.75rem", fontSize: "0.875rem" }}
+          >
+            ← Back to home
+          </Link>
+        </div>
         <section id="getting-started" className="eco-docs__section">
           <h2>Getting Started</h2>
           <div className="eco-docs__grid">

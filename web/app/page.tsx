@@ -22,14 +22,17 @@ export default function Home() {
           />
         </div>
         <nav className="eco-landing__nav">
+          <Link href="/demo" className="eco-landing__nav-link">
+            Demo
+          </Link>
+          <Link href="/docs" className="eco-landing__nav-link">
+            Docs
+          </Link>
           <Link href="/auth/signin" className="eco-landing__nav-link">
             Sign in
           </Link>
           <Link href="/auth/signup" className="eco-landing__nav-link">
             Create account
-          </Link>
-          <Link href="/docs" className="eco-landing__nav-link">
-            Docs
           </Link>
           <a
             href="https://github.com/Open-Eco/oe-core"
@@ -53,16 +56,16 @@ export default function Home() {
             </p>
             <div className="eco-landing__actions">
               <Link
-                href="/auth/signup"
+                href="/demo"
                 className="eco-button eco-button--primary"
               >
-                Get started (self-hosted)
+                Try the demo
               </Link>
               <a
                 href="https://open-eco.org/docs/INSTALLATION.html"
                 className="eco-button eco-button--ghost"
               >
-                Install guide
+                Get started (self-hosted)
               </a>
             </div>
             <p className="eco-landing__footnote">

@@ -20,17 +20,17 @@ export default function AppLayout({ children }: AppLayoutProps) {
           </div>
         </div>
         <nav className="eco-app-shell__nav">
-          <Link href="/dashboard" className="eco-app-shell__nav-link">
+          <Link href="/demo/dashboard" className="eco-app-shell__nav-link">
             Dashboard
           </Link>
-          <Link href="/organizations" className="eco-app-shell__nav-link">
-            Organizations
+          <Link href="/demo/activity" className="eco-app-shell__nav-link">
+            Activity Entry
           </Link>
-          <Link href="/reports" className="eco-app-shell__nav-link">
-            Reports
+          <Link href="/periods" className="eco-app-shell__nav-link">
+            Reporting Periods
           </Link>
-          <Link href="/emissions" className="eco-app-shell__nav-link">
-            Emissions
+          <Link href="/demo/organizations/new" className="eco-app-shell__nav-link">
+            Create Organization
           </Link>
           <Link href="/docs" className="eco-app-shell__nav-link">
             Docs
