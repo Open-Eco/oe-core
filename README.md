@@ -6,6 +6,44 @@
 
 ---
 
+## Our Commitment to Credibility
+
+OpenEco is built on the principle that **climate data must be trustworthy, verifiable, and reproducible**. We're not just building software — we're building infrastructure for accountability.
+
+<table>
+<tr>
+<td width="50%" valign="top">
+
+### Methodology & Standards
+
+✓ **GHG Protocol–aligned methodologies**  
+Full conformance with the GHG Protocol Corporate Standard for Scope 1, 2, and 3 accounting.
+
+✓ **Uses IPCC / DEFRA / EPA factors**  
+Built on authoritative, publicly available emission factor datasets — versioned, cited, and reproducible.
+
+</td>
+<td width="50%" valign="top">
+
+### Audit & Assurance
+
+✓ **Designed for third-party assurance**  
+Every calculation links inputs → factors → outputs with full provenance.
+
+✓ **Audit-ready by design**  
+Evidence attachments, approval workflows, locked periods, and immutable calculation records.
+
+✓ **Reproducible, transparent calculations**  
+Open algorithms. No black boxes. Anyone can verify.
+
+</td>
+</tr>
+</table>
+
+> *We believe the credibility of climate reporting depends on transparency of method, not proprietary systems.*
+
+---
+
 ## What is OpenEco?
 
 OpenEco is a free, open-source platform for measuring, tracking, and reporting greenhouse gas emissions. Companies download and self-host the platform, maintaining full control over their data while contributing to global climate transparency.
@@ -194,11 +232,12 @@ Visit [http://localhost:3000](http://localhost:3000) 🎉
 
 | Document | Description |
 |----------|-------------|
-| [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Technical architecture, deployment models, data model |
+| [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Technical architecture, engines, and deployment models |
+| [**SECURITY_AND_GOVERNANCE.md**](./SECURITY_AND_GOVERNANCE.md) | Security model, trust boundaries, data governance |
 | [**PLATFORM_FEATURES.md**](./PLATFORM_FEATURES.md) | Full feature list, requirements, and roadmap |
 | [**INSTALLATION.md**](./INSTALLATION.md) | Setup guide for dev, enterprise, and public deployment |
-| [**OPEN_SOURCE_PLAYBOOK.md**](./OPEN_SOURCE_PLAYBOOK.md) | Governance, auditability, factor management |
-| [**COMPETITIVE_ANALYSIS.md**](./COMPETITIVE_ANALYSIS.md) | Competitive landscape and UI patterns |
+| [**OPEN_SOURCE_PLAYBOOK.md**](./OPEN_SOURCE_PLAYBOOK.md) | Open source governance and community guidelines |
+| [**COMPETITIVE_ANALYSIS.md**](./COMPETITIVE_ANALYSIS.md) | Competitive landscape and product strategy |
 | [**FAQ.md**](./FAQ.md) | Frequently asked questions |
 | [**CONTRIBUTING.md**](./CONTRIBUTING.md) | How to contribute |
 
