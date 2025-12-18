@@ -6,6 +6,45 @@ OpenEco is an open-source, enterprise-grade climate transparency platform. This 
 
 ---
 
+## 0. Contributor Quickstart
+
+If you just want to get the app running locally as fast as possible:
+
+### Windows
+
+```powershell
+# 1) Clone the repo
+git clone https://github.com/Open-Eco/oe-core.git
+cd oe-core
+
+# 2) Run setup script (installs deps, sets up Postgres container/.env, runs Prisma)
+.\scripts	imeout.ps1
+
+# 3) Start the web app
+cd web
+npm run dev
+```
+
+### macOS / Linux
+
+```bash
+# 1) Clone the repo
+git clone https://github.com/Open-Eco/oe-core.git
+cd oe-core
+
+# 2) Run setup script (installs deps, sets up Postgres container/.env, runs Prisma)
+chmod +x scripts/setup.sh
+./scripts/setup.sh
+
+# 3) Start the web app
+cd web
+npm run dev
+```
+
+If you run into issues, see `INSTALLATION.md` for full details or open an issue.
+
+---
+
 ## 1. Ground Rules
 
 - Be respectful and collaborative.
@@ -90,7 +129,7 @@ When you open an issue, feel free to suggest a priority, but maintainers may adj
 
 ---
 
-## 4. Development Environment
+## 4. Development Environment (Details)
 
 See `INSTALLATION.md` for detailed setup instructions. In short:
 
