@@ -4,6 +4,23 @@ This guide covers all installation scenarios: local development, enterprise self
 
 ---
 
+## Target Environments (Officially Supported)
+
+OpenEco is designed to be deployed in the following environments. All of them use the **same OCI image** for the web application; only the runtime and infrastructure differ.
+
+| Environment | Recommended Pattern | Notes |
+|------------|---------------------|-------|
+| **Linux Server** | Podman/Docker + Compose (single host) | Primary, simplest path for pilots and production. See [Option A: Single Host](#option-a-single-host-podmandocker--compose). |
+| **Windows Server** | Run Linux containers via WSL2 or a small Linux VM | Windows Server hosts a Linux VM/WSL2 instance that runs the same Podman/Docker + Compose stack as Linux. IIS/NGINX on Windows can reverse proxy to the Linux VM if desired. |
+| **Kubernetes / OKD / OpenShift** | Native K8s/OKD deployment | Use the manifests in `deploy/okd/` with the same web image. See [Option B: Kubernetes / OKD / OpenShift](#option-b-kubernetes--okd--openshift). |
+
+**Key idea:**
+
+- **One application image**, many deployment options.
+- Enterprise customers can choose the runtime that best fits their infra (Linux server, Windows server with Linux containers, or OKD/OpenShift), without any changes to application code.
+
+---
+
 ## Quick Start (Local Development)
 
 ### Prerequisites
@@ -309,7 +326,7 @@ For each enterprise:
 
 2. **Add Custom Domain** (Optional)
    ```bash
-   echo "docs.open-eco.org" > docs/CNAME
+   echo "docs.open-eco.org" > docs/CREDENTIALS
    ```
 
 3. **Configure DNS**

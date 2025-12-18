@@ -350,7 +350,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ## License
 
-- **Code**: MIT or Apache-2.0
+- **Code**: GNU Affero General Public License v3.0 (AGPL-3.0-only)
 - **Data**: CC-BY or CC0
 
 ---
