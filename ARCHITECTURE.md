@@ -15,9 +15,10 @@ This document describes the technical architecture, deployment models, and distr
 7. [Calculation Engine](#calculation-engine)
 8. [Reporting Engine](#reporting-engine)
 9. [Forecasting & Analytics Engine](#forecasting--analytics-engine)
-10. [Cross-Instance Data Sharing](#cross-instance-data-sharing)
-11. [Release Strategy](#release-strategy)
-12. [Roadmap](#roadmap)
+10. [AI Assistant](#ai-assistant)
+11. [Cross-Instance Data Sharing](#cross-instance-data-sharing)
+12. [Release Strategy](#release-strategy)
+13. [Roadmap](#roadmap)
 
 ---
 
@@ -56,7 +57,8 @@ open-eco/
 │   ├── app/                       # Next.js App Router
 │   │   └── api/                   # API routes
 │   ├── components/                # React components
-│   │   └── reports/               # Report UI components
+│   │   ├── reports/               # Report UI components
+│   │   └── ai-assistant/          # AI Assistant UI
 │   ├── lib/                       # Core libraries
 │   │   ├── calculations/          # Calculation engine
 │   │   │   ├── algorithms/        # Algorithm templates
@@ -77,6 +79,11 @@ open-eco/
 │   │   │   ├── models/            # Statistical models
 │   │   │   ├── scenarios/         # Scenario analysis
 │   │   │   └── projections/       # Emission projections
+│   │   ├── ai-assistant/          # AI Assistant (optional)
+│   │   │   ├── prompt-template.ts
+│   │   │   ├── context-builder.ts
+│   │   │   ├── model-adapter.ts
+│   │   │   └── audit-logger.ts
 │   │   └── prisma.ts              # Database client
 │   ├── prisma/                    # Database schema
 │   └── public/                    # Static assets
@@ -938,7 +945,257 @@ POST /api/forecasting/initiatives/model
 
 ---
 
-## Release Strategy
+## AI Assistant
+
+OpenEco includes an **optional, auditable AI assistant** designed to explain and summarize sustainability data, and to **never generate or modify emissions calculations without human input**.
+
+### Design Principles
+
+The AI Assistant is built with strict boundaries to preserve OpenEco's core values:
+
+| Principle | Implementation |
+|-----------|----------------|
+| **Deterministic calculations** | LLM never generates emissions values or modifies calculations |
+| **Auditability** | All AI interactions are logged and auditable |
+| **Human confirmation required** | LLM never acts autonomously; all suggestions require human approval |
+| **Self-hosted** | No external API calls; data never leaves the organization's environment |
+| **Read-only queries** | LLM can query and explain data, but cannot edit directly |
+
+### Hard Boundaries (Never Allowed)
+
+The AI Assistant **must never**:
+
+- ❌ Generate emissions values
+- ❌ Modify data directly
+- ❌ Change factor versions
+- ❌ Override calculations
+- ❌ Make compliance claims
+- ❌ Act without human confirmation
+
+### Allowed Capabilities
+
+The AI Assistant **can**:
+
+- ✅ **Explain reporting** — "Explain this CSRD report section"
+- ✅ **Summarize changes** — "Summarize emissions changes between Q1 and Q2"
+- ✅ **Draft narratives** — "Draft a CSRD-ready narrative from existing results"
+- ✅ **Data hygiene** — Flag missing or inconsistent data, generate todos
+- ✅ **Answer questions** — "What factors were used for Scope 2 electricity?"
+- ✅ **Query data** — Read-only queries about emissions, factors, audit logs
+
+### Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────────────────┐
+│                        AI Assistant Layer                            │
+├─────────────────────────────────────────────────────────────────────┤
+│                                                                      │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐          │
+│  │      UI      │───▶│   Prompt     │───▶│   Context   │          │
+│  │   Panel      │    │  Template    │    │   Builder   │          │
+│  └──────────────┘    └──────────────┘    └──────────────┘          │
+│                              │                    │                 │
+│                              │                    ▼                 │
+│                              │         ┌─────────────────────┐     │
+│                              │         │  Context Sources   │     │
+│                              │         ├─────────────────────┤     │
+│                              │         │ - Emission summaries│     │
+│                              │         │ - Factor metadata   │     │
+│                              │         │ - Audit logs        │     │
+│                              │         │ - Reporting outputs │     │
+│                              │         │ - Docs snippets     │     │
+│                              │         │ - Org metadata      │     │
+│                              │         └─────────────────────┘     │
+│                              │                    │                 │
+│                              ▼                    ▼                 │
+│  ┌─────────────────────────────────────────────────────────────┐   │
+│  │                    Model Adapter                              │   │
+│  │              (LLaMA / Mistral / etc.)                        │   │
+│  │                  Self-hosted, local                           │   │
+│  └─────────────────────────────────────────────────────────────┘   │
+│                              │                                       │
+│                              ▼                                       │
+│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐          │
+│  │  Response    │    │   Audit      │    │   Human      │          │
+│  │  Generator   │───▶│   Log        │───▶│  Confirmation│          │
+│  └──────────────┘    └──────────────┘    └──────────────┘          │
+│                                                                      │
+└─────────────────────────────────────────────────────────────────────┘
+```
+
+### Self-Hosted Model Strategy
+
+**No external APIs** — All inference runs locally:
+
+| Model Option | Description | Use Case |
+|--------------|-------------|----------|
+| **LLaMA 2/3** | Meta's open-source models | General-purpose queries |
+| **Mistral 7B** | Mistral AI's efficient model | Lower resource requirements |
+| **Llama.cpp** | Optimized inference engine | Fast, CPU-friendly inference |
+
+**Deployment:**
+
+- Model weights bundled with OpenEco installation (optional component)
+- Runs in-process or as a sidecar container
+- No network calls to external LLM providers
+- Data sovereignty preserved
+
+### MVP Implementation
+
+**Minimal viable AI Assistant:**
+
+| Component | Purpose |
+|-----------|---------|
+| **One Prompt Template** | Single, well-tested prompt structure |
+| **One Context Builder** | Aggregates relevant data from DB/docs |
+| **One Model Adapter** | Abstraction layer for model switching |
+| **One UI Panel** | "OpenEco Assistant" chat interface |
+
+**File Structure:**
+
+```
+web/
+├── lib/
+│   └── ai-assistant/
+│       ├── prompt-template.ts      # Prompt structure
+│       ├── context-builder.ts      # Gathers context from DB/docs
+│       ├── model-adapter.ts         # Interface for LLaMA/Mistral/etc.
+│       ├── response-processor.ts    # Validates, formats responses
+│       └── audit-logger.ts         # Logs all interactions
+├── components/
+│   └── ai-assistant/
+│       └── AssistantPanel.tsx      # UI component
+└── app/
+    └── api/
+        └── ai-assistant/
+            └── chat/route.ts        # Chat endpoint
+```
+
+### Context Builder
+
+Gathers relevant context from multiple sources:
+
+```typescript
+interface AssistantContext {
+  // Emission data
+  emissionSummaries: {
+    scope: string;
+    total: number;
+    period: { start: Date; end: Date };
+  }[];
+  
+  // Factor metadata
+  factorsUsed: {
+    id: string;
+    dataset: string;
+    version: string;
+    citation: string;
+  }[];
+  
+  // Audit trail snippets
+  recentChanges: {
+    action: string;
+    resource: string;
+    timestamp: Date;
+  }[];
+  
+  // Reporting outputs
+  recentReports: {
+    type: string;
+    period: { start: Date; end: Date };
+    status: string;
+  }[];
+  
+  // Documentation snippets
+  relevantDocs: string[];  // Extracted from ARCHITECTURE.md, etc.
+  
+  // Organization metadata
+  orgProfile: {
+    name: string;
+    facilities: number;
+    boundary: string;
+  };
+}
+```
+
+### Prompt Template Structure
+
+```typescript
+const SYSTEM_PROMPT = `
+You are the OpenEco Assistant, an AI helper for carbon accounting and sustainability reporting.
+
+CRITICAL RULES:
+- You can EXPLAIN and SUMMARIZE data, but NEVER generate emissions values
+- You can DRAFT narratives, but NEVER make compliance claims
+- You can FLAG data issues, but NEVER modify data directly
+- All suggestions require HUMAN CONFIRMATION before action
+
+Your role:
+- Explain reports and calculations
+- Summarize emissions trends
+- Draft ESG narratives from existing data
+- Answer questions about methodology and factors
+- Flag data quality issues
+
+Context provided:
+{context}
+
+User query: {query}
+`;
+```
+
+### Audit Trail
+
+All AI interactions are logged:
+
+```prisma
+model AIAssistantInteraction {
+  id              String   @id @default(cuid())
+  organizationId  String?
+  userId          String
+  query           String   @db.Text
+  contextUsed     Json     // Snapshot of context provided
+  response        String   @db.Text
+  modelUsed       String   // "llama-3-8b", "mistral-7b", etc.
+  promptVersion   String   // Version of prompt template
+  tokensUsed      Int?
+  latencyMs       Int?
+  timestamp       DateTime @default(now())
+  
+  // Human actions taken (if any)
+  humanActions    Json?    // e.g., "user_drafted_narrative", "user_exported_summary"
+  
+  organization    Organization? @relation(...)
+  
+  @@index([organizationId])
+  @@index([userId])
+  @@index([timestamp])
+}
+```
+
+### Use Cases
+
+| Use Case | Example Query | Expected Behavior |
+|----------|--------------|-------------------|
+| **Explain Report** | "Explain this CSRD report section" | Summarizes report content, explains methodology used |
+| **Summarize Changes** | "What changed in emissions between Q1 and Q2?" | Compares periods, highlights differences |
+| **Draft Narrative** | "Draft a CSRD-ready narrative from Q3 results" | Generates draft text based on actual data (requires human review) |
+| **Data Hygiene** | "What data is missing for Scope 3?" | Flags incomplete categories, suggests todos |
+| **Factor Questions** | "What factors were used for UK grid electricity?" | Lists factors, versions, citations |
+| **Methodology Questions** | "How is Scope 2 calculated?" | Explains methodology from docs |
+
+### Transparency Statement
+
+> **"OpenEco includes an optional, auditable AI assistant designed to explain and summarize sustainability data, and to never generate or modify emissions calculations without human input."**
+
+This statement appears:
+- In the UI when the assistant is first accessed
+- In documentation
+- In audit logs
+
+---
+
+## Cross-Instance Data Sharing
 
 ### Versioning
 
@@ -958,35 +1215,278 @@ POST /api/forecasting/initiatives/model
 
 ## Roadmap
 
-### Phase 1: Foundation ✅
-- [x] Core Next.js application
-- [x] EcoKit design system
-- [x] Prisma data model
-- [x] Basic auth and API routes
-- [ ] OCI containerization
+This roadmap organizes features by priority and maps them to OpenEco's architectural engines. Features are grouped into **Tiers** (Critical, High, Medium) based on enterprise credibility requirements and strategic differentiation.
 
-### Phase 2: Self-Hosting
-- [ ] Podman/Docker Compose setup
-- [ ] Helm charts for Kubernetes/OKD
-- [ ] Installation documentation
-- [ ] Demo site on Vercel
+---
 
-### Phase 3: Enterprise Features
-- [ ] Factor library with versioning
-- [ ] Approval workflows
-- [ ] Audit pack exports
-- [ ] High availability setup
+### Current Status (Q4 2024)
 
-### Phase 4: Ecosystem
-- [ ] Plugin system
-- [ ] Supplier portal
-- [ ] Framework reporting (CSRD/TCFD)
-- [ ] API marketplace
+**✅ Completed:**
+- Core Next.js application with App Router
+- EcoKit design system
+- Prisma data model (basic)
+- Basic authentication (NextAuth.js)
+- Basic API routes
+- Dashboard with charts (pie, bar, line)
+- Basic activity data entry
+- Organization and facility management
 
-### Phase 5: Developer Experience
-- [ ] `openeco` CLI wrapper
-- [ ] Cross-platform dev scripts
-- [ ] Local dev with Podman/Docker
+**🚧 In Progress:**
+- Documentation (ARCHITECTURE.md, SECURITY_AND_GOVERNANCE.md, AI Assistant spec)
+- Contributor onboarding (CONTRIBUTING.md, setup scripts)
+
+---
+
+### Tier 1: Credibility Spine 🔴 Critical
+
+**Goal:** Build enterprise trust through transparent, auditable calculations and governance.
+
+**Timeline:** Q1 2025
+
+| Feature | Component | Effort | Dependencies |
+|---------|-----------|--------|--------------|
+| **Calculation Details Drawer** | UI Component | Low | Factor library |
+| **Factor Library MVP** | Calculation Engine | Medium | DEFRA/IPCC/EPA datasets |
+| **Factor Versioning** | Calculation Engine | Medium | Factor library |
+| **Evidence Attachments** | Data Model + UI | Low | File storage |
+| **Approval Workflow** | Data Model + UI | Medium | Status field, RBAC |
+| **Locked Periods** | Data Model + Logic | Medium | Approval workflow |
+| **Audit Log** | Data Model + API | Medium | All state changes |
+| **Export Audit Pack** | Reporting Engine | Low | CSV/JSON + methodology doc |
+
+**Deliverables:**
+- `/factors` module with search/filter
+- "Calculation Details" drawer on every emission row
+- Draft → Submitted → Approved → Locked workflow
+- Immutable calculation records with full provenance
+- Export ZIP with CSV, JSON, methodology documentation
+
+**Success Criteria:**
+- Every emission value can be traced to source data + factor version
+- All data changes are logged and auditable
+- Reports include factor citations and methodology footnotes
+
+---
+
+### Tier 2: Platform Differentiation 🟠 High Priority
+
+**Goal:** Differentiate OpenEco as the "system of proof" through transparency and interoperability.
+
+**Timeline:** Q2-Q3 2025
+
+| Feature | Component | Effort | Dependencies |
+|---------|-----------|--------|--------------|
+| **Public Verification Artifacts** | Reporting Engine | Low | Report generation |
+| **Scope 2 Dual Reporting** | Calculation Engine | Low | Market-based factors |
+| **Data Quality Scoring** | Analytics Engine | Medium | Completeness tracking |
+| **Interoperability-First API** | API Layer | Medium | RESTful endpoints |
+| **Completeness Tracking UI** | UI Component | Low | Data model |
+| **Status Badges** | UI Component | Low | Status field |
+| **Hierarchy Table** | UI Component | Medium | Category drilldown |
+
+**Deliverables:**
+- QR codes and shareable links for frozen reports
+- Location-based + market-based Scope 2 calculations
+- Coverage % indicators and anomaly detection
+- Full REST API with authentication
+- Expandable category → subcategory → activity drilldown
+
+**Success Criteria:**
+- Reports can be publicly verified without login
+- API enables full platform integration
+- Data quality issues are automatically flagged
+
+---
+
+### Tier 3: Big Value Features 🟡 Medium Priority
+
+**Goal:** Enable advanced analytics, forecasting, and collaboration.
+
+**Timeline:** Q4 2025 - Q2 2026
+
+#### 3.1. Reporting Engine (Full Implementation)
+
+| Feature | Component | Effort | Dependencies |
+|---------|-----------|--------|--------------|
+| **Framework Mapping Layer** | Reporting Engine | High | TCFD/CSRD/CDP/GRI schemas |
+| **Report Template Library** | Reporting Engine | High | Framework mapping |
+| **PDF Generation** | Reporting Engine | Medium | Playwright/PDFKit |
+| **Async Job Queue** | Reporting Engine | Medium | BullMQ + Redis |
+| **S3-Compatible Storage** | Reporting Engine | Low | MinIO/S3 |
+
+**Deliverables:**
+- CSRD, TCFD, CDP, GRI report templates
+- HTML-to-PDF generation pipeline
+- Background report generation jobs
+- Verification hashes and QR codes
+
+#### 3.2. Forecasting & Analytics Engine
+
+| Feature | Component | Effort | Dependencies |
+|---------|-----------|--------|--------------|
+| **Statistical Models** | Forecasting Engine | High | Time series data |
+| **Scenario Analysis** | Forecasting Engine | High | Statistical models |
+| **Reduction Initiative Modeling** | Forecasting Engine | Medium | Scenario analysis |
+| **Gap Analysis** | Forecasting Engine | Medium | Scenarios + targets |
+
+**Deliverables:**
+- Linear Trend, ARIMA, Seasonal models
+- SBTi-aligned scenario templates
+- Initiative impact projections
+- Target vs. projection gap analysis
+
+#### 3.3. AI Assistant (MVP)
+
+| Feature | Component | Effort | Dependencies |
+|---------|-----------|--------|--------------|
+| **Self-Hosted Model Integration** | AI Assistant | High | LLaMA/Mistral setup |
+| **Context Builder** | AI Assistant | Medium | Data aggregation |
+| **Prompt Template** | AI Assistant | Low | Context builder |
+| **UI Panel** | AI Assistant | Medium | Model adapter |
+| **Audit Logging** | AI Assistant | Low | Interaction tracking |
+
+**Deliverables:**
+- "OpenEco Assistant" chat interface
+- Read-only queries (explain, summarize, draft narratives)
+- Self-hosted inference (no external APIs)
+- Full interaction audit trail
+
+**Constraints:**
+- Never generates emissions values
+- Never modifies data directly
+- Requires human confirmation for all actions
+
+#### 3.4. Supplier Collaboration
+
+| Feature | Component | Effort | Dependencies |
+|---------|-----------|--------|--------------|
+| **Supplier Portal** | UI + API | High | Multi-tenant scoping |
+| **Survey Workflows** | UI + API | Medium | Supplier portal |
+| **Supply Chain Mapping** | UI Component | Medium | Supplier data |
+| **Cross-Instance Data Sharing** | API + Security | High | Supplier portal |
+
+**Deliverables:**
+- Supplier self-service data entry
+- Questionnaire builder
+- Supply chain visualization
+- Secure cross-instance data exchange
+
+---
+
+### Infrastructure & DevOps
+
+**Timeline:** Ongoing
+
+| Feature | Component | Effort | Status |
+|---------|-----------|--------|--------|
+| **OCI Containerization** | DevOps | Medium | 🚧 Planned |
+| **Podman/Docker Compose** | DevOps | Low | 🚧 Planned |
+| **Helm Charts (K8s/OKD)** | DevOps | Medium | 🚧 Planned |
+| **Installation Documentation** | Docs | Low | ✅ In Progress |
+| **Demo Site (Vercel)** | DevOps | Low | 🚧 Planned |
+| **High Availability Setup** | DevOps | High | 📅 Future |
+| **SBOM + Signed Releases** | DevOps | Medium | 📅 Q1 2025 |
+
+---
+
+### Developer Experience
+
+**Timeline:** Q2-Q3 2025
+
+| Feature | Component | Effort | Dependencies |
+|---------|-----------|--------|--------------|
+| **Setup Scripts** | DevOps | Low | ✅ Windows done |
+| **`openeco` CLI** | Tooling | Medium | Containerization |
+| **Local Dev with Podman** | DevOps | Low | Podman setup |
+| **Test Suite** | Testing | High | Core features |
+| **API Documentation** | Docs | Medium | API endpoints |
+
+---
+
+### Advanced Features (Future)
+
+**Timeline:** Q3 2026+
+
+| Feature | Component | Priority |
+|---------|-----------|----------|
+| **Plugin System** | Architecture | Medium |
+| **Sector-Specific Modules** | Modules | Medium |
+| **Advanced GHG Tracking** | Calculation Engine | Medium |
+| **Financial System Integrations** | Integrations | High |
+| **Expert Support Platform** | Community | Low |
+| **Educational Content Hub** | Community | Low |
+
+---
+
+### Milestones
+
+#### 🎯 Milestone 1: Credibility MVP (Q1 2025)
+**Goal:** Enterprise-ready calculation transparency
+
+- ✅ Factor library with versioning
+- ✅ Calculation details drawer
+- ✅ Approval workflow
+- ✅ Audit log
+- ✅ Export audit pack
+
+**Outcome:** Organizations can trust OpenEco for audit-grade emissions accounting.
+
+#### 🎯 Milestone 2: Platform Differentiation (Q2-Q3 2025)
+**Goal:** "System of proof" capabilities
+
+- ✅ Public verification artifacts
+- ✅ Scope 2 dual reporting
+- ✅ Data quality scoring
+- ✅ Full REST API
+
+**Outcome:** OpenEco differentiates through transparency and interoperability.
+
+#### 🎯 Milestone 3: Advanced Analytics (Q4 2025 - Q1 2026)
+**Goal:** Forecasting and framework reporting
+
+- ✅ Reporting Engine (full implementation)
+- ✅ Forecasting & Analytics Engine
+- ✅ Framework-mapped reports (CSRD, TCFD)
+- ✅ AI Assistant MVP
+
+**Outcome:** OpenEco enables strategic planning and regulatory compliance.
+
+#### 🎯 Milestone 4: Ecosystem (Q2-Q3 2026)
+**Goal:** Collaboration and extensibility
+
+- ✅ Supplier portal
+- ✅ Cross-instance data sharing
+- ✅ Plugin system
+- ✅ Sector-specific modules
+
+**Outcome:** OpenEco becomes the platform for supply chain transparency.
+
+---
+
+### Priority Rationale
+
+**Tier 1 (Critical):** Without calculation transparency, factor management, and audit trails, OpenEco cannot compete with enterprise platforms. These features are **table stakes** for credibility.
+
+**Tier 2 (High):** Public verification and interoperability differentiate OpenEco as the "system of proof" rather than just another carbon accounting tool.
+
+**Tier 3 (Medium):** Advanced features (forecasting, AI, supplier collaboration) provide long-term value but are not required for initial enterprise adoption.
+
+---
+
+### Risk Mitigation
+
+| Risk | Mitigation |
+|------|------------|
+| **Factor data quality** | Start with authoritative sources (DEFRA, IPCC, EPA), version everything |
+| **Calculation accuracy** | Publish test vectors, enable external validation |
+| **Performance at scale** | Async job queues, caching, database optimization |
+| **Security vulnerabilities** | Security-first architecture, regular audits, SBOM |
+| **Adoption barriers** | Clear documentation, easy setup, demo site |
+
+---
+
+**Last Updated:** December 2024  
+**Next Review:** Quarterly
 
 ---
 

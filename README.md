@@ -53,6 +53,7 @@ OpenEco is a free, open-source platform for measuring, tracking, and reporting g
 - GHG Protocol aligned calculations
 - Custom dashboards and reporting
 - Audit-ready documentation
+- Optional AI Assistant (self-hosted, read-only, auditable)
 - Enterprise self-hosting (Podman/Docker, Kubernetes/OKD)
 
 ---
@@ -232,9 +233,10 @@ Visit [http://localhost:3000](http://localhost:3000) 🎉
 
 | Document | Description |
 |----------|-------------|
+| [**ROADMAP.md**](./ROADMAP.md) | Development priorities, milestones, and timeline |
 | [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Technical architecture, engines, and deployment models |
 | [**SECURITY_AND_GOVERNANCE.md**](./SECURITY_AND_GOVERNANCE.md) | Security model, trust boundaries, data governance |
-| [**PLATFORM_FEATURES.md**](./PLATFORM_FEATURES.md) | Full feature list, requirements, and roadmap |
+| [**PLATFORM_FEATURES.md**](./PLATFORM_FEATURES.md) | Full feature list and requirements |
 | [**INSTALLATION.md**](./INSTALLATION.md) | Setup guide for dev, enterprise, and public deployment |
 | [**OPEN_SOURCE_PLAYBOOK.md**](./OPEN_SOURCE_PLAYBOOK.md) | Open source governance and community guidelines |
 | [**COMPETITIVE_ANALYSIS.md**](./COMPETITIVE_ANALYSIS.md) | Competitive landscape and product strategy |
@@ -247,26 +249,37 @@ Visit [http://localhost:3000](http://localhost:3000) 🎉
 
 ```
 open-eco/
-├── web/                # Next.js application
-│   ├── app/           # App Router pages
-│   ├── components/    # React components
-│   ├── lib/           # Utilities & Prisma
-│   └── prisma/        # Database schema
+├── web/                           # Next.js application
+│   ├── app/                       # App Router pages & API routes
+│   ├── components/                # React components
+│   │   ├── reports/               # Report UI components
+│   │   └── ai-assistant/          # AI Assistant UI (optional)
+│   ├── lib/                       # Core libraries
+│   │   ├── calculations/          # Calculation engine
+│   │   ├── reporting/             # Reporting engine
+│   │   ├── forecasting/           # Forecasting & analytics
+│   │   ├── ai-assistant/          # AI Assistant (optional, self-hosted)
+│   │   └── prisma.ts              # Database client
+│   └── prisma/                    # Database schema
 │
-├── docs/              # EcoKit design system (GitHub Pages)
+├── docs/                          # EcoKit design system (GitHub Pages)
 │   ├── components.html
 │   ├── tokens.html
 │   └── assets/EcoKit/
 │
-├── deploy/            # Deployment configs
-│   ├── compose.dev.yml
-│   └── okd/
+├── deploy/                        # Deployment configs
+│   ├── compose.dev.yml            # Podman/Docker Compose
+│   └── okd/                       # Kubernetes/OKD manifests
 │
-├── scripts/           # Setup and utility scripts
-│   ├── setup.sh       # Linux/macOS setup
-│   └── setup.ps1      # Windows setup
+├── scripts/                       # Setup and utility scripts
+│   ├── setup.sh                   # Linux/macOS setup
+│   └── setup.ps1                  # Windows setup
 │
-└── [root]/            # Project documentation
+└── [root]/                        # Project documentation
+    ├── ARCHITECTURE.md            # Technical architecture
+    ├── SECURITY_AND_GOVERNANCE.md # Security & governance
+    ├── INSTALLATION.md            # Installation guides
+    └── CONTRIBUTING.md            # Contribution guidelines
 ```
 
 ---

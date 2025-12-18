@@ -214,11 +214,33 @@ We will work with you to validate the issue, determine impact, and coordinate di
 
 ---
 
-## 8. Questions?
+## 8. AI Tooling & Assistance
 
-If anything here is unclear or you’re unsure how best to contribute:
+OpenEco contributors may use AI coding assistants (e.g., GitHub Copilot, Cursor, ChatGPT) to help with development tasks. **Please use these tools responsibly:**
+
+- **Review all AI-generated code** before committing — AI tools can introduce bugs, security issues, or incorrect logic.
+- **Verify methodology accuracy** — For calculation logic, factor handling, or GHG Protocol compliance, always validate against authoritative sources.
+- **Maintain auditability** — Ensure AI-assisted code still produces deterministic, reproducible results with full provenance.
+- **Document AI assistance** — If significant portions of code were AI-generated, note this in PR descriptions for transparency.
+
+**Remember:** OpenEco's credibility depends on transparent, verifiable calculations. AI tools are helpers, not replacements for human judgment and review.
+
+---
+
+## 9. Community & Support
+
+### Discord
+
+Join our community Discord for real-time discussions, questions, and collaboration:
+
+**👉 [Join OpenEco Discord](https://discord.gg/3MgJ8vXW)**
+
+### Questions?
+
+If anything here is unclear or you're unsure how best to contribute:
 
 - Open a **GitHub Discussion** or **Issue** with the `question` label.
+- Join our **Discord** server for quick questions and community chat.
 - Or comment directly on a relevant issue/PR.
 
-We’re excited to build an open, credible climate transparency platform with you.
+We're excited to build an open, credible climate transparency platform with you.
