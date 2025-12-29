@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 
-export default function OIDCCompletePage() {
+function OIDCCompleteContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
@@ -33,19 +33,27 @@ export default function OIDCCompletePage() {
   }, [userId, router]);
 
   return (
+    <div>
+      {error ? (
+        <div style={{ color: "#c33" }}>{error}</div>
+      ) : (
+        <div>Completing sign in...</div>
+      )}
+    </div>
+  );
+}
+
+export default function OIDCCompletePage() {
+  return (
     <div style={{ 
       minHeight: "100vh", 
       display: "flex", 
       alignItems: "center", 
       justifyContent: "center" 
     }}>
-      <div>
-        {error ? (
-          <div style={{ color: "#c33" }}>{error}</div>
-        ) : (
-          <div>Completing sign in...</div>
-        )}
-      </div>
+      <Suspense fallback={<div>Loading...</div>}>
+        <OIDCCompleteContent />
+      </Suspense>
     </div>
   );
 }
