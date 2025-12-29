@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
     // Test OIDC connection
     try {
       // Dynamic import to avoid Next.js static analysis issues
-      const oidc = await import("openid-client");
+      const oidc = await import("openid-client") as any;
       const discoveredIssuer = await oidc.Issuer.discover(issuer);
       
       // Verify issuer is valid

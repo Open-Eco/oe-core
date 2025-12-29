@@ -32,7 +32,7 @@ export async function getOIDCClient(organizationId: string, baseUrl: string) {
     throw new Error("OIDC not configured for this organization");
   }
 
-  const oidc = await getOIDCModule();
+  const oidc = await getOIDCModule() as any;
 
   // Discover issuer if endpoints not provided
   let issuer: any;
