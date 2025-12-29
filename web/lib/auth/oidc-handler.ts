@@ -1,8 +1,12 @@
-import * as oidc from "openid-client";
 import { randomBytes, createHash } from "crypto";
 import { getOIDCConfig, getOIDCCallbackURL } from "./oidc-config";
 import { resolveUserRole, getOrCreateOrganizationUser } from "./role-mapper";
 import { prisma } from "../prisma";
+
+// Dynamic import to avoid Next.js static analysis issues
+const getOIDCModule = async () => {
+  return await import("openid-client");
+};
 
 /**
  * Generate a random code verifier for PKCE
@@ -28,8 +32,10 @@ export async function getOIDCClient(organizationId: string, baseUrl: string) {
     throw new Error("OIDC not configured for this organization");
   }
 
+  const oidc = await getOIDCModule();
+
   // Discover issuer if endpoints not provided
-  let issuer: oidc.Issuer<oidc.Client>;
+  let issuer: any;
   if (config.authorizationEndpoint && config.tokenEndpoint) {
     // Use provided endpoints
     issuer = new oidc.Issuer({

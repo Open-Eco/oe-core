@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import * as oidc from "openid-client";
 
 // Force Node.js runtime (openid-client requires Node.js APIs)
 export const runtime = "nodejs";
@@ -40,6 +39,8 @@ export async function POST(request: NextRequest) {
 
     // Test OIDC connection
     try {
+      // Dynamic import to avoid Next.js static analysis issues
+      const oidc = await import("openid-client");
       const discoveredIssuer = await oidc.Issuer.discover(issuer);
       
       // Verify issuer is valid
