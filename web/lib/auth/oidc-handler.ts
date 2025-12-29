@@ -1,4 +1,4 @@
-import { Issuer, Client } from "openid-client";
+import * as oidc from "openid-client";
 import { randomBytes, createHash } from "crypto";
 import { getOIDCConfig, getOIDCCallbackURL } from "./oidc-config";
 import { resolveUserRole, getOrCreateOrganizationUser } from "./role-mapper";
@@ -29,10 +29,10 @@ export async function getOIDCClient(organizationId: string, baseUrl: string) {
   }
 
   // Discover issuer if endpoints not provided
-  let issuer: Issuer<Client>;
+  let issuer: oidc.Issuer<oidc.Client>;
   if (config.authorizationEndpoint && config.tokenEndpoint) {
     // Use provided endpoints
-    issuer = new Issuer({
+    issuer = new oidc.Issuer({
       issuer: config.issuer,
       authorization_endpoint: config.authorizationEndpoint,
       token_endpoint: config.tokenEndpoint,
@@ -40,7 +40,7 @@ export async function getOIDCClient(organizationId: string, baseUrl: string) {
     });
   } else {
     // Auto-discover from issuer
-    issuer = await Issuer.discover(config.issuer);
+    issuer = await oidc.Issuer.discover(config.issuer);
   }
 
   const client = new issuer.Client({

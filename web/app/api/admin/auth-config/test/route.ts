@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
-import { Issuer } from "openid-client";
+import * as oidc from "openid-client";
 
 // POST /api/admin/auth-config/test
 export async function POST(request: NextRequest) {
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     // Test OIDC connection
     try {
-      const discoveredIssuer = await Issuer.discover(issuer);
+      const discoveredIssuer = await oidc.Issuer.discover(issuer);
       
       // Verify issuer is valid
       if (!discoveredIssuer.metadata.issuer) {
