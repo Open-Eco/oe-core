@@ -37,7 +37,7 @@ export async function GET(request: NextRequest) {
       select: { organizationId: true },
     })
 
-    const orgIds = userOrgs.map(ou => ou.organizationId)
+    const orgIds = userOrgs.map((ou: { organizationId: string }) => ou.organizationId)
 
     if (orgIds.length === 0) {
       return NextResponse.json({ emissions: [] })
