@@ -58,6 +58,17 @@ OpenEco is a free, open-source platform for measuring, tracking, and reporting g
 
 ---
 
+## 🚀 Getting Started
+
+**New to OpenEco?** Start here:
+
+- **For Companies:** See [Getting Started: Enterprise Deployment](./INSTALLATION.md#getting-started-enterprise-deployment) in the Installation Guide
+- **For Developers:** See [Quick Start (Developers)](#quick-start-developers) below
+
+The deployment process typically takes 2-4 hours for a pilot setup on a single Linux server.
+
+---
+
 ## Prerequisites
 
 Before you begin, install these dependencies:
