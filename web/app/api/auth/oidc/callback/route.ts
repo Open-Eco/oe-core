@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { handleOIDCCallback } from "@/lib/auth/oidc-handler";
 
+// Force Node.js runtime (openid-client requires Node.js APIs)
+export const runtime = "nodejs";
+
 /**
  * GET /api/auth/oidc/callback?code=xxx&state=xxx&organizationId=xxx
  * Handles OIDC callback and creates user session

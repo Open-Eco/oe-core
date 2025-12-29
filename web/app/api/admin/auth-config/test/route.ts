@@ -4,6 +4,9 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import * as oidc from "openid-client";
 
+// Force Node.js runtime (openid-client requires Node.js APIs)
+export const runtime = "nodejs";
+
 // POST /api/admin/auth-config/test
 export async function POST(request: NextRequest) {
   try {

@@ -4,6 +4,9 @@ import { authOptions } from "@/lib/auth";
 import { getAuthorizationURL } from "@/lib/auth/oidc-handler";
 import { prisma } from "@/lib/prisma";
 
+// Force Node.js runtime (openid-client requires Node.js APIs)
+export const runtime = "nodejs";
+
 /**
  * GET /api/auth/oidc/authorize?organizationId=xxx
  * Initiates OIDC authorization flow
