@@ -1,7 +1,23 @@
-import { Issuer, Client, generators } from "openid-client";
+import { Issuer, Client } from "openid-client";
+import { randomBytes, createHash } from "crypto";
 import { getOIDCConfig, getOIDCCallbackURL } from "./oidc-config";
 import { resolveUserRole, getOrCreateOrganizationUser } from "./role-mapper";
 import { prisma } from "../prisma";
+
+/**
+ * Generate a random code verifier for PKCE
+ */
+function generateCodeVerifier(): string {
+  return randomBytes(32).toString("base64url");
+}
+
+/**
+ * Calculate code challenge from verifier (S256 method)
+ */
+async function calculateCodeChallenge(verifier: string): Promise<string> {
+  const hash = createHash("sha256").update(verifier).digest("base64url");
+  return hash;
+}
 
 /**
  * Initialize OIDC client for an organization
@@ -46,9 +62,9 @@ export async function getAuthorizationURL(
   state?: string
 ): Promise<{ url: string; codeVerifier: string; state: string }> {
   const { client, config } = await getOIDCClient(organizationId, baseUrl);
-  const codeVerifier = generators.codeVerifier();
-  const codeChallenge = generators.codeChallenge(codeVerifier);
-  const generatedState = state || generators.state();
+  const codeVerifier = generateCodeVerifier();
+  const codeChallenge = await calculateCodeChallenge(codeVerifier);
+  const generatedState = state || randomBytes(32).toString("base64url");
 
   const params = {
     redirect_uri: getOIDCCallbackURL(baseUrl, organizationId),
