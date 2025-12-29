@@ -1,10 +1,10 @@
 "use client"
 
 import { signIn } from "next-auth/react"
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 
-export default function SignInPage() {
+function SignInContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
@@ -86,21 +86,14 @@ export default function SignInPage() {
   }
 
   return (
-    <div style={{ 
-      minHeight: "100vh", 
-      display: "flex", 
-      alignItems: "center", 
-      justifyContent: "center",
-      padding: "1rem"
+    <div style={{
+      width: "100%",
+      maxWidth: "400px",
+      padding: "2rem",
+      border: "1px solid #e0e0e0",
+      borderRadius: "8px",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
     }}>
-      <div style={{
-        width: "100%",
-        maxWidth: "400px",
-        padding: "2rem",
-        border: "1px solid #e0e0e0",
-        borderRadius: "8px",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
-      }}>
         <h1 style={{ marginBottom: "1.5rem", fontSize: "1.5rem" }}>
           Sign In
         </h1>
@@ -219,6 +212,30 @@ export default function SignInPage() {
           </a>
         </p>
       </div>
+  )
+}
+
+export default function SignInPage() {
+  return (
+    <div style={{ 
+      minHeight: "100vh", 
+      display: "flex", 
+      alignItems: "center", 
+      justifyContent: "center",
+      padding: "1rem"
+    }}>
+      <Suspense fallback={
+        <div style={{
+          width: "100%",
+          maxWidth: "400px",
+          padding: "2rem",
+          textAlign: "center"
+        }}>
+          <div>Loading...</div>
+        </div>
+      }>
+        <SignInContent />
+      </Suspense>
     </div>
   )
 }
