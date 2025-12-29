@@ -28,12 +28,6 @@ export default function Home() {
           <Link href="/docs" className="eco-landing__nav-link">
             Docs
           </Link>
-          <Link href="/auth/signin" className="eco-landing__nav-link">
-            Sign in
-          </Link>
-          <Link href="/auth/signup" className="eco-landing__nav-link">
-            Create account
-          </Link>
           <a
             href="https://github.com/Open-Eco/oe-core"
             className="eco-landing__nav-link"
@@ -69,7 +63,7 @@ export default function Home() {
               </a>
             </div>
             <p className="eco-landing__footnote">
-              MIT-licensed, OCI containers, Podman/Buildah and OKD friendly.
+              GNU Affero General Public License v3.0, OCI containers, Podman/Buildah and OKD friendly.
             </p>
           </div>
 

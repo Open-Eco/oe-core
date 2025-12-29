@@ -50,18 +50,7 @@ export default function AppLayout({ children }: AppLayoutProps) {
             </p>
           </div>
           <div className="eco-app-shell__header-right">
-            <a
-              href="/auth/signin"
-              className="eco-app-shell__header-link eco-app-shell__header-link--secondary"
-            >
-              Sign in
-            </a>
-            <a
-              href="/auth/signup"
-              className="eco-app-shell__header-link eco-app-shell__header-link--primary"
-            >
-              Create account
-            </a>
+            {/* Sign in options temporarily hidden */}
           </div>
         </header>
 
