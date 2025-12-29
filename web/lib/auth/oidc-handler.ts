@@ -72,7 +72,7 @@ export async function getAuthorizationURL(
   const codeChallenge = await calculateCodeChallenge(codeVerifier);
   const generatedState = state || randomBytes(32).toString("base64url");
 
-  const params = {
+  const params: any = {
     redirect_uri: getOIDCCallbackURL(baseUrl, organizationId),
     scope: "openid email profile",
     state: generatedState,
