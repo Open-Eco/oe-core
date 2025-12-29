@@ -1,15 +1,64 @@
 "use client"
 
 import { signIn } from "next-auth/react"
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 
 export default function SignInPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [organizationId, setOrganizationId] = useState<string | null>(null)
+  const [oidcEnabled, setOidcEnabled] = useState(false)
+
+  useEffect(() => {
+    // Check if organization has OIDC enabled
+    const orgId = searchParams.get("organizationId");
+    if (orgId) {
+      setOrganizationId(orgId);
+      checkOIDCStatus(orgId);
+    } else {
+      // Try to get organization from user's session (if they have one)
+      loadUserOrganization();
+    }
+  }, [searchParams])
+
+  const loadUserOrganization = async () => {
+    try {
+      const response = await fetch("/api/organizations");
+      const data = await response.json();
+      if (response.ok && data.organizations && data.organizations.length > 0) {
+        const orgId = data.organizations[0].id;
+        setOrganizationId(orgId);
+        checkOIDCStatus(orgId);
+      }
+    } catch (err) {
+      // Ignore - user not signed in or no organizations
+    }
+  }
+
+  const checkOIDCStatus = async (orgId: string) => {
+    try {
+      const response = await fetch(`/api/admin/auth-config?organizationId=${orgId}`);
+      const data = await response.json();
+      if (response.ok && data.config?.enabled && data.config?.provider === "oidc") {
+        setOidcEnabled(true);
+      }
+    } catch (err) {
+      // Ignore errors - OIDC not configured
+    }
+  }
+
+  const handleOIDCLogin = () => {
+    if (!organizationId) {
+      setError("Organization ID required for OIDC login");
+      return;
+    }
+    window.location.href = `/api/auth/oidc/authorize?organizationId=${organizationId}`;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -55,6 +104,32 @@ export default function SignInPage() {
         <h1 style={{ marginBottom: "1.5rem", fontSize: "1.5rem" }}>
           Sign In
         </h1>
+
+        {oidcEnabled && (
+          <div style={{ marginBottom: "1.5rem" }}>
+            <button
+              type="button"
+              onClick={handleOIDCLogin}
+              style={{
+                width: "100%",
+                padding: "0.75rem",
+                backgroundColor: "#0070f3",
+                color: "white",
+                border: "none",
+                borderRadius: "4px",
+                fontSize: "1rem",
+                fontWeight: "500",
+                cursor: "pointer",
+                marginBottom: "1rem",
+              }}
+            >
+              Sign in with Identity Provider
+            </button>
+            <div style={{ textAlign: "center", color: "#666", fontSize: "0.875rem" }}>
+              or
+            </div>
+          </div>
+        )}
         
         {error && (
           <div style={{

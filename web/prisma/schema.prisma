@@ -83,6 +83,7 @@ model Organization {
   suppliers        Supplier[]
   auditLogs        AuditLog[]
   reportingPeriods ReportingPeriod[]
+  authConfig       AuthConfig?
 }
 
 model OrganizationUser {
@@ -99,6 +100,52 @@ model OrganizationUser {
   @@unique([userId, organizationId])
   @@index([organizationId])
   @@index([userId])
+}
+
+// Authentication Configuration (Federated Auth)
+model AuthConfig {
+  id              String   @id @default(cuid())
+  organizationId  String   @unique
+  provider        String   // "oidc", "saml", "credentials"
+  enabled         Boolean  @default(false)
+  
+  // OIDC Configuration
+  issuer          String?
+  clientId        String?
+  clientSecret    String?  @db.Text
+  authorizationEndpoint String?
+  tokenEndpoint   String?
+  userInfoEndpoint String?
+  audience        String?
+  
+  // SAML Configuration (future)
+  samlIssuer      String?
+  samlCert        String?  @db.Text
+  samlMetadataUrl String?
+  
+  // Role Mapping
+  roleMappings    RoleMapping[]
+  
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  
+  @@index([organizationId])
+}
+
+model RoleMapping {
+  id            String   @id @default(cuid())
+  authConfigId  String
+  type          String   // "email_domain", "group", "attribute"
+  matchValue    String   // e.g., "@acme.com" or "sustainability-team"
+  role          String   // "ORG_ADMIN", "ORG_MEMBER", etc.
+  priority      Int      @default(0) // Higher priority = checked first
+  
+  authConfig    AuthConfig @relation(fields: [authConfigId], references: [id], onDelete: Cascade)
+  
+  @@index([authConfigId])
+  @@index([authConfigId, priority])
 }
 
 // Facilities

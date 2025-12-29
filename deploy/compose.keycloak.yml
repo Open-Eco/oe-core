@@ -1,0 +1,97 @@
+version: '3.8'
+
+# Full stack: OpenEco + Keycloak + PostgreSQL
+# Usage: docker-compose -f compose.keycloak.yml up -d
+
+services:
+  # Keycloak Database
+  keycloak-db:
+    image: postgres:15
+    container_name: openeco-keycloak-db
+    environment:
+      POSTGRES_DB: keycloak
+      POSTGRES_USER: keycloak
+      POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-change-me}
+    volumes:
+      - keycloak-db-data:/var/lib/postgresql/data
+    networks:
+      - openeco-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keycloak"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Keycloak Identity Provider
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: openeco-keycloak
+    command: start-dev
+    environment:
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: ${KEYCLOAK_DB_PASSWORD:-change-me}
+      KC_HOSTNAME: ${KEYCLOAK_HOSTNAME:-localhost}
+      KC_HOSTNAME_PORT: ${KEYCLOAK_PORT:-8080}
+      KC_HOSTNAME_STRICT: false
+      KC_HTTP_ENABLED: true
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN:-admin}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD:-change-me}
+    ports:
+      - "${KEYCLOAK_PORT:-8080}:8080"
+    depends_on:
+      keycloak-db:
+        condition: service_healthy
+    networks:
+      - openeco-network
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # OpenEco Database
+  openeco-db:
+    image: postgres:15
+    container_name: openeco-postgres
+    environment:
+      POSTGRES_DB: openeco
+      POSTGRES_USER: openeco
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-change-me}
+    volumes:
+      - openeco-db-data:/var/lib/postgresql/data
+    networks:
+      - openeco-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openeco"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # OpenEco Web Application
+  openeco-web:
+    image: ghcr.io/open-eco/oe-core:web-latest
+    container_name: openeco-web
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://openeco:${POSTGRES_PASSWORD:-change-me}@openeco-db:5432/openeco?schema=public
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-http://localhost:3000}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-http://localhost:3000}
+      NEXT_PUBLIC_APP_NAME: ${NEXT_PUBLIC_APP_NAME:-OpenEco}
+    depends_on:
+      openeco-db:
+        condition: service_healthy
+    networks:
+      - openeco-network
+    restart: unless-stopped
+
+volumes:
+  keycloak-db-data:
+  openeco-db-data:
+
+networks:
+  openeco-network:
+    driver: bridge

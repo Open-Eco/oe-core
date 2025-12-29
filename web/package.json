@@ -20,6 +20,7 @@
     "bcryptjs": "^3.0.3",
     "next": "^16.0.10",
     "next-auth": "^4.24.13",
+    "openid-client": "^6.2.0",
     "prisma": "^6.19.1",
     "react": "19.2.1",
     "react-dom": "19.2.1",

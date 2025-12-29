@@ -11,9 +11,25 @@ export const authOptions: NextAuthOptions = {
       name: "Credentials",
       credentials: {
         email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" }
+        password: { label: "Password", type: "password" },
+        userId: { label: "User ID", type: "text" } // For OIDC flow
       },
       async authorize(credentials) {
+        // Support OIDC-authenticated users (userId passed directly)
+        if (credentials?.userId) {
+          const user = await prisma.user.findUnique({
+            where: { id: credentials.userId as string }
+          })
+          if (user) {
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+            }
+          }
+        }
+
+        // Standard email/password authentication
         if (!credentials?.email || !credentials?.password) {
           return null
         }

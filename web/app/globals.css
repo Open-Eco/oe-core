@@ -376,6 +376,17 @@ body {
   margin-top: var(--space-1);
 }
 
+.eco-form__section {
+  margin-bottom: var(--space-8);
+}
+
+.eco-form__section-title {
+  font-size: var(--text-lg);
+  font-weight: var(--font-weight-medium);
+  color: var(--foreground);
+  margin-bottom: var(--space-4);
+}
+
 .eco-form__help {
   font-size: var(--text-xs);
   color: var(--neutral-500);

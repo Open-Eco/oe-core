@@ -1,6 +1,6 @@
 # OpenEco - Open Climate Transparency Platform
 
-**An open-source, enterprise-grade carbon accounting platform that companies can self-host on their own infrastructure.**
+**A forthcoming open-source, enterprise-grade emissions accounting platform that small and mid-sized companies can self-host on their own infrastructure.**
 
 > **Climate transparency should not be paywalled.**
 
@@ -20,7 +20,7 @@ OpenEco is built on the principle that **climate data must be trustworthy, verif
 Full conformance with the GHG Protocol Corporate Standard for Scope 1, 2, and 3 accounting.
 
 ✓ **Uses IPCC / DEFRA / EPA factors**  
-Built on authoritative, publicly available emission factor datasets — versioned, cited, and reproducible.
+Built on authoritative, publicly available emission factor datasets: versioned, cited, and reproducible.
 
 </td>
 <td width="50%" valign="top">
@@ -246,6 +246,7 @@ Visit [http://localhost:3000](http://localhost:3000) 🎉
 |----------|-------------|
 | [**ROADMAP.md**](./ROADMAP.md) | Development priorities, milestones, and timeline |
 | [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Technical architecture, engines, and deployment models |
+| [**AUTHENTICATION.md**](./AUTHENTICATION.md) | Federated authentication setup (OIDC, Keycloak) |
 | [**SECURITY_AND_GOVERNANCE.md**](./SECURITY_AND_GOVERNANCE.md) | Security model, trust boundaries, data governance |
 | [**PLATFORM_FEATURES.md**](./PLATFORM_FEATURES.md) | Full feature list and requirements |
 | [**INSTALLATION.md**](./INSTALLATION.md) | Setup guide for dev, enterprise, and public deployment |
@@ -375,7 +376,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 ## License
 
 - **Code**: GNU Affero General Public License v3.0 (AGPL-3.0-only)
-- **Data**: CC-BY or CC0
+- **Data**: CC-BY / CC0
 
 ---
 
@@ -386,4 +387,4 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 
 ---
 
-**Status**: 🚧 In Development
+**Status**: 🚧 Active Development (Not Deployment Ready)
