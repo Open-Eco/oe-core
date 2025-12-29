@@ -275,9 +275,38 @@ Enterprises with suppliers who also run OpenEco can share data securely.
 | Priority | Implementation |
 |----------|----------------|
 | **Integrity** | Append-only audit logs, immutable calculation runs |
-| **Authenticity** | Verified orgs, NextAuth sessions |
+| **Authenticity** | Verified orgs, NextAuth sessions, federated authentication |
 | **Auditability** | Change logs, factor provenance, evidence attachments |
 | **Multi-tenancy** | Per-org database isolation |
+
+### Authentication Architecture
+
+OpenEco uses **federated authentication** with **Keycloak as an open-source IdP bridge**.
+
+**Architecture Pattern:**
+```
+User → OpenEco → Keycloak (IdP Bridge) → Organization's IdP (Azure AD/Okta/Google/etc.)
+                                      ↓
+                                  User authenticates
+                                      ↓
+                                  Keycloak issues OIDC token to OpenEco
+```
+
+**Key Principles:**
+- **No Identity Management**: OpenEco does not store passwords or manage user accounts
+- **IdP Bridge Pattern**: Keycloak acts as a bridge between OpenEco and your organization's IdP
+- **Self-Hosted**: You own and control all components (OpenEco + Keycloak + your IdP)
+- **Flexible Deployment**: Keycloak can run embedded, as sidecar, or externally
+- **Critical Point**: You host one Keycloak instance, but each organization brings their own IdP
+
+**Keycloak Features:**
+- ✅ **OIDC + SAML support** - Connects to virtually any IdP
+- ✅ **Industry standard** - Used by Red Hat, governments, NGOs
+- ✅ **Actively maintained** - Regular security updates
+- ✅ **Zero license cost** - Fully open-source
+- ✅ **Flexible deployment** - Embedded, sidecar, or external
+
+See [AUTHENTICATION.md](./AUTHENTICATION.md) for detailed setup instructions.
 
 ---
 

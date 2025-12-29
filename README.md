@@ -55,6 +55,7 @@ OpenEco is a free, open-source platform for measuring, tracking, and reporting g
 - Audit-ready documentation
 - Optional AI Assistant (self-hosted, read-only, auditable)
 - Enterprise self-hosting (Podman/Docker, Kubernetes/OKD)
+- Federated authentication via Keycloak (IdP bridge) - connect your existing IdP (Azure AD, Okta, etc.)
 
 ---
 
@@ -316,9 +317,11 @@ Each enterprise deployment gets **its own isolated database** - no shared multi-
 | Framework | Next.js 16+ (App Router) |
 | Language | TypeScript |
 | Database | PostgreSQL 15+ Prisma ORM |
-| Auth | NextAuth.js |
+| Auth | NextAuth.js + Keycloak (IdP bridge) |
 | Styling | Vanilla CSS (EcoKit design system) |
 | Container | OCI images (Buildah/Podman/Docker) |
+
+**Authentication:** OpenEco uses **Keycloak as an open-source IdP bridge** that connects to your organization's existing identity provider (Azure AD, Okta, Google Workspace, etc.). See [AUTHENTICATION.md](./AUTHENTICATION.md) for details.
 
 ---
 

@@ -2,76 +2,121 @@
 
 ## Overview
 
-OpenEco uses **federated authentication** - it does NOT manage user identities. Organizations use their existing identity providers (Keycloak, Azure AD, Okta, etc.) and OpenEco trusts identity assertions from those providers.
+OpenEco uses **federated authentication** - it does NOT manage user identities. Organizations use **Keycloak as an open-source IdP bridge** that connects to their existing identity providers (Azure AD, Okta, Google Workspace, etc.), and OpenEco trusts identity assertions from Keycloak.
 
 ### Key Principles
 
 - **No Identity Management**: OpenEco does not store passwords or manage user accounts
-- **Federated Authentication**: All authentication is delegated to your identity provider
-- **Self-Hosted**: You own and control all components (OpenEco + IdP)
+- **IdP Bridge Pattern**: Keycloak acts as a bridge between OpenEco and your organization's IdP
+- **Self-Hosted**: You own and control all components (OpenEco + Keycloak + your IdP)
+- **Flexible Deployment**: Keycloak can run embedded, as sidecar, or externally
 - **Role Mapping**: Users are automatically assigned roles based on email domain, groups, or attributes
+
+### Critical Architecture Point
+
+**You host one Keycloak instance, but each organization brings their own IdP.**
+
+- Organization A connects their Azure AD to Keycloak
+- Organization B connects their Okta to Keycloak  
+- Organization C connects their Google Workspace to Keycloak
+- Keycloak federates all of these and presents a single OIDC endpoint to OpenEco
 
 ---
 
 ## Architecture
 
-### Authentication Flow
+### Authentication Flow (IdP Bridge Pattern)
 
 ```
-User → OpenEco → Identity Provider (Keycloak/Azure AD/Okta)
-                ↓
-            User authenticates
-                ↓
-            OIDC Token returned
-                ↓
+User → OpenEco → Keycloak (IdP Bridge) → Organization's IdP (Azure AD/Okta/Google/etc.)
+                                      ↓
+                                  User authenticates
+                                      ↓
+                                  IdP returns token to Keycloak
+                                      ↓
+                                  Keycloak issues OIDC token to OpenEco
+                                      ↓
 OpenEco verifies token → Maps roles → Creates session
 ```
 
 ### Self-Hosted Stack
 
 ```
-┌─────────────────────────────────────────┐
-│      Organization Infrastructure        │
-│                                         │
-│  ┌──────────────┐  ┌──────────────┐    │
-│  │   OpenEco    │  │  Keycloak    │    │
-│  │  (Web App)   │  │  (IdP)       │    │
-│  └──────┬───────┘  └──────┬───────┘    │
-│         │                  │            │
-│         └────────┬─────────┘            │
-│                  │                      │
-│         ┌────────▼─────────┐            │
-│         │   PostgreSQL     │            │
-│         │  (OpenEco DB)    │            │
-│         └──────────────────┘            │
-└─────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│              Organization Infrastructure                    │
+│                                                             │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
+│  │   OpenEco    │  │  Keycloak    │  │  Org's IdP   │     │
+│  │  (Web App)   │  │ (IdP Bridge) │  │ (Azure AD/   │     │
+│  │              │  │              │  │  Okta/etc.)  │     │
+│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘     │
+│         │                 │                 │             │
+│         └─────────┬───────┴─────────────────┘             │
+│                   │                                       │
+│         ┌─────────▼─────────┐                            │
+│         │   PostgreSQL      │                            │
+│         │  (OpenEco DB)     │                            │
+│         └───────────────────┘                            │
+└─────────────────────────────────────────────────────────────┘
 ```
 
 **Key Points:**
-- Organization owns and controls all components
-- OpenEco provides Helm/Docker templates for deployment
-- No external dependencies for authentication
-- Aligns with AGPL + public-good ethos
+- **Keycloak as IdP Bridge**: Industry-standard open-source identity provider
+  - ✅ Supports OIDC + SAML
+  - ✅ Actively maintained (used by Red Hat, governments, NGOs)
+  - ✅ Zero license cost
+  - ✅ Can run embedded, as sidecar, or externally
+- **Each Org Brings Their Own IdP**: Organization connects their existing IdP (Azure AD, Okta, etc.) to Keycloak
+- **Single Keycloak Instance**: One Keycloak instance federates multiple organization IdPs
+- **Organization owns and controls all components**
+- **OpenEco provides Helm/Docker templates for deployment**
+- **No external dependencies for authentication**
+- **Aligns with AGPL + public-good ethos**
 
 ---
 
 ## Supported Identity Providers
 
+OpenEco connects to **Keycloak** (open-source IdP bridge). Keycloak then federates to your organization's existing IdP:
+
 | Provider Type | Examples | Protocol | Status |
 |---------------|----------|----------|--------|
-| **Self-Hosted** | Keycloak, Authentik | OIDC | ✅ Supported |
-| **Cloud IAM** | Azure AD, Google Workspace, AWS IAM | OIDC | ✅ Supported |
-| **Enterprise SSO** | Okta, Auth0 | OIDC, SAML | ✅ OIDC Supported, SAML Planned |
-| **Enterprise Directory** | Active Directory (via Keycloak) | LDAP → OIDC | ✅ Via Keycloak |
+| **Cloud IAM** | Azure AD, Google Workspace, AWS IAM | OIDC/SAML → Keycloak → OpenEco | ✅ Supported |
+| **Enterprise SSO** | Okta, Auth0 | OIDC/SAML → Keycloak → OpenEco | ✅ Supported |
+| **Enterprise Directory** | Active Directory | LDAP → Keycloak → OpenEco | ✅ Supported |
+| **Self-Hosted** | Keycloak (standalone) | OIDC | ✅ Supported |
 | **Local Auth** | Email/password (dev only) | Credentials | ⚠️ Development only |
+
+**Keycloak Features:**
+- ✅ **OIDC + SAML support** - Connects to virtually any IdP
+- ✅ **Industry standard** - Used by Red Hat, governments, NGOs
+- ✅ **Actively maintained** - Regular security updates
+- ✅ **Zero license cost** - Fully open-source
+- ✅ **Flexible deployment** - Embedded, sidecar, or external
 
 ---
 
 ## Quick Start: Keycloak + OpenEco
 
-### Step 1: Deploy Keycloak
+### Step 1: Deploy Keycloak (IdP Bridge)
 
-**Option A: Docker Compose (Recommended for Pilots)**
+Keycloak can be deployed in three ways:
+
+**Option A: Embedded (Same Pod/Container as OpenEco)**
+- Keycloak runs alongside OpenEco in the same deployment
+- Best for: Single-tenant deployments, simplified infrastructure
+
+**Option B: Sidecar (Same Namespace/Network)**
+- Keycloak runs as a sidecar container
+- Best for: Kubernetes deployments, shared infrastructure
+
+**Option C: External (Dedicated Instance)**
+- Keycloak runs as a separate service
+- Best for: Multi-tenant deployments, centralized identity management
+
+**Deployment Commands:**
+
+**Docker Compose (Recommended for Pilots):**
 
 ```bash
 cd deploy/keycloak
@@ -91,7 +136,7 @@ docker-compose up -d
 podman-compose up -d
 ```
 
-**Option B: Kubernetes/OKD**
+**Kubernetes/OKD:**
 
 ```bash
 kubectl apply -f deploy/okd/keycloak/deployment.yaml
@@ -99,7 +144,7 @@ kubectl apply -f deploy/okd/keycloak/deployment.yaml
 
 See [deploy/keycloak/README.md](./deploy/keycloak/README.md) for detailed instructions.
 
-### Step 2: Configure Keycloak
+### Step 2: Configure Keycloak as IdP Bridge
 
 1. **Access Admin Console**
    - Navigate to `https://keycloak.yourcompany.com`
@@ -110,7 +155,36 @@ See [deploy/keycloak/README.md](./deploy/keycloak/README.md) for detailed instru
    - Name: `your-company` (or your organization name)
    - Click "Create"
 
-3. **Create Client for OpenEco**
+3. **Connect Your Organization's IdP (Identity Provider)**
+
+   **For Azure AD:**
+   - Go to "Identity Providers" → "Add provider" → "OpenID Connect v1.0"
+   - Alias: `azure-ad`
+   - Discovery Endpoint: `https://login.microsoftonline.com/{tenant-id}/.well-known/openid-configuration`
+   - Client ID: `[from Azure AD]`
+   - Client Secret: `[from Azure AD]`
+   - Click "Save"
+
+   **For Okta:**
+   - Go to "Identity Providers" → "Add provider" → "OpenID Connect v1.0"
+   - Alias: `okta`
+   - Discovery Endpoint: `https://{your-domain}.okta.com/.well-known/openid-configuration`
+   - Client ID: `[from Okta]`
+   - Client Secret: `[from Okta]`
+   - Click "Save"
+
+   **For Google Workspace:**
+   - Go to "Identity Providers" → "Add provider" → "Google"
+   - Client ID: `[from Google Cloud Console]`
+   - Client Secret: `[from Google Cloud Console]`
+   - Click "Save"
+
+   **For Active Directory (LDAP):**
+   - Go to "User Federation" → "Add provider" → "ldap"
+   - Configure LDAP connection details
+   - Click "Save"
+
+4. **Create Client for OpenEco**
    - Go to "Clients" → "Create client"
    - Client ID: `openeco`
    - Client protocol: `openid-connect`
@@ -122,10 +196,10 @@ See [deploy/keycloak/README.md](./deploy/keycloak/README.md) for detailed instru
    - Go to "Credentials" tab
    - Copy the "Secret" value (you'll need this for OpenEco config)
 
-4. **Configure User Groups (Optional)**
+5. **Configure User Groups (Optional)**
    - Go to "Groups" → "Create group"
    - Create groups like: `sustainability-team`, `admins`, etc.
-   - Assign users to groups
+   - Assign users to groups (users can come from your IdP)
    - These groups can be used for role mapping in OpenEco
 
 ### Step 3: Configure OpenEco
@@ -260,16 +334,41 @@ When you first deploy OpenEco, you'll be guided through setup:
 
 ## Integration Examples
 
-### Keycloak
+### Keycloak as IdP Bridge
+
+**Flow:** Organization's IdP → Keycloak → OpenEco
+
+**Step 1: Connect Your IdP to Keycloak**
+
+**For Azure AD:**
+- In Keycloak: "Identity Providers" → "Add provider" → "OpenID Connect v1.0"
+- Discovery Endpoint: `https://login.microsoftonline.com/{tenant-id}/.well-known/openid-configuration`
+- Client ID: `[from Azure AD App Registration]`
+- Client Secret: `[from Azure AD App Registration]`
+
+**For Okta:**
+- In Keycloak: "Identity Providers" → "Add provider" → "OpenID Connect v1.0"
+- Discovery Endpoint: `https://{your-domain}.okta.com/.well-known/openid-configuration`
+- Client ID: `[from Okta Application]`
+- Client Secret: `[from Okta Application]`
+
+**For Google Workspace:**
+- In Keycloak: "Identity Providers" → "Add provider" → "Google"
+- Client ID: `[from Google Cloud Console]`
+- Client Secret: `[from Google Cloud Console]`
+
+**Step 2: Configure Keycloak Client for OpenEco**
 
 **Keycloak Client Configuration:**
 ```
 Client ID: openeco
 Client Protocol: openid-connect
 Access Type: confidential
-Valid Redirect URIs: https://climate.yourcompany.com/api/auth/callback/oidc?organizationId=*
+Valid Redirect URIs: https://climate.yourcompany.com/api/auth/oidc/callback?organizationId=*
 Web Origins: https://climate.yourcompany.com
 ```
+
+**Step 3: Configure OpenEco**
 
 **OpenEco Configuration:**
 ```
@@ -279,34 +378,7 @@ Client Secret: [from Keycloak]
 Audience: openeco
 ```
 
-### Azure AD
-
-**Azure AD App Registration:**
-- Redirect URI: `https://climate.yourcompany.com/api/auth/oidc/callback?organizationId=*`
-- Supported account types: Your organization only
-- API permissions: `openid`, `profile`, `email`
-
-**OpenEco Configuration:**
-```
-Issuer: https://login.microsoftonline.com/{tenant-id}/v2.0
-Client ID: [Azure AD Application ID]
-Client Secret: [Azure AD Client Secret]
-Audience: [Azure AD Application ID]
-```
-
-### Google Workspace
-
-**Google Cloud Console:**
-- OAuth 2.0 Client ID
-- Authorized redirect URIs: `https://climate.yourcompany.com/api/auth/oidc/callback?organizationId=*`
-
-**OpenEco Configuration:**
-```
-Issuer: https://accounts.google.com
-Client ID: [Google OAuth Client ID]
-Client Secret: [Google OAuth Client Secret]
-Audience: [Google OAuth Client ID]
-```
+**Note:** OpenEco only connects to Keycloak. Your organization's IdP (Azure AD, Okta, etc.) connects to Keycloak, not directly to OpenEco.
 
 ---
 

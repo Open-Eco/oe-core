@@ -1,6 +1,31 @@
 # Keycloak Deployment for OpenEco
 
-This directory contains deployment templates for Keycloak, an open-source identity provider that works with OpenEco's federated authentication.
+This directory contains deployment templates for **Keycloak**, an open-source **IdP bridge** that works with OpenEco's federated authentication.
+
+## Keycloak as IdP Bridge
+
+Keycloak acts as an **identity provider bridge** that:
+- ✅ Supports **OIDC + SAML** protocols
+- ✅ Connects to your organization's existing IdP (Azure AD, Okta, Google Workspace, Active Directory, etc.)
+- ✅ Presents a single OIDC endpoint to OpenEco
+- ✅ **Industry-standard**: Used by Red Hat, governments, NGOs
+- ✅ **Actively maintained** with regular security updates
+- ✅ **Zero license cost** (fully open-source)
+- ✅ **Flexible deployment**: Can run embedded, as sidecar, or externally
+
+### Architecture Pattern
+
+**Critical Point:** You host one Keycloak instance, but each organization brings their own IdP.
+
+```
+User → OpenEco → Keycloak (IdP Bridge) → Organization's IdP (Azure AD/Okta/etc.)
+                                      ↓
+                                  User authenticates
+                                      ↓
+                                  Keycloak issues OIDC token to OpenEco
+```
+
+Each organization connects their existing IdP to Keycloak, and Keycloak federates all of them to OpenEco.
 
 ## Quick Start
 
@@ -33,7 +58,7 @@ Default credentials:
 
 ## Production Setup
 
-### 1. Configure Keycloak
+### 1. Configure Keycloak as IdP Bridge
 
 1. **Access Admin Console**
    - Navigate to `https://keycloak.yourcompany.com`
@@ -44,22 +69,53 @@ Default credentials:
    - Name: `your-company` (or your organization name)
    - Click "Create"
 
-3. **Create Client for OpenEco**
+3. **Connect Your Organization's IdP (Identity Provider)**
+
+   This is the **critical step** - connect your existing IdP to Keycloak:
+
+   **For Azure AD:**
+   - Go to "Identity Providers" → "Add provider" → "OpenID Connect v1.0"
+   - Alias: `azure-ad`
+   - Discovery Endpoint: `https://login.microsoftonline.com/{tenant-id}/.well-known/openid-configuration`
+   - Client ID: `[from Azure AD App Registration]`
+   - Client Secret: `[from Azure AD App Registration]`
+   - Click "Save"
+
+   **For Okta:**
+   - Go to "Identity Providers" → "Add provider" → "OpenID Connect v1.0"
+   - Alias: `okta`
+   - Discovery Endpoint: `https://{your-domain}.okta.com/.well-known/openid-configuration`
+   - Client ID: `[from Okta Application]`
+   - Client Secret: `[from Okta Application]`
+   - Click "Save"
+
+   **For Google Workspace:**
+   - Go to "Identity Providers" → "Add provider" → "Google"
+   - Client ID: `[from Google Cloud Console]`
+   - Client Secret: `[from Google Cloud Console]`
+   - Click "Save"
+
+   **For Active Directory (LDAP):**
+   - Go to "User Federation" → "Add provider" → "ldap"
+   - Configure LDAP connection details (server, bind DN, etc.)
+   - Click "Save"
+
+4. **Create Client for OpenEco**
    - Go to "Clients" → "Create client"
    - Client ID: `openeco`
    - Client protocol: `openid-connect`
    - Click "Next"
    - Access Type: `confidential`
-   - Valid Redirect URIs: `https://climate.yourcompany.com/api/auth/callback/oidc?organizationId=*`
+   - Valid Redirect URIs: `https://climate.yourcompany.com/api/auth/oidc/callback?organizationId=*`
    - Web Origins: `https://climate.yourcompany.com`
    - Click "Save"
    - Go to "Credentials" tab
    - Copy the "Secret" value (you'll need this for OpenEco config)
 
-4. **Configure User Groups (Optional)**
+5. **Configure User Groups (Optional)**
    - Go to "Groups" → "Create group"
    - Create groups like: `sustainability-team`, `admins`, etc.
-   - Assign users to groups
+   - Assign users to groups (users can come from your IdP)
    - These groups can be used for role mapping in OpenEco
 
 ### 2. Configure OpenEco
