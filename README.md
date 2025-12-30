@@ -304,7 +304,7 @@ open-eco/
 | **Local Dev** | Development | See Quick Start above |
 | **Podman/Docker** | Pilots, small teams | [INSTALLATION.md](./INSTALLATION.md#option-a-single-host-podmandocker--compose) |
 | **Kubernetes/OKD** | Production, enterprise | [INSTALLATION.md](./INSTALLATION.md#option-b-kubernetes--okd--openshift) |
-| **Vercel** | Demo site | [INSTALLATION.md](./INSTALLATION.md#demo-site--vercel) |
+| **Pterodactyl** | Demo site | [INSTALLATION.md](./INSTALLATION.md#demo-site--pterodactyl) |
 
 Each enterprise deployment gets **its own isolated database** - no shared multi-tenant infrastructure.
 

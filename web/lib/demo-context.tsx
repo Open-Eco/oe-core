@@ -2,6 +2,20 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
+/**
+ * Demo Context Provider
+ * 
+ * Provides demo functionality using browser sessionStorage for data persistence.
+ * This works in both local development and hosted environments (e.g., Pterodactyl).
+ * 
+ * Demo data characteristics:
+ * - Stored in browser sessionStorage (client-side only)
+ * - Persists during browser session
+ * - Cleared when browser session ends or user clears storage
+ * - No server-side persistence required
+ * - Compatible with hosted demo instances
+ */
+
 // Demo data types
 export type DemoOrganization = {
   id: string;

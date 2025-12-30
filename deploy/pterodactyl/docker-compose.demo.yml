@@ -1,0 +1,54 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: openeco-demo-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: openeco_demo
+      POSTGRES_USER: openeco_demo
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-demo_password_change_me}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - openeco-demo
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U openeco_demo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    image: ${WEB_IMAGE:-ghcr.io/open-eco/oe-core:web-latest}
+    container_name: openeco-demo-web
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://openeco_demo:${POSTGRES_PASSWORD:-demo_password_change_me}@postgres:5432/openeco_demo?schema=public
+      NEXTAUTH_URL: ${NEXTAUTH_URL:-https://demo.open-eco.org}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET:-change-me-to-a-long-random-secret-min-32-chars}
+      NEXT_PUBLIC_APP_URL: ${NEXT_PUBLIC_APP_URL:-https://demo.open-eco.org}
+      NEXT_PUBLIC_APP_NAME: OpenEco Demo
+      NODE_ENV: production
+      PORT: 3000
+    ports:
+      - "${WEB_PORT:-3000}:3000"
+    networks:
+      - openeco-demo
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  openeco-demo:
+    driver: bridge

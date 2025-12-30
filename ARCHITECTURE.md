@@ -118,13 +118,16 @@ open-eco/
 - **Releases**: Versioned with OCI container images, Helm charts, installation scripts
 - **Container Images**: Built with Buildah, runnable via Podman or Docker
 
-### 2. Demo Site (Vercel)
+### 2. Demo Site (Pterodactyl)
 
 **URL**: `demo.open-eco.org`
 
-- Interactive demo with sample data
+- Full OpenEco instance hosted on Pterodactyl Panel
+- Interactive demo with sample data stored in browser sessionStorage
 - Feature walkthroughs and sandbox
+- Minimal PostgreSQL database (only for NextAuth.js sessions)
 - Links to installation guides and GitHub
+- See [Pterodactyl Deployment Guide](../deploy/pterodactyl/README.md) for setup
 
 ### 3. Documentation Site (GitHub Pages)
 
@@ -1412,7 +1415,7 @@ This roadmap organizes features by priority and maps them to OpenEco's architect
 | **Podman/Docker Compose** | DevOps | Low | 🚧 Planned |
 | **Helm Charts (K8s/OKD)** | DevOps | Medium | 🚧 Planned |
 | **Installation Documentation** | Docs | Low | ✅ In Progress |
-| **Demo Site (Vercel)** | DevOps | Low | 🚧 Planned |
+| **Demo Site (Pterodactyl)** | DevOps | Low | ✅ In Progress |
 | **High Availability Setup** | DevOps | High | 📅 Future |
 | **SBOM + Signed Releases** | DevOps | Medium | 📅 Q1 2025 |
 

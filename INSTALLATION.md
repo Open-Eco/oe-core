@@ -778,35 +778,85 @@ For each enterprise:
 
 ## Public Site Deployment
 
-### Demo Site → Vercel
+### Demo Site → Pterodactyl
 
-**Platform**: Vercel  
+**Platform**: Pterodactyl Panel  
 **Domain**: `demo.open-eco.org`
 
-#### Setup
+OpenEco demo is hosted on Pterodactyl, a game server management platform that can manage Docker containers for applications. The demo runs as a full OpenEco instance with demo data stored in browser sessionStorage.
 
-1. **Connect Repository**
-   - Go to [vercel.com](https://vercel.com)
-   - Import GitHub repository
-   - Set root directory to `web/`
+#### Quick Setup
 
-2. **Configure Environment Variables**
-   
-   In Vercel dashboard → Settings → Environment Variables:
+**Option 1: Using Docker Compose (Standalone)**
+
+1. **Run Setup Script**:
+   ```bash
+   ./scripts/pterodactyl-setup.sh
    ```
-   DATABASE_URL=your-postgres-connection-string
-   NEXTAUTH_SECRET=your-secret-key
+
+2. **Configure Environment**:
+   ```bash
+   # Edit environment variables
+   vi deploy/pterodactyl/.env
+   ```
+
+3. **Start Demo**:
+   ```bash
+   cd deploy/pterodactyl
+   docker-compose -f docker-compose.demo.yml up -d
+   ```
+
+4. **Run Migrations**:
+   ```bash
+   docker-compose -f docker-compose.demo.yml exec web npx prisma db push
+   ```
+
+**Option 2: Using Pterodactyl Panel**
+
+1. **Install Pterodactyl** (if not installed):
+   - See [Pterodactyl Installation Guide](https://pterodactyl.io/panel/1.0/getting_started.html)
+   - Requires: Pterodactyl Panel + Wings (daemon)
+
+2. **Create Demo Server**:
+   - Log into Pterodactyl Panel
+   - Create new server: **Name**: `OpenEco Demo`
+   - **Nest**: Node.js (or import custom egg from `deploy/pterodactyl/pterodactyl-egg.json`)
+   - **Docker Image**: `ghcr.io/open-eco/oe-core:web-latest`
+   - **Startup Command**: `npm run start`
+
+3. **Configure Environment Variables**:
+   ```
+   DATABASE_URL=postgresql://openeco_demo:password@postgres:5432/openeco_demo?schema=public
+   NEXTAUTH_SECRET=your-secret-key-min-32-chars
    NEXTAUTH_URL=https://demo.open-eco.org
    NEXT_PUBLIC_APP_URL=https://demo.open-eco.org
+   NODE_ENV=production
+   PORT=3000
    ```
 
-3. **Add Custom Domain**
-   - Project Settings → Domains → Add `demo.open-eco.org`
-   - Configure DNS CNAME to `cname.vercel-dns.com`
+4. **Set Up Database**:
+   - Create PostgreSQL container/server in Pterodactyl
+   - Or use external PostgreSQL database
+   - Update `DATABASE_URL` with correct connection string
 
-4. **Auto-Deployment**
-   - Production: Deploys on push to `main`
-   - Preview: Every PR gets a preview URL
+5. **Run Migrations**:
+   - In server console: `npx prisma generate && npx prisma db push`
+
+6. **Configure Domain & SSL**:
+   - Set up reverse proxy (Nginx/Caddy) or use Pterodactyl's proxy
+   - Configure SSL certificate (Let's Encrypt recommended)
+
+#### Detailed Instructions
+
+For complete setup instructions, troubleshooting, and maintenance:
+- See [`deploy/pterodactyl/README.md`](./deploy/pterodactyl/README.md)
+
+#### Demo Characteristics
+
+- **Data Storage**: Demo data uses browser `sessionStorage` (no persistent server-side data)
+- **Database**: Minimal PostgreSQL (only for NextAuth.js sessions)
+- **Reset**: Users can clear browser data or use incognito mode for fresh demo
+- **Updates**: Use `./scripts/pterodactyl-deploy.sh --pull --migrate --restart` to update
 
 ### Documentation Site → GitHub Pages
 

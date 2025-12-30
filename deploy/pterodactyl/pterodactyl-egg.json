@@ -1,0 +1,93 @@
+{
+  "_comment": "OpenEco Demo Pterodactyl Egg Configuration",
+  "meta": {
+    "version": "1.0.0",
+    "name": "OpenEco Demo",
+    "description": "Open-source emissions accounting platform demo instance",
+    "author": "OpenEco Team",
+    "image": "ghcr.io/open-eco/oe-core:web-latest"
+  },
+  "startup": "npm run start",
+  "stop": "^C",
+  "config": {
+    "files": "{}",
+    "startup": {
+      "done": "Ready on",
+      "userInteraction": []
+    },
+    "logs": "{}",
+    "extends": null
+  },
+  "scripts": {
+    "installation": {
+      "script": "#!/bin/bash\n# OpenEco Demo Installation Script\n\n# Install Node.js dependencies (if needed)\nif [ ! -d \"node_modules\" ]; then\n  npm ci --production\nfi\n\n# Generate Prisma client\nnpx prisma generate\n\n# Run database migrations\nnpx prisma db push --accept-data-loss\n\necho \"OpenEco Demo installation complete\"",
+      "container": "node:20-alpine",
+      "entrypoint": "ash"
+    }
+  },
+  "variables": [
+    {
+      "name": "DATABASE_URL",
+      "description": "PostgreSQL connection string for the demo database",
+      "env_variable": "DATABASE_URL",
+      "default_value": "postgresql://openeco_demo:password@postgres:5432/openeco_demo?schema=public",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|max:500",
+      "required": true
+    },
+    {
+      "name": "NEXTAUTH_SECRET",
+      "description": "Secret key for NextAuth.js session encryption (min 32 characters)",
+      "env_variable": "NEXTAUTH_SECRET",
+      "default_value": "",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|min:32",
+      "required": true
+    },
+    {
+      "name": "NEXTAUTH_URL",
+      "description": "Public URL of the demo instance (e.g., https://demo.open-eco.org)",
+      "env_variable": "NEXTAUTH_URL",
+      "default_value": "https://demo.open-eco.org",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|url",
+      "required": true
+    },
+    {
+      "name": "NEXT_PUBLIC_APP_URL",
+      "description": "Public URL for the application (same as NEXTAUTH_URL typically)",
+      "env_variable": "NEXT_PUBLIC_APP_URL",
+      "default_value": "https://demo.open-eco.org",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "required|string|url",
+      "required": true
+    },
+    {
+      "name": "NODE_ENV",
+      "description": "Node.js environment",
+      "env_variable": "NODE_ENV",
+      "default_value": "production",
+      "user_viewable": true,
+      "user_editable": false,
+      "rules": "string",
+      "required": false
+    },
+    {
+      "name": "PORT",
+      "description": "Port the application listens on",
+      "env_variable": "PORT",
+      "default_value": "3000",
+      "user_viewable": true,
+      "user_editable": true,
+      "rules": "integer|min:1|max:65535",
+      "required": false
+    }
+  ],
+  "docker_images": {
+    "ghcr.io/open-eco/oe-core:web-latest": "ghcr.io/open-eco/oe-core:web-latest"
+  }
+}
