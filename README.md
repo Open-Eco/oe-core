@@ -59,6 +59,34 @@ OpenEco is a free, open-source platform for measuring, tracking, and reporting g
 
 ---
 
+## Preview
+
+Here's what OpenEco looks like:
+
+<div align="center">
+
+![OpenEco Dashboard Mockup 1](./_mockups/Mock1.png)
+
+*Overview Dashboard - Executive view with emissions breakdown and key metrics*
+
+![OpenEco Dashboard Mockup 2](./_mockups/Mock2.png)
+
+*Measurements View - Activity data entry and management*
+
+![OpenEco Dashboard Mockup 3](./_mockups/mock3.png)
+
+*Scopes & Reporting - GHG Protocol-aligned scope breakdown*
+
+![OpenEco Dashboard Mockup 4](./_mockups/mock4.png)
+
+*Data Lineage & Audit - Complete transparency and traceability*
+
+</div>
+
+For detailed UI/UX specifications, see [UI_UX_WIREFRAME_PLAN.md](./UI_UX_WIREFRAME_PLAN.md).
+
+---
+
 ## 🚀 Getting Started
 
 **New to OpenEco?** Start here:
