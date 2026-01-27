@@ -52,7 +52,7 @@ interface ChartProps {
 }
 
 interface BaseChartProps extends ChartProps {
-  children: React.ReactNode;
+  children: React.ReactElement;
 }
 
 /**
@@ -75,7 +75,7 @@ export const EcoChart: React.FC<BaseChartProps> = ({
       {subtitle && <p className="eco-chart__subtitle">{subtitle}</p>}
       <div className="eco-chart__container" style={heightValue ? { height: `${heightValue}px` } : undefined}>
         <ResponsiveContainer width="100%" height="100%">
-          {children}
+          {children as React.ReactElement}
         </ResponsiveContainer>
       </div>
     </div>
