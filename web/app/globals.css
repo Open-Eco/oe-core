@@ -1,3 +1,6 @@
+/* Import EcoKit Design System */
+@import './assets/EcoKit/ecokit.css';
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
