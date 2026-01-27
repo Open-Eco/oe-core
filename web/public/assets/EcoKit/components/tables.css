@@ -1,0 +1,58 @@
+.eco-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: var(--font-sans);
+  font-size: var(--text-md);
+  background: white;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
+}
+
+.eco-table thead {
+  background: var(--neutral-100);
+}
+
+.eco-table th {
+  padding: var(--space-4);
+  text-align: left;
+  font-weight: var(--font-weight-bold);
+  font-size: var(--text-sm);
+  color: var(--neutral-900);
+  border-bottom: 2px solid var(--neutral-300);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.eco-table td {
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--neutral-300);
+  color: var(--neutral-700);
+}
+
+.eco-table tbody tr:hover {
+  background: var(--neutral-100);
+}
+
+.eco-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.eco-table--striped tbody tr:nth-child(even) {
+  background: var(--neutral-100);
+}
+
+.eco-table--bordered {
+  border: 1px solid var(--neutral-300);
+}
+
+.eco-table--bordered th,
+.eco-table--bordered td {
+  border-right: 1px solid var(--neutral-300);
+}
+
+.eco-table--bordered th:last-child,
+.eco-table--bordered td:last-child {
+  border-right: none;
+}
+

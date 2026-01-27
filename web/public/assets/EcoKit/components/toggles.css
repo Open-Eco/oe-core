@@ -1,0 +1,79 @@
+/* Toggle Button */
+.eco-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--neutral-100);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--neutral-700);
+  transition: all var(--duration-normal) var(--easing-ease-out);
+  user-select: none;
+}
+
+.eco-toggle:hover {
+  background: var(--neutral-200);
+  border-color: var(--neutral-400);
+}
+
+.eco-toggle:focus {
+  outline: 2px solid var(--brand-blue-600);
+  outline-offset: 2px;
+}
+
+.eco-toggle--active {
+  background: var(--brand-blue-600);
+  border-color: var(--brand-blue-600);
+  color: white;
+}
+
+.eco-toggle--active:hover {
+  background: var(--brand-blue-700);
+  border-color: var(--brand-blue-700);
+}
+
+.eco-toggle--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.eco-toggle--disabled:hover {
+  background: var(--neutral-100);
+  border-color: var(--neutral-300);
+}
+
+/* Toggle Button Group */
+.eco-toggle-group {
+  display: inline-flex;
+  gap: var(--space-1);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--neutral-100);
+  padding: var(--space-1);
+}
+
+.eco-toggle-group .eco-toggle {
+  border: none;
+  background: transparent;
+  margin: 0;
+}
+
+.eco-toggle-group .eco-toggle:hover {
+  background: var(--neutral-200);
+}
+
+.eco-toggle-group .eco-toggle--active {
+  background: white;
+  color: var(--brand-blue-600);
+  box-shadow: var(--shadow-sm);
+}
+
+.eco-toggle-group .eco-toggle--active:hover {
+  background: white;
+}
+

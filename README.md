@@ -44,6 +44,14 @@ Open algorithms. No black boxes. Anyone can verify.
 
 ---
 
+## Quick Start for IT Admins
+
+**🚀 Need to deploy this now?** See [Quick Deploy Guide](https://www.open-eco.org/docs/deployment/quick-deploy) - 5-minute deployment guide.
+
+**📚 Full Documentation:** [docs.open-eco.org](https://www.open-eco.org/docs)
+
+---
+
 ## What is OpenEco?
 
 OpenEco is a free, open-source platform for measuring, tracking, and reporting greenhouse gas emissions. Companies download and self-host the platform, maintaining full control over their data while contributing to global climate transparency.
@@ -83,7 +91,7 @@ Here's what OpenEco looks like:
 
 </div>
 
-For detailed UI/UX specifications, see [UI_UX_WIREFRAME_PLAN.md](./UI_UX_WIREFRAME_PLAN.md).
+For detailed UI/UX specifications, see [UI/UX Wireframe Plan](https://www.open-eco.org/docs/resources/ui-ux-wireframe).
 
 ---
 
@@ -91,7 +99,7 @@ For detailed UI/UX specifications, see [UI_UX_WIREFRAME_PLAN.md](./UI_UX_WIREFRA
 
 **New to OpenEco?** Start here:
 
-- **For Companies:** See [Getting Started: Enterprise Deployment](./INSTALLATION.md#getting-started-enterprise-deployment) in the Installation Guide
+- **For Companies:** See [Getting Started](https://www.open-eco.org/docs/getting-started) in the documentation
 - **For Developers:** See [Quick Start (Developers)](#quick-start-developers) below
 
 The deployment process typically takes 2-4 hours for a pilot setup on a single Linux server.
@@ -271,18 +279,23 @@ Visit [http://localhost:3000](http://localhost:3000) 🎉
 
 ## Documentation
 
-| Document | Description |
-|----------|-------------|
-| [**ROADMAP.md**](./ROADMAP.md) | Development priorities, milestones, and timeline |
-| [**ARCHITECTURE.md**](./ARCHITECTURE.md) | Technical architecture, engines, and deployment models |
-| [**AUTHENTICATION.md**](./AUTHENTICATION.md) | Federated authentication setup (OIDC, Keycloak) |
-| [**SECURITY_AND_GOVERNANCE.md**](./SECURITY_AND_GOVERNANCE.md) | Security model, trust boundaries, data governance |
-| [**PLATFORM_FEATURES.md**](./PLATFORM_FEATURES.md) | Full feature list and requirements |
-| [**INSTALLATION.md**](./INSTALLATION.md) | Setup guide for dev, enterprise, and public deployment |
-| [**OPEN_SOURCE_PLAYBOOK.md**](./OPEN_SOURCE_PLAYBOOK.md) | Open source governance and community guidelines |
-| [**COMPETITIVE_ANALYSIS.md**](./COMPETITIVE_ANALYSIS.md) | Competitive landscape and product strategy |
-| [**FAQ.md**](./FAQ.md) | Frequently asked questions |
-| [**CONTRIBUTING.md**](./CONTRIBUTING.md) | How to contribute |
+**📚 Full documentation available at [docs.open-eco.org](https://www.open-eco.org/docs)**
+
+### Quick Links
+
+| Section | Description | Link |
+|---------|-------------|------|
+| **Getting Started** | Deployment guides and setup | [docs.open-eco.org/docs/getting-started](https://www.open-eco.org/docs/getting-started) |
+| **Features** | Platform capabilities | [docs.open-eco.org/docs/features](https://www.open-eco.org/docs/features) |
+| **Compliance & Audit** | Security and governance | [docs.open-eco.org/docs/compliance](https://www.open-eco.org/docs/compliance) |
+| **Integrations** | Authentication and data sources | [docs.open-eco.org/docs/integrations](https://www.open-eco.org/docs/integrations) |
+| **Roles & Dashboards** | User roles and access | [docs.open-eco.org/docs/roles](https://www.open-eco.org/docs/roles) |
+| **Resources** | Architecture, FAQ, and more | [docs.open-eco.org/docs/resources](https://www.open-eco.org/docs/resources) |
+| **Upcoming Features** | Roadmap and planned features | [docs.open-eco.org/docs/upcoming](https://www.open-eco.org/docs/upcoming) |
+
+### Local Documentation (GitHub)
+
+- [**CONTRIBUTING.md**](./CONTRIBUTING.md) - How to contribute
 
 ---
 
@@ -349,7 +362,7 @@ Each enterprise deployment gets **its own isolated database** - no shared multi-
 | Styling | Vanilla CSS (EcoKit design system) |
 | Container | OCI images (Buildah/Podman/Docker) |
 
-**Authentication:** OpenEco uses **Keycloak as an open-source IdP bridge** that connects to your organization's existing identity provider (Azure AD, Okta, Google Workspace, etc.). See [AUTHENTICATION.md](./AUTHENTICATION.md) for details.
+**Authentication:** OpenEco uses **Keycloak as an open-source IdP bridge** that connects to your organization's existing identity provider (Azure AD, Okta, Google Workspace, etc.). See [Authentication Guide](https://www.open-eco.org/docs/integrations/authentication) for details.
 
 ---
 

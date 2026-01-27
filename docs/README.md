@@ -1,159 +1,53 @@
-# Documentation Site
+# OpenEco Documentation
 
-Static documentation site for design system, architecture guides, and developer documentation.
+**Self-hosted climate transparency for enterprises.**
 
-## Overview
+This documentation site is available at [docs.open-eco.org](https://www.open-eco.org/docs) and contains all deployment, feature, and technical documentation for OpenEco.
 
-This site is deployed to `docs.open-eco.org` via GitHub Pages.
+## Documentation Structure
 
-## Tech Stack Options
+### Getting Started
+- [Getting Started](./getting-started.md) - Overview and quick links
+- [Quick Deploy](./deployment/quick-deploy.md) - 5-minute production deployment
+- [Quick Start](./deployment/quick-start.md) - Local development setup
+- [Deployment Guide](./deployment/deployment-guide.md) - Comprehensive deployment
+- [Installation Guide](./deployment/installation.md) - Enterprise setup
+- [Podman Guide](./deployment/podman-guide.md) - Using Podman
+- [Environment Setup](./deployment/env-setup.md) - Configuration
 
-Choose one:
+### Features
+- [Features](./features.md) - Platform capabilities overview
+- [Platform Features](./features/platform-features.md) - Complete feature list
 
-- **Jekyll** (GitHub Pages native) - Simplest
-- **Docusaurus** (React-based) - Most features
-- **Next.js Static Export** - Consistent with web app
-- **VitePress** - Fast, Vue-based
-- **MkDocs** - Python-based, simple
+### Compliance & Audit
+- [Compliance & Audit](./compliance.md) - Audit-ready design
+- [Security & Governance](./compliance/security-governance.md) - Security model
 
-**Recommendation**: Start with **Jekyll** for simplicity, or **Docusaurus** for a full-featured docs site.
+### Upcoming Features
+- [Upcoming Features](./upcoming.md) - Planned capabilities
+- [Roadmap](./upcoming/roadmap.md) - Development timeline
 
-## Getting Started
+### Integrations
+- [Integrations](./integrations.md) - Data sources and infrastructure
+- [Authentication](./integrations/authentication.md) - OIDC/Keycloak setup
 
-### Option 1: Jekyll (Recommended for GitHub Pages)
+### Roles & Dashboards
+- [Roles & Dashboards](./roles.md) - User roles and access control
 
-```bash
-# Install Jekyll
-gem install bundler jekyll
+### Resources
+- [Resources](./resources.md) - Technical documentation
+- [Architecture](./resources/architecture.md) - System architecture
+- [UI/UX Wireframe](./resources/ui-ux-wireframe.md) - Design specifications
+- [Product Requirements](./resources/prd.md) - PRD
+- [Reporting Engine](./resources/reporting-engine.md) - Reporting docs
+- [Open Source Playbook](./resources/open-source-playbook.md) - Community guidelines
+- [Competitive Analysis](./resources/competitive-analysis.md) - Market analysis
+- [FAQ](./resources/faq.md) - Frequently asked questions
 
-# Initialize (if starting fresh)
-jekyll new . --force
+## Design System
 
-# Install dependencies
-bundle install
+The [EcoKit Design System](./index.html) is also available in this documentation site, providing UI components, design tokens, and guidelines.
 
-# Run locally
-bundle exec jekyll serve
-```
+## Contributing
 
-### Option 2: Docusaurus
-
-```bash
-# Create Docusaurus site
-npx create-docusaurus@latest . classic
-
-# Install dependencies
-npm install
-
-# Run locally
-npm start
-```
-
-### Option 3: Next.js Static Export
-
-```bash
-# Initialize Next.js
-npx create-next-app@latest . --typescript --app
-
-# Configure for static export
-# In next.config.js:
-# module.exports = { output: 'export' }
-
-# Run locally
-npm run dev
-```
-
-## Project Structure
-
-```
-docs/
-├── _config.yml      # Jekyll config (if using Jekyll)
-├── _docs/           # Documentation pages
-│   ├── design-system/
-│   ├── architecture/
-│   └── guides/
-├── assets/          # Documentation assets
-└── index.md         # Homepage
-```
-
-## Deployment
-
-### GitHub Pages
-
-1. **Enable GitHub Pages** in repository settings:
-   - Settings → Pages
-   - Source: `main` branch, `/docs` folder (or root)
-
-2. **Configure Custom Domain**:
-   - Add `docs.open-eco.org` in Pages settings
-   - Add CNAME file: `echo "docs.open-eco.org" > CNAME`
-
-3. **Update DNS** at domain registrar:
-   ```
-   CNAME: docs → your-username.github.io
-   ```
-
-### GitHub Actions (Recommended)
-
-Create `.github/workflows/docs.yml`:
-
-```yaml
-name: Deploy Docs
-
-on:
-  push:
-    branches: [main]
-    paths:
-      - 'docs/**'
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: |
-          cd docs
-          npm install
-          npm run build
-      - uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs/build
-```
-
-## Design Assets
-
-Reference shared assets from `../EcoKit/`:
-
-```markdown
-![Logo](../../EcoKit/logo.png)
-```
-
-## Content Structure
-
-### Design System Documentation
-
-- Component library
-- Design tokens (colors, typography, spacing)
-- Usage guidelines
-- Asset library
-
-### Architecture Documentation
-
-- System architecture
-- API documentation
-- Database schema
-- Deployment guides
-
-### Developer Guides
-
-- Setup instructions
-- Contributing guidelines
-- Development workflow
-- Troubleshooting
-
----
-
-See parent [README.md](../README.md) for monorepo overview.
-
+See [CONTRIBUTING.md](../CONTRIBUTING.md) in the repository root for contribution guidelines.
