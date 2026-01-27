@@ -1,0 +1,53 @@
+.eco-tabs {
+  display: flex;
+  flex-direction: column;
+}
+
+.eco-tabs__list {
+  display: flex;
+  gap: var(--space-1);
+  border-bottom: 2px solid var(--neutral-200);
+  overflow-x: auto;
+}
+
+.eco-tabs__trigger {
+  padding: var(--space-3) var(--space-5);
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  font-family: var(--font-sans);
+  font-size: var(--text-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--neutral-600);
+  white-space: nowrap;
+  transition: all var(--duration-normal) var(--easing-ease-out);
+  margin-bottom: -2px;
+}
+
+.eco-tabs__trigger:hover {
+  color: var(--neutral-900);
+  background: var(--neutral-50);
+}
+
+.eco-tabs__trigger[aria-selected="true"] {
+  color: var(--brand-blue-600);
+  border-bottom-color: var(--brand-blue-600);
+  background: transparent;
+}
+
+.eco-tabs__trigger:focus {
+  outline: 2px solid var(--brand-blue-600);
+  outline-offset: -2px;
+  border-radius: var(--radius-sm);
+}
+
+.eco-tabs__panel {
+  padding: var(--space-5) 0;
+  display: none;
+}
+
+.eco-tabs__panel[aria-hidden="false"] {
+  display: block;
+}
+

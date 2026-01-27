@@ -1,0 +1,40 @@
+.eco-progress {
+  width: 100%;
+  height: 8px;
+  background: var(--neutral-300);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  position: relative;
+}
+
+.eco-progress__bar {
+  height: 100%;
+  background: var(--gradient-brand);
+  border-radius: var(--radius-full);
+  transition: width var(--duration-slow) var(--easing-ease-out);
+}
+
+.eco-progress--success .eco-progress__bar {
+  background: var(--success-500);
+}
+
+.eco-progress--warning .eco-progress__bar {
+  background: var(--warning-500);
+}
+
+.eco-progress--error .eco-progress__bar {
+  background: var(--error-500);
+}
+
+.eco-progress--sm {
+  height: 4px;
+}
+
+.eco-progress--md {
+  height: 8px;
+}
+
+.eco-progress--lg {
+  height: 12px;
+}
+
