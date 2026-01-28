@@ -1,13 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "version": 2,
-  "buildCommand": "cd web && npm run build",
-  "devCommand": "cd web && npm run dev",
-  "installCommand": "cd web && npm install",
-  "framework": "nextjs",
-  "regions": ["iad1"],
-  "outputDirectory": "web/.next",
-  "public": false,
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "headers": [
     {
       "source": "/(.*)",
@@ -45,13 +39,10 @@
     }
   ],
   "functions": {
-    "web/app/api/**/*.ts": {
+    "app/api/**/*.ts": {
       "memory": 1024,
       "maxDuration": 10
     }
-  },
-  "env": {
-    "NODE_ENV": "production"
   },
   "build": {
     "env": {

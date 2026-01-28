@@ -84,7 +84,7 @@ The fastest way to deploy OpenEco to Vercel:
 
 3. **Configure project settings:**
    - **Framework Preset:** Next.js (auto-detected)
-   - **Root Directory:** `web`
+   - **Root Directory:** `web` ⚠️ **IMPORTANT** - Must be set to `web`
    - **Build Command:** `npm run build` (auto-detected)
    - **Output Directory:** `.next` (auto-detected)
    - **Install Command:** `npm install` (auto-detected)
@@ -342,15 +342,12 @@ Then **redeploy** for changes to take effect.
 
 The repository includes a `vercel.json` configuration file that optimizes deployment:
 
+**Important:** This configuration assumes you set the **Root Directory** to `web` in Vercel project settings.
+
 ```json
 {
-  "version": 2,
-  "buildCommand": "cd web && npm run build",
-  "devCommand": "cd web && npm run dev",
-  "installCommand": "cd web && npm install",
-  "framework": "nextjs",
-  "regions": ["iad1"],
-  "outputDirectory": "web/.next",
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
   "headers": [
     {
       "source": "/(.*)",
@@ -375,7 +372,7 @@ The repository includes a `vercel.json` configuration file that optimizes deploy
     }
   ],
   "functions": {
-    "web/app/api/**/*.ts": {
+    "app/api/**/*.ts": {
       "memory": 1024,
       "maxDuration": 10
     }
@@ -387,17 +384,27 @@ The repository includes a `vercel.json` configuration file that optimizes deploy
 
 | Setting | Purpose |
 |---------|---------|
-| `buildCommand` | Runs build in `web/` directory (npm install handled by installCommand) |
-| `framework` | Enables Next.js optimizations |
-| `regions` | Deploy to specific regions (iad1 = US East) |
+| `buildCommand` | Runs Next.js build (npm install handled by installCommand) |
+| `installCommand` | Installs dependencies before build |
 | `headers` | Security headers (CSP, frame protection, content type) |
 | `functions` | Serverless function configuration |
+
+**Note:** Vercel auto-detects Next.js projects, so framework/regions are optional.
 
 ---
 
 ## Troubleshooting
 
 ### Build Failures
+
+**Error: "Cannot find module 'next'" or "Command failed"**
+
+**Solution:**
+Ensure **Root Directory** is set to `web` in Vercel project settings:
+1. Go to Project Settings > General
+2. Under "Build & Development Settings"
+3. Set **Root Directory** to `web`
+4. Redeploy
 
 **Error: "Prisma Client not generated"**
 
