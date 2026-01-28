@@ -8,12 +8,6 @@
   "regions": ["iad1"],
   "outputDirectory": "web/.next",
   "public": false,
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/web/$1"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",

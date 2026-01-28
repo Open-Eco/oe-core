@@ -351,12 +351,6 @@ The repository includes a `vercel.json` configuration file that optimizes deploy
   "framework": "nextjs",
   "regions": ["iad1"],
   "outputDirectory": "web/.next",
-  "rewrites": [
-    {
-      "source": "/docs/:path*",
-      "destination": "/docs/:path*"
-    }
-  ],
   "headers": [
     {
       "source": "/(.*)",
@@ -396,7 +390,6 @@ The repository includes a `vercel.json` configuration file that optimizes deploy
 | `buildCommand` | Custom build in `web/` directory |
 | `framework` | Enables Next.js optimizations |
 | `regions` | Deploy to specific regions (iad1 = US East) |
-| `rewrites` | URL routing configuration |
 | `headers` | Security headers (CSP, XSS protection) |
 | `functions` | Serverless function configuration |
 
