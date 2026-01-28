@@ -1,6 +1,6 @@
 # Documentation Migration Summary
 
-All documentation has been reorganized into the `docs/` directory structure to match the [docs.open-eco.org](https://www.open-eco.org/docs) site.
+All documentation has been reorganized into the `docs/` directory structure to match the [open-eco.github.io/oe-core](https://open-eco.github.io/oe-core) site.
 
 ## New Structure
 
@@ -69,14 +69,14 @@ All original MD files remain in the repository root for backward compatibility. 
 ## Documentation Site URLs
 
 When deployed, documentation will be available at:
-- Main docs: `https://www.open-eco.org/docs`
-- Getting Started: `https://www.open-eco.org/docs/getting-started`
-- Features: `https://www.open-eco.org/docs/features`
-- Compliance: `https://www.open-eco.org/docs/compliance`
-- Upcoming: `https://www.open-eco.org/docs/upcoming`
-- Integrations: `https://www.open-eco.org/docs/integrations`
-- Roles: `https://www.open-eco.org/docs/roles`
-- Resources: `https://www.open-eco.org/docs/resources`
+- Main docs: `https://open-eco.github.io/oe-core`
+- Getting Started: `https://open-eco.github.io/oe-core/getting-started`
+- Features: `https://open-eco.github.io/oe-core/features`
+- Compliance: `https://open-eco.github.io/oe-core/compliance`
+- Upcoming: `https://open-eco.github.io/oe-core/upcoming`
+- Integrations: `https://open-eco.github.io/oe-core/integrations`
+- Roles: `https://open-eco.github.io/oe-core/roles`
+- Resources: `https://open-eco.github.io/oe-core/resources`
 
 ## Migration Complete
 
