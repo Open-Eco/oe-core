@@ -46,9 +46,9 @@ Open algorithms. No black boxes. Anyone can verify.
 
 ## Quick Start for IT Admins
 
-**🚀 Need to deploy this now?** See [Quick Deploy Guide](https://www.open-eco.org/docs/deployment/quick-deploy) - 5-minute deployment guide.
+**🚀 Need to deploy this now?** See [Quick Deploy Guide](https://open-eco.github.io/oe-core/deployment/quick-deploy) - 5-minute deployment guide.
 
-**📚 Full Documentation:** [docs.open-eco.org](https://www.open-eco.org/docs)
+**📚 Full Documentation:** [open-eco.github.io/oe-core](https://open-eco.github.io/oe-core)
 
 ---
 
@@ -91,7 +91,7 @@ Here's what OpenEco looks like:
 
 </div>
 
-For detailed UI/UX specifications, see [UI/UX Wireframe Plan](https://www.open-eco.org/docs/resources/ui-ux-wireframe).
+For detailed UI/UX specifications, see [UI/UX Wireframe Plan](https://open-eco.github.io/oe-core/resources/ui-ux-wireframe).
 
 ---
 
@@ -99,7 +99,7 @@ For detailed UI/UX specifications, see [UI/UX Wireframe Plan](https://www.open-e
 
 **New to OpenEco?** Start here:
 
-- **For Companies:** See [Getting Started](https://www.open-eco.org/docs/getting-started) in the documentation
+- **For Companies:** See [Getting Started](https://open-eco.github.io/oe-core/getting-started) in the documentation
 - **For Developers:** See [Quick Start (Developers)](#quick-start-developers) below
 
 The deployment process typically takes 2-4 hours for a pilot setup on a single Linux server.
@@ -279,19 +279,19 @@ Visit [http://localhost:3000](http://localhost:3000) 🎉
 
 ## Documentation
 
-**📚 Full documentation available at [docs.open-eco.org](https://www.open-eco.org/docs)**
+**📚 Full documentation available at [open-eco.github.io/oe-core](https://open-eco.github.io/oe-core)**
 
 ### Quick Links
 
 | Section | Description | Link |
 |---------|-------------|------|
-| **Getting Started** | Deployment guides and setup | [docs.open-eco.org/docs/getting-started](https://www.open-eco.org/docs/getting-started) |
-| **Features** | Platform capabilities | [docs.open-eco.org/docs/features](https://www.open-eco.org/docs/features) |
-| **Compliance & Audit** | Security and governance | [docs.open-eco.org/docs/compliance](https://www.open-eco.org/docs/compliance) |
-| **Integrations** | Authentication and data sources | [docs.open-eco.org/docs/integrations](https://www.open-eco.org/docs/integrations) |
-| **Roles & Dashboards** | User roles and access | [docs.open-eco.org/docs/roles](https://www.open-eco.org/docs/roles) |
-| **Resources** | Architecture, FAQ, and more | [docs.open-eco.org/docs/resources](https://www.open-eco.org/docs/resources) |
-| **Upcoming Features** | Roadmap and planned features | [docs.open-eco.org/docs/upcoming](https://www.open-eco.org/docs/upcoming) |
+| **Getting Started** | Deployment guides and setup | [open-eco.github.io/oe-core/getting-started](https://open-eco.github.io/oe-core/getting-started) |
+| **Features** | Platform capabilities | [open-eco.github.io/oe-core/features](https://open-eco.github.io/oe-core/features) |
+| **Compliance & Audit** | Security and governance | [open-eco.github.io/oe-core/compliance](https://open-eco.github.io/oe-core/compliance) |
+| **Integrations** | Authentication and data sources | [open-eco.github.io/oe-core/integrations](https://open-eco.github.io/oe-core/integrations) |
+| **Roles & Dashboards** | User roles and access | [open-eco.github.io/oe-core/roles](https://open-eco.github.io/oe-core/roles) |
+| **Resources** | Architecture, FAQ, and more | [open-eco.github.io/oe-core/resources](https://open-eco.github.io/oe-core/resources) |
+| **Upcoming Features** | Roadmap and planned features | [open-eco.github.io/oe-core/upcoming](https://open-eco.github.io/oe-core/upcoming) |
 
 ### Local Documentation (GitHub)
 
@@ -362,7 +362,7 @@ Each enterprise deployment gets **its own isolated database** - no shared multi-
 | Styling | Vanilla CSS (EcoKit design system) |
 | Container | OCI images (Buildah/Podman/Docker) |
 
-**Authentication:** OpenEco uses **Keycloak as an open-source IdP bridge** that connects to your organization's existing identity provider (Azure AD, Okta, Google Workspace, etc.). See [Authentication Guide](https://www.open-eco.org/docs/integrations/authentication) for details.
+**Authentication:** OpenEco uses **Keycloak as an open-source IdP bridge** that connects to your organization's existing identity provider (Azure AD, Okta, Google Workspace, etc.). See [Authentication Guide](https://open-eco.github.io/oe-core/integrations/authentication) for details.
 
 ---
 

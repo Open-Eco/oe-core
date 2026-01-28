@@ -2,7 +2,7 @@
 
 **Self-hosted climate transparency for enterprises.**
 
-This documentation site is available at [docs.open-eco.org](https://www.open-eco.org/docs) and contains all deployment, feature, and technical documentation for OpenEco.
+This documentation site is available at [open-eco.github.io/oe-core](https://open-eco.github.io/oe-core) and contains all deployment, feature, and technical documentation for OpenEco.
 
 ## Documentation Structure
 
