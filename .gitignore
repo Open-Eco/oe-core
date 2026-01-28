@@ -20,6 +20,10 @@ out/
 .env.test.local
 .env.production.local
 
+# But allow example files
+!.env.example
+!**/.env.example
+
 # Logs
 npm-debug.log*
 yarn-debug.log*

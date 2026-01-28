@@ -1,0 +1,48 @@
+# .vercelignore - Files and directories to exclude from Vercel deployment
+
+# Documentation (not needed for web app)
+docs/
+*.md
+!web/README.md
+
+# Deployment configs for other platforms
+deploy/
+scripts/
+
+# Mockups and design files
+_mockups/
+
+# Development files
+.git/
+.github/
+.gitignore
+
+# Local environment files
+.env.local
+.env*.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp

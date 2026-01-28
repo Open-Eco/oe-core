@@ -783,6 +783,27 @@ For each enterprise:
 **Platform**: Pterodactyl Panel  
 **Domain**: `demo.open-eco.org`
 
+---
+
+### Vercel Deployment (Managed Hosting)
+
+**Best for:** Demo sites, previews, small teams (non-enterprise production)
+
+Vercel provides automatic deployments from GitHub with zero configuration for Next.js applications.
+
+**Time:** ~10 minutes  
+**Cost:** Free tier available, pay-as-you-go for production
+
+For complete Vercel deployment guide, see:
+- **[Vercel Deployment Guide](./vercel-deployment.md)** - Docs version (quick reference)
+- **[VERCEL_DEPLOYMENT.md](../../VERCEL_DEPLOYMENT.md)** - Root version (comprehensive)
+
+#### Quick Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FOpen-Eco%2Foe-core&project-name=openeco&repository-name=openeco&root-directory=web)
+
+---
+
 OpenEco demo is hosted on Pterodactyl, a game server management platform that can manage Docker containers for applications. The demo runs as a full OpenEco instance with demo data stored in browser sessionStorage.
 
 #### Quick Setup
