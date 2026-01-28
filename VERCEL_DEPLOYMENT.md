@@ -345,7 +345,7 @@ The repository includes a `vercel.json` configuration file that optimizes deploy
 ```json
 {
   "version": 2,
-  "buildCommand": "cd web && npm install && npm run build",
+  "buildCommand": "cd web && npm run build",
   "devCommand": "cd web && npm run dev",
   "installCommand": "cd web && npm install",
   "framework": "nextjs",
@@ -364,12 +364,12 @@ The repository includes a `vercel.json` configuration file that optimizes deploy
           "value": "DENY"
         },
         {
-          "key": "X-XSS-Protection",
-          "value": "1; mode=block"
-        },
-        {
           "key": "Referrer-Policy",
           "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval';"
         }
       ]
     }
@@ -387,10 +387,10 @@ The repository includes a `vercel.json` configuration file that optimizes deploy
 
 | Setting | Purpose |
 |---------|---------|
-| `buildCommand` | Custom build in `web/` directory |
+| `buildCommand` | Runs build in `web/` directory (npm install handled by installCommand) |
 | `framework` | Enables Next.js optimizations |
 | `regions` | Deploy to specific regions (iad1 = US East) |
-| `headers` | Security headers (CSP, XSS protection) |
+| `headers` | Security headers (CSP, frame protection, content type) |
 | `functions` | Serverless function configuration |
 
 ---
