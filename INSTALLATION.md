@@ -13,6 +13,7 @@ This guide covers all installation scenarios: local development, enterprise self
    - [Option A: Single Host (Podman/Docker + Compose)](#option-a-single-host-podmandocker--compose)
    - [Option B: Kubernetes / OKD / OpenShift](#option-b-kubernetes--okd--openshift)
 5. [Public Site Deployment](#public-site-deployment)
+   - [Vercel Deployment (Managed Hosting)](#vercel-deployment-managed-hosting)
 6. [Upgrades and Rollbacks](#upgrades-and-rollbacks)
 7. [Enterprise Installation Checklist](#enterprise-installation-checklist)
 8. [Troubleshooting](#troubleshooting)
@@ -777,6 +778,84 @@ For each enterprise:
 ---
 
 ## Public Site Deployment
+
+This section covers deploying public-facing OpenEco sites for demos, documentation, or community instances.
+
+---
+
+### Vercel Deployment (Managed Hosting)
+
+**Best for:** Demo sites, previews, small teams (non-enterprise production)
+
+Vercel provides automatic deployments from GitHub with zero configuration for Next.js applications.
+
+**Time:** ~10 minutes  
+**Cost:** Free tier available, pay-as-you-go for production
+
+#### Quick Deploy to Vercel
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FOpen-Eco%2Foe-core&project-name=openeco&repository-name=openeco&root-directory=web&env=DATABASE_URL,NEXTAUTH_SECRET,NEXTAUTH_URL)
+
+#### What You'll Need
+
+1. **GitHub account** - Repository must be on GitHub
+2. **Vercel account** - Sign up at [vercel.com](https://vercel.com)
+3. **PostgreSQL database** - Use managed service:
+   - **Neon.tech** (Recommended): Serverless PostgreSQL, free tier available
+   - **Supabase**: PostgreSQL + additional features
+   - **Railway**: Simple managed PostgreSQL
+   - **AWS RDS / Azure / GCP**: Enterprise options
+
+#### Environment Variables for Vercel
+
+Set these in Vercel project settings:
+
+```bash
+# Database (from Neon, Supabase, Railway, etc.)
+DATABASE_URL=postgresql://user:pass@host:5432/openeco?sslmode=require
+
+# Auth secret (generate: openssl rand -base64 32)
+NEXTAUTH_SECRET=your-32-character-secret
+
+# Your Vercel URL
+NEXTAUTH_URL=https://your-project.vercel.app
+NEXT_PUBLIC_APP_URL=https://your-project.vercel.app
+```
+
+#### Complete Vercel Guide
+
+For detailed Vercel deployment instructions, troubleshooting, and configuration:
+
+📖 **See [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md)** for complete guide
+
+**Topics covered:**
+- Step-by-step deployment
+- Database provider comparison (Neon, Supabase, Railway, etc.)
+- Custom domain configuration
+- Environment variables reference
+- Troubleshooting common issues
+- Vercel vs self-hosted comparison
+- Security headers and optimization
+- Database initialization
+
+#### When to Use Vercel vs Self-Hosted
+
+**Use Vercel for:**
+- ✅ Demo environments
+- ✅ Proof-of-concept deployments
+- ✅ Small team pilots (< 100 users)
+- ✅ Preview deployments for PRs
+- ✅ Development/staging environments
+
+**Use self-hosted (Kubernetes/Docker) for:**
+- ✅ Enterprise production deployments
+- ✅ Data residency requirements
+- ✅ Air-gapped/offline deployments
+- ✅ High-security environments
+- ✅ Large-scale (1000+ users)
+- ✅ Complex authentication (custom SAML/OIDC)
+
+---
 
 ### Demo Site → Pterodactyl
 

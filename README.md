@@ -343,6 +343,7 @@ open-eco/
 | Method | Best For | Documentation |
 |--------|----------|---------------|
 | **Local Dev** | Development | See Quick Start above |
+| **Vercel** | Demos, previews, small teams | [VERCEL_DEPLOYMENT.md](./VERCEL_DEPLOYMENT.md) |
 | **Podman/Docker** | Pilots, small teams | [INSTALLATION.md](./INSTALLATION.md#option-a-single-host-podmandocker--compose) |
 | **Kubernetes/OKD** | Production, enterprise | [INSTALLATION.md](./INSTALLATION.md#option-b-kubernetes--okd--openshift) |
 | **Pterodactyl** | Demo site | [INSTALLATION.md](./INSTALLATION.md#demo-site--pterodactyl) |

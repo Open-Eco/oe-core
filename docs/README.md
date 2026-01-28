@@ -9,6 +9,7 @@ This documentation site is available at [docs.open-eco.org](https://www.open-eco
 ### Getting Started
 - [Getting Started](./getting-started.md) - Overview and quick links
 - [Quick Deploy](./deployment/quick-deploy.md) - 5-minute production deployment
+- [Vercel Deployment](./deployment/vercel-deployment.md) - Deploy to Vercel (10 minutes)
 - [Quick Start](./deployment/quick-start.md) - Local development setup
 - [Deployment Guide](./deployment/deployment-guide.md) - Comprehensive deployment
 - [Installation Guide](./deployment/installation.md) - Enterprise setup
