@@ -1,0 +1,45 @@
+name: Sync Wiki
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'wiki/**'
+      - '*.md'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  sync-wiki:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Clone wiki repository
+        run: |
+          git clone https://github.com/Open-Eco/oe-core.wiki.git /tmp/wiki
+          
+      - name: Copy wiki files
+        run: |
+          cp wiki/*.md /tmp/wiki/ || true
+          
+      - name: Commit and push changes
+        run: |
+          cd /tmp/wiki
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Sync documentation from main repository
+
+          Updated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
+          git push
+        env:
+          GH_TOKEN: ${{ github.token }}
