@@ -1,5 +1,8 @@
 #!/bin/bash
 # Sync wiki files to the GitHub wiki repository
+#
+# Usage: ./scripts/sync-wiki.sh
+# Note: Make sure this script is executable: chmod +x scripts/sync-wiki.sh
 
 set -e
 
