@@ -41,7 +41,7 @@ export interface OrganizationProfile {
   verified: boolean
   facilitiesCount: number
   boundaries?: {
-    operational: string[]
+    facilities: string[]
     organizational: string[]
   }
   metadata?: Record<string, any>

@@ -146,7 +146,7 @@ Collects organization profile including boundaries, facilities, and metadata.
     verified: true,
     facilitiesCount: 3,
     boundaries: {
-      operational: ["Facility A", "Facility B", "Facility C"],
+      facilities: ["Facility A", "Facility B", "Facility C"],
       organizational: ["Acme Corporation"]
     },
     metadata: {
@@ -240,7 +240,7 @@ interface OrganizationProfile {
   verified: boolean
   facilitiesCount: number
   boundaries?: {
-    operational: string[]
+    facilities: string[]
     organizational: string[]
   }
   metadata?: Record<string, any>

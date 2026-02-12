@@ -273,10 +273,19 @@ export class ReportDataCollector {
         periodEnd: activity.periodEnd,
         status: activity.status,
         source: activity.source || undefined,
-        // Evidence is considered present if metadata contains evidence-related fields
-        hasEvidence: !!(activity.metadata && 
+        // Evidence is considered present if metadata contains evidence with actual data
+        hasEvidence: !!(
+          activity.metadata && 
           typeof activity.metadata === 'object' &&
-          'evidence' in activity.metadata),
+          'evidence' in activity.metadata &&
+          activity.metadata.evidence !== null &&
+          activity.metadata.evidence !== undefined &&
+          (
+            (typeof activity.metadata.evidence === 'string' && activity.metadata.evidence.length > 0) ||
+            (Array.isArray(activity.metadata.evidence) && activity.metadata.evidence.length > 0) ||
+            (typeof activity.metadata.evidence === 'object' && Object.keys(activity.metadata.evidence).length > 0)
+          )
+        ),
       }))
 
       return {
@@ -361,7 +370,7 @@ export class ReportDataCollector {
         verified: organization.verified,
         facilitiesCount: organization.facilities.length,
         boundaries: {
-          operational: organization.facilities.map((f) => f.name),
+          facilities: organization.facilities.map((f) => f.name),
           organizational: [organization.name],
         },
         metadata: {
