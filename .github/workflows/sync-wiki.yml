@@ -21,7 +21,7 @@ jobs:
         
       - name: Clone wiki repository
         run: |
-          git clone https://github.com/Open-Eco/oe-core.wiki.git /tmp/wiki
+          git clone https://x-access-token:${{ github.token }}@github.com/Open-Eco/oe-core.wiki.git /tmp/wiki
           
       - name: Copy wiki files
         run: |
@@ -41,5 +41,3 @@ jobs:
 
           Updated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")"
           git push
-        env:
-          GH_TOKEN: ${{ github.token }}
