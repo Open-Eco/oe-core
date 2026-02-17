@@ -62,7 +62,7 @@ Architecture documentation, UI/UX specifications, FAQ, and community resources.
 
 ## Design System
 
-[EcoKit Design System](./index.html) - UI components, design tokens, and guidelines
+[EcoKit Design System](./ecokit.html) - UI components, design tokens, and guidelines
 
 ---
 
