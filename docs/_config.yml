@@ -1,0 +1,40 @@
+# Jekyll configuration for OpenEco documentation
+title: OpenEco Documentation
+description: Self-hosted climate transparency for enterprises
+baseurl: "/oe-core"
+url: "https://open-eco.github.io"
+
+# Build settings
+markdown: kramdown
+theme: jekyll-theme-minimal
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - INTEGRATION.md
+  - assets/EcoKit/
+  - .gitkeep
+
+# Include markdown files
+include:
+  - _*.md
+
+# Kramdown settings
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+  auto_ids: true
+  
+# Plugins
+plugins:
+  - jekyll-relative-links
+  - jekyll-optional-front-matter
+
+# Relative links configuration
+relative_links:
+  enabled: true
+  collections: false
+
+# Optional front matter
+optional_front_matter:
+  enabled: true

@@ -47,7 +47,7 @@ This documentation site is available at [open-eco.github.io/oe-core](https://ope
 
 ## Design System
 
-The [EcoKit Design System](./index.html) is also available in this documentation site, providing UI components, design tokens, and guidelines.
+The [EcoKit Design System](./ecokit.html) is also available in this documentation site, providing UI components, design tokens, and guidelines.
 
 ## Contributing
 
