@@ -558,7 +558,7 @@ See [Vercel Limits](https://vercel.com/docs/concepts/limits/overview) for detail
 
 - **GitHub Issues:** [github.com/Open-Eco/oe-core/issues](https://github.com/Open-Eco/oe-core/issues)
 - **Discussions:** [github.com/Open-Eco/oe-core/discussions](https://github.com/Open-Eco/oe-core/discussions)
-- **Documentation:** [docs.open-eco.org](https://open-eco.github.io/oe-core/)
+- **Documentation:** [open-eco.github.io/oe-core](https://open-eco.github.io/oe-core/)
 
 ### Contributing
 
