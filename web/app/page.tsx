@@ -57,7 +57,7 @@ export default function Home() {
                 Try the demo (Coming Soon!)
               </button>
               <a
-                href="https://open-eco.org/docs/INSTALLATION.html"
+                href="https://open-eco.github.io/oe-core/deployment/installation"
                 className="eco-button eco-button--ghost"
               >
                 Get started (self-hosted)
