@@ -124,6 +124,84 @@ Then redeploy.
 
 ## Troubleshooting
 
+### 404 Not Found Error
+
+A `404 Not Found` response after deployment is one of the most common issues with OpenEco on Vercel.
+
+#### Common Causes
+
+1. **Root Directory not set to `web`** — OpenEco's Next.js app lives in `web/`. If Vercel builds from the repository root it cannot locate the application, causing all routes to return 404.
+2. **Incorrect or missing `vercel.json`** — Invalid `rewrites`, `redirects`, or `routes` entries can send requests to paths that do not exist.
+3. **Build output directory mismatch** — Setting `outputDirectory` to anything other than `.next` (the Next.js default) prevents Vercel from serving the compiled app.
+4. **Build did not complete successfully** — A failed build leaves no deployable output, so all routes return 404.
+5. **Next.js page not found** — The requested path simply does not exist in the Next.js app (mistyped URL, removed route, etc.).
+
+#### Step-by-Step Debugging
+
+**Step 1: Check the Root Directory setting**
+
+1. Go to **Project Settings > General** in your Vercel project
+2. Under **Build & Development Settings**, confirm **Root Directory** is `web`
+3. If blank or set to `.`, change it to `web` and redeploy
+
+**Step 2: Verify `vercel.json`**
+
+The repository-level `vercel.json` should look like this (no `outputDirectory` or `framework` overrides needed):
+
+```json
+{
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
+}
+```
+
+**Step 3: Review build logs**
+
+1. Open the Vercel project dashboard and select the affected deployment
+2. Click **View Build Logs** and scroll to the end
+3. A successful build ends with `✓ Compiled successfully` and a route listing
+4. Any errors or a missing `.next` output indicate a build failure
+
+**Step 4: Confirm the build output locally**
+
+```bash
+cd web
+npm install
+npm run build
+ls -la .next/   # Should list: cache/, server/, static/, BUILD_ID, etc.
+```
+
+**Step 5: Test a known route**
+
+Visit `https://your-project.vercel.app/` and `https://your-project.vercel.app/api/health`. If only specific routes return 404, the issue is in Next.js routing rather than Vercel configuration.
+
+#### Repository-Specific Example
+
+| Setting | Correct Value |
+|---------|---------------|
+| Root Directory | `web` |
+| Framework Preset | Next.js (auto-detected) |
+| Build Command | `npm run build` |
+| Output Directory | `.next` (auto-detected) |
+| Install Command | `npm install` |
+
+An empty Root Directory causes Vercel to look for `next.config.js` in the repository root (where it does not exist), producing a build error or 404 on all routes.
+
+#### Further Reading
+
+- [Vercel – Error: 404 Not Found (official docs)](https://vercel.com/docs/errors/not-found)
+- [Vercel – Monorepo support and Root Directory](https://vercel.com/docs/monorepos/overview)
+- [Next.js – Custom 404 page](https://nextjs.org/docs/pages/building-your-application/routing/custom-error#404-page)
+- [Vercel Community Discussions](https://github.com/orgs/vercel/discussions)
+
+---
+
 ### Build Fails: "Prisma Client not generated"
 
 **Solution:** Ensure `web/package.json` has:
