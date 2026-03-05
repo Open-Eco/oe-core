@@ -1,6 +1,6 @@
 # OpenEco - Open Climate Transparency Platform
 
-**A forthcoming open-source emissions accounting platform built for medium-sized businesses exploring sustainability — without the price tag of enterprise solutions.**
+**A forthcoming open-source emissions accounting platform built for medium-sized businesses exploring sustainability, without the price tag of enterprise solutions.**
 
 > **Climate transparency should not be paywalled.**
 
