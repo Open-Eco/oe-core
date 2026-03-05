@@ -26,7 +26,9 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:latest
     container_name: openeco-keycloak
-    command: start-dev
+    # Use 'start' for production. Requires valid hostname, TLS, and DB settings.
+    # For local testing only, replace with 'start-dev' (disables TLS, not for production).
+    command: start
     environment:
       KC_DB: postgres
       KC_DB_URL: jdbc:postgresql://keycloak-db:5432/keycloak

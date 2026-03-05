@@ -1,10 +1,13 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
+import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  // Skip middleware for API routes, auth pages, setup, and static files
+  // Skip middleware for API routes, auth pages, setup, and static files.
+  // NOTE: /api/* (including /api/health) and /auth/* (including /auth/signin)
+  // are intentionally public — no authentication is enforced for these paths.
   if (
     pathname.startsWith("/api") ||
     pathname.startsWith("/auth") ||
@@ -39,6 +42,18 @@ export async function middleware(request: NextRequest) {
       // If check fails, allow request through
       console.error("Setup check error:", error);
     }
+  }
+
+  // Enforce authentication: redirect unauthenticated users to sign-in
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
+
+  if (!token) {
+    const signInUrl = new URL("/auth/signin", request.url);
+    signInUrl.searchParams.set("callbackUrl", request.url);
+    return NextResponse.redirect(signInUrl);
   }
 
   return NextResponse.next();

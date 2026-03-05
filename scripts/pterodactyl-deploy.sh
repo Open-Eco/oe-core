@@ -70,7 +70,9 @@ if [ -f "$COMPOSE_FILE" ]; then
             sleep 5
             docker-compose -f docker-compose.demo.yml exec -T web npx prisma generate
         }
-        docker-compose -f docker-compose.demo.yml exec -T web npx prisma db push --accept-data-loss || {
+        # Use 'migrate deploy' for production-safe schema updates.
+        # WARNING: 'db push --accept-data-loss' can silently drop columns/tables.
+        docker-compose -f docker-compose.demo.yml exec -T web npx prisma migrate deploy || {
             echo -e "${RED}✗ Migration failed${NC}"
             exit 1
         }

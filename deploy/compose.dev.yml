@@ -13,12 +13,19 @@ services:
       - "5432:5432"
     volumes:
       - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   web:
     # This image is built from web/Containerfile using Buildah/Podman/Docker
     image: openeco-web:dev
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    restart: unless-stopped
     environment:
       DATABASE_URL: postgresql://postgres:password@db:5432/openeco?schema=public
       NEXTAUTH_URL: http://localhost:3000
@@ -27,11 +34,16 @@ services:
       NEXT_PUBLIC_APP_NAME: Open Climate Transparency Platform
     ports:
       - "3000:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     # For local dev you can mount source, but production should use a built image only
     # volumes:
     #   - ../web:/app
 
 volumes:
   db_data:
-
 
