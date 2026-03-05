@@ -235,12 +235,18 @@ Located in repository root. Key settings:
 
 ```json
 {
-  "framework": "nextjs",
-  "buildCommand": "cd web && npm install && npm run build",
-  "outputDirectory": "web/.next",
-  "regions": ["iad1"]
+  "buildCommand": "npm run build",
+  "installCommand": "npm install",
+  "functions": {
+    "app/api/**/*.ts": {
+      "memory": 1024,
+      "maxDuration": 10
+    }
+  }
 }
 ```
+
+> **Important:** Do **not** add `"framework"`, `"outputDirectory"`, or `"routes"` keys unless you have a specific reason — Next.js auto-detection handles these correctly when **Root Directory** is set to `web`. Incorrect values for these keys are a common cause of 404 errors after deployment. See [Troubleshooting: 404 Not Found Error](#404-not-found-error) for details.
 
 ### Security Headers
 
