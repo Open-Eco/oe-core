@@ -30,7 +30,6 @@ import DashboardPage, {
   EmissionKpiCard,
   DashboardFilterBar,
   TopEmittersTable,
-  StatusPill,
   type DashboardFilters,
   type TopEmitter,
 } from '../app/(app)/dashboard/page';
@@ -83,22 +82,32 @@ describe('EmissionKpiCard', () => {
   });
 });
 
-// ── StatusPill ────────────────────────────────────────────────────────────────
+// ── Status Badge (rendered inside TopEmittersTable via EcoDataGrid) ───────────
 
-describe('StatusPill', () => {
-  it('renders "Approved" with correct testid', () => {
-    render(<StatusPill status="approved" />);
+describe('Status badges in TopEmittersTable', () => {
+  const emitters: TopEmitter[] = [
+    { id: '1', category: 'Utilities', subcategory: 'Electricity', co2e: 330, unit: 'CO₂', scope: 'Diesel', status: 'approved' },
+  ];
+
+  it('renders "Approved" badge with correct testid', () => {
+    render(<TopEmittersTable data={emitters} />);
     expect(screen.getByTestId('status-pill-approved')).toHaveTextContent('Approved');
   });
 
-  it('renders "Reviewed"', () => {
-    render(<StatusPill status="reviewed" />);
-    expect(screen.getByText('Reviewed')).toBeInTheDocument();
+  it('renders "Flagged" badge', () => {
+    const flaggedEmitter: TopEmitter[] = [
+      { id: '2', category: 'Travel', subcategory: 'Flights', co2e: 150, unit: 'CO₂', scope: 'Company', status: 'flagged' },
+    ];
+    render(<TopEmittersTable data={flaggedEmitter} />);
+    expect(screen.getByText('Flagged')).toBeInTheDocument();
   });
 
-  it('renders "Flagged"', () => {
-    render(<StatusPill status="flagged" />);
-    expect(screen.getByText('Flagged')).toBeInTheDocument();
+  it('renders "Reviewed" badge', () => {
+    const reviewedEmitter: TopEmitter[] = [
+      { id: '3', category: 'Utilities', subcategory: 'Diesel', co2e: 150, unit: 'CO₂', scope: 'Travel', status: 'reviewed' },
+    ];
+    render(<TopEmittersTable data={reviewedEmitter} />);
+    expect(screen.getByText('Reviewed')).toBeInTheDocument();
   });
 });
 
@@ -203,82 +212,30 @@ describe('TopEmittersTable', () => {
   ];
 
   it('renders table heading', () => {
-    render(
-      <TopEmittersTable
-        data={emitters}
-        page={1}
-        totalPages={2}
-        onPageChange={jest.fn()}
-      />
-    );
+    render(<TopEmittersTable data={emitters} />);
     expect(screen.getByTestId('top-emitters-table')).toBeInTheDocument();
     expect(screen.getByText('Top Emitters')).toBeInTheDocument();
   });
 
   it('renders all emitter rows', () => {
-    render(
-      <TopEmittersTable
-        data={emitters}
-        page={1}
-        totalPages={2}
-        onPageChange={jest.fn()}
-      />
-    );
+    render(<TopEmittersTable data={emitters} />);
     expect(screen.getByText('Utilities')).toBeInTheDocument();
     expect(screen.getByText('Electricity')).toBeInTheDocument();
     expect(screen.getByText('Travel')).toBeInTheDocument();
     expect(screen.getByText('Flights')).toBeInTheDocument();
   });
 
-  it('renders status pills', () => {
-    render(
-      <TopEmittersTable
-        data={emitters}
-        page={1}
-        totalPages={2}
-        onPageChange={jest.fn()}
-      />
-    );
+  it('renders status badges', () => {
+    render(<TopEmittersTable data={emitters} />);
     expect(screen.getByTestId('status-pill-approved')).toBeInTheDocument();
     expect(screen.getByTestId('status-pill-flagged')).toBeInTheDocument();
   });
 
-  it('calls onPageChange when next button is clicked', () => {
-    const onPageChange = jest.fn();
-    render(
-      <TopEmittersTable
-        data={emitters}
-        page={1}
-        totalPages={2}
-        onPageChange={onPageChange}
-      />
-    );
-    fireEvent.click(screen.getByLabelText('Page 2'));
-    expect(onPageChange).toHaveBeenCalledWith(2);
-  });
-
-  it('disables previous button on first page', () => {
-    render(
-      <TopEmittersTable
-        data={emitters}
-        page={1}
-        totalPages={2}
-        onPageChange={jest.fn()}
-      />
-    );
-    expect(screen.getByLabelText('Previous page')).toBeDisabled();
-  });
-
-  it('disables next button on last page', () => {
-    render(
-      <TopEmittersTable
-        data={emitters}
-        page={2}
-        totalPages={2}
-        onPageChange={jest.fn()}
-      />
-    );
-    expect(screen.getByLabelText('Next page')).toBeDisabled();
+  it('renders TanStack Table column headers', () => {
+    render(<TopEmittersTable data={emitters} />);
+    expect(screen.getByText('Category')).toBeInTheDocument();
+    expect(screen.getByText('Subcategory')).toBeInTheDocument();
+    expect(screen.getByText('Status')).toBeInTheDocument();
   });
 });
 

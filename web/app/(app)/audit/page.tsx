@@ -1,8 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  flexRender,
+  ColumnDef,
+} from "@tanstack/react-table";
 
-// ── Types ─────────────────────────────────────────────────────────────────────
+// Types
 
 export type AuditStatus = "approved" | "reviewed" | "flagged" | "pending";
 
@@ -45,150 +53,58 @@ export interface ChangeHistoryEntry {
   date?: string;
 }
 
-// ── Static Demo Data ──────────────────────────────────────────────────────────
+// Static Demo Data
 
 const AUDIT_ENTRIES: AuditEntry[] = [
   {
     id: "1",
-    activity: "Electricity – HQ",
+    activity: "Electricity \u2013 HQ",
     category: "DEFRA 2023",
     factor: "DEFRA 2023",
     method: "Location-based",
-    result: "320 t CO₂e",
+    result: "320 t CO\u2082e",
     status: "approved",
     detail: {
       rows: [
-        {
-          label: "Quantity",
-          source: "120,000 KWh",
-          factor: "Jan–Dec 2024",
-          method: "Location-based",
-          status: "approved",
-        },
-        {
-          label: "Location",
-          source: "HQ – Berlin",
-          factor: "Utility invoices",
-          method: "uploaded",
-          status: "approved",
-        },
-        {
-          label: "Electricity — HQ",
-          source: "2024-2023",
-          factor: "",
-          method: "",
-          status: "approved",
-          result: "",
-        },
+        { label: "Quantity", source: "120,000 KWh", factor: "Jan\u2013Dec 2024", method: "Location-based", status: "approved" },
+        { label: "Location", source: "HQ \u2013 Berlin", factor: "Utility invoices", method: "uploaded", status: "approved" },
+        { label: "Electricity \u2014 HQ", source: "2024-2023", factor: "", method: "", status: "approved", result: "" },
         { label: "Activity Data", source: "Source", factor: "DEFRA 2023", method: "DEFRA" },
-        { label: "Transformation", source: "L. hWh", factor: "Stup × 2. kWh", method: "DEFRA" },
-        { label: "Emission Factor", source: "Source", factor: "DEFRA  2023", method: "DEFRA" },
-        {
-          label: "Calculation",
-          source: "› Activity × Factor",
-          factor: "320 t CO₂e",
-          method: "",
-          result: "330 t CO₂e",
-        },
-        {
-          label: "Approval",
-          source: "J. Smith",
-          factor: "J. Smith",
-          method: "",
-          status: "approved",
-        },
-        {
-          label: "Approved",
-          source: "A. Patel",
-          factor: "2024-03-12",
-          method: "",
-          status: "flagged",
-        },
+        { label: "Transformation", source: "L. hWh", factor: "Stup \u00d7 2. kWh", method: "DEFRA" },
+        { label: "Emission Factor", source: "Source", factor: "DEFRA 2023", method: "DEFRA" },
+        { label: "Calculation", source: "\u203a Activity \u00d7 Factor", factor: "320 t CO\u2082e", method: "", result: "330 t CO\u2082e" },
+        { label: "Approval", source: "J. Smith", factor: "J. Smith", method: "", status: "approved" },
+        { label: "Approved", source: "A. Patel", factor: "2024-03-12", method: "", status: "flagged" },
       ],
     },
   },
-  {
-    id: "2",
-    activity: "Fleet Diesel",
-    category: "Fuel",
-    factor: "EPA 2022",
-    method: "Combustion",
-    result: "180 t CO₂e",
-    status: "approved",
-  },
-  {
-    id: "3",
-    activity: "Business Flights",
-    category: "Travel",
-    factor: "DEFRA 2023",
-    method: "Distance-based",
-    result: "95 t CO₂e",
-    status: "reviewed",
-  },
-  {
-    id: "4",
-    activity: "Employee Commute",
-    category: "Travel",
-    factor: "Modeled",
-    method: "Survey-based",
-    result: "45 t CO₂e",
-    status: "flagged",
-  },
+  { id: "2", activity: "Fleet Diesel", category: "Fuel", factor: "EPA 2022", method: "Combustion", result: "180 t CO\u2082e", status: "approved" },
+  { id: "3", activity: "Business Flights", category: "Travel", factor: "DEFRA 2023", method: "Distance-based", result: "95 t CO\u2082e", status: "reviewed" },
+  { id: "4", activity: "Employee Commute", category: "Travel", factor: "Modeled", method: "Survey-based", result: "45 t CO\u2082e", status: "flagged" },
 ];
 
 const EVIDENCE_ATTACHMENTS: EvidenceAttachment[] = [
-  {
-    id: "1",
-    filename: "Electricity_Invoice_Jan2024.pdf",
-    uploadedBy: "J. Smith",
-    uploadedAt: "2024-02-01",
-    ago: "Last.kgo",
-  },
-  {
-    id: "2",
-    filename: "Electricity_Invoice_Feb2024.pdf",
-    uploadedBy: "J. Smith",
-    uploadedAt: "2024-02-31",
-    ago: "Last.ago",
-  },
-  {
-    id: "3",
-    filename: "Meter_Readings_2024.xlsx",
-    uploadedBy: "A. Patel",
-    uploadedAt: "2024-02-01",
-    ago: "Last.lgo",
-  },
+  { id: "1", filename: "Electricity_Invoice_Jan2024.pdf", uploadedBy: "J. Smith", uploadedAt: "2024-02-01", ago: "Last.kgo" },
+  { id: "2", filename: "Electricity_Invoice_Feb2024.pdf", uploadedBy: "J. Smith", uploadedAt: "2024-02-31", ago: "Last.ago" },
+  { id: "3", filename: "Meter_Readings_2024.xlsx", uploadedBy: "A. Patel", uploadedAt: "2024-02-01", ago: "Last.lgo" },
 ];
 
 const CHANGE_HISTORY: ChangeHistoryEntry[] = [
-  {
-    id: "1",
-    description: "Quantity updated",
-    detail: "(00300 → (20,009)",
-  },
-  {
-    id: "2",
-    description: "Emission factor updated",
-    detail: "(DEFRA 2022 -1-DEFRA 3546)",
-  },
-  {
-    id: "3",
-    description: "Approved by Admin",
-    date: "2024-03-12",
-  },
+  { id: "1", description: "Quantity updated", detail: "(00300 \u2192 (20,009)" },
+  { id: "2", description: "Emission factor updated", detail: "(DEFRA 2022 -1-DEFRA 3546)" },
+  { id: "3", description: "Approved by Admin", date: "2024-03-12" },
 ];
 
-// ── Status Badge ──────────────────────────────────────────────────────────────
+// Status variant map (maps to eco-badge variants)
 
-const STATUS_CONFIG: Record<
-  AuditStatus,
-  { label: string; bg: string; color: string }
-> = {
-  approved: { label: "Approved", bg: "#138A4F", color: "#fff" },
-  reviewed: { label: "Reviewed", bg: "#1A6F8A", color: "#fff" },
-  flagged: { label: "Flagged", bg: "#F4B400", color: "#0F1A1C" },
-  pending: { label: "Pending", bg: "#7A8C8E", color: "#fff" },
+const STATUS_VARIANT: Record<AuditStatus, string> = {
+  approved: "success",
+  reviewed: "primary",
+  flagged: "warning",
+  pending: "neutral",
 };
+
+// Status Badge using eco-badge from EcoKit
 
 export function AuditStatusBadge({
   status,
@@ -197,189 +113,92 @@ export function AuditStatusBadge({
   status: AuditStatus;
   dropdown?: boolean;
 }) {
-  const cfg = STATUS_CONFIG[status];
+  const label = status.charAt(0).toUpperCase() + status.slice(1);
   return (
     <span
-      className="audit-status-badge"
-      style={{ background: cfg.bg, color: cfg.color }}
+      className={`eco-badge eco-badge--${STATUS_VARIANT[status]}`}
       data-testid={`audit-status-${status}`}
     >
-      {cfg.label}
+      {label}
       {dropdown && (
-        <svg
-          width="12"
-          height="12"
-          viewBox="0 0 16 16"
-          fill="none"
-          style={{ marginLeft: 4 }}
-          aria-hidden="true"
-        >
-          <path
-            d="M4 6l4 4 4-4"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-          />
+        <svg width="10" height="10" viewBox="0 0 16 16" fill="none" style={{ marginLeft: 4 }} aria-hidden="true">
+          <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
         </svg>
       )}
     </span>
   );
 }
 
-// ── Evidence & History Panel ──────────────────────────────────────────────────
+// Evidence & History Panel - uses eco-card from EcoKit
 
-interface EvidencePanelProps {
+export function EvidencePanel({
+  attachments,
+  history,
+}: {
   attachments: EvidenceAttachment[];
   history: ChangeHistoryEntry[];
-  onClose?: () => void;
-}
+}) {
+  const ClockIcon = () => (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 5v3l2 2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
 
-export function EvidencePanel({ attachments, history }: EvidencePanelProps) {
   return (
-    <div className="audit-evidence-panel" data-testid="evidence-panel">
-      <div className="audit-evidence-panel__header">
-        <h3 className="audit-evidence-panel__title">Evidence &amp; History</h3>
-        <button
-          className="audit-evidence-panel__more"
-          type="button"
-          aria-label="More options"
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
-          >
-            <path
-              d="M4 6l4 4 4-4"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
+    <div className="eco-card" style={{ minWidth: 260, flexShrink: 0 }} data-testid="evidence-panel">
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
+        <h3 style={{ fontSize: "var(--text-md)", fontWeight: "var(--font-weight-bold)", color: "var(--neutral-900)", margin: 0 }}>
+          Evidence &amp; History
+        </h3>
+        <button className="eco-btn eco-btn--secondary" style={{ padding: "0.25rem 0.5rem", minWidth: "auto" }} type="button" aria-label="Collapse">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
       </div>
 
-      {/* Evidence Attachments */}
-      <section className="audit-evidence-section">
-        <h4 className="audit-evidence-section__title">Evidence Attachments</h4>
-        <ul className="audit-evidence-list">
+      <section style={{ marginBottom: "1.25rem" }}>
+        <h4 style={{ fontSize: "var(--text-sm)", fontWeight: "var(--font-weight-bold)", color: "var(--neutral-900)", marginBottom: "0.75rem" }}>
+          Evidence Attachments
+        </h4>
+        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {attachments.map((a) => (
-            <li key={a.id} className="audit-evidence-item">
-              <div className="audit-evidence-item__icon" aria-hidden="true">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 20 20"
-                  fill="none"
-                >
-                  <path
-                    d="M4 4h8l4 4v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z"
-                    stroke="currentColor"
-                    strokeWidth="1.6"
-                  />
+            <li key={a.id} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+              <span style={{ color: "var(--brand-blue-600)", marginTop: 2 }}>
+                <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                  <path d="M4 4h8l4 4v8a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Z" stroke="currentColor" strokeWidth="1.6" />
                   <path d="M12 4v4h4" stroke="currentColor" strokeWidth="1.6" />
                 </svg>
-              </div>
-              <div className="audit-evidence-item__info">
-                <span className="audit-evidence-item__name">{a.filename}</span>
-                <span className="audit-evidence-item__meta">
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 12 12"
-                    fill="none"
-                    aria-hidden="true"
-                  >
-                    <rect
-                      x="1"
-                      y="1"
-                      width="10"
-                      height="10"
-                      rx="2"
-                      stroke="currentColor"
-                      strokeWidth="1.2"
-                    />
-                    <path d="M4 6h4M4 8h2" stroke="currentColor" strokeWidth="1.2" />
-                  </svg>{" "}
-                  {a.uploadedBy} {a.uploadedAt} {a.ago}
-                </span>
+              </span>
+              <div>
+                <a href="#" style={{ fontSize: "var(--text-sm)", color: "var(--brand-blue-600)", textDecoration: "none" }}>
+                  {a.filename}
+                </a>
+                <div style={{ fontSize: "var(--text-xs)", color: "var(--neutral-500)", display: "flex", alignItems: "center", gap: 4 }}>
+                  <ClockIcon /> {a.uploadedBy} {a.uploadedAt} {a.ago}
+                </div>
               </div>
             </li>
           ))}
         </ul>
-        <button
-          className="audit-evidence-see-more"
-          type="button"
-        >
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
-          >
-            <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" />
-            <path
-              d="M8 5v3l2 2"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-            />
-          </svg>{" "}
-          4 Chaing Fislory new
+        <button type="button" style={{ marginTop: "0.5rem", fontSize: "var(--text-xs)", color: "var(--brand-blue-600)", background: "none", border: "none", cursor: "pointer", padding: 0, display: "flex", alignItems: "center", gap: 4 }}>
+          <ClockIcon /> 4 Chaing Fislory new
         </button>
       </section>
 
-      {/* Change History */}
-      <section className="audit-evidence-section">
-        <h4 className="audit-evidence-section__title">
-          <svg
-            width="14"
-            height="14"
-            viewBox="0 0 16 16"
-            fill="none"
-            aria-hidden="true"
-            style={{ marginRight: 6 }}
-          >
-            <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" />
-            <path
-              d="M8 5v3l2 2"
-              stroke="currentColor"
-              strokeWidth="1.4"
-              strokeLinecap="round"
-            />
-          </svg>
-          Change History
+      <section>
+        <h4 style={{ fontSize: "var(--text-sm)", fontWeight: "var(--font-weight-bold)", color: "var(--neutral-900)", marginBottom: "0.75rem", display: "flex", alignItems: "center", gap: 6 }}>
+          <ClockIcon /> Change History
         </h4>
-        <ul className="audit-history-list">
+        <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           {history.map((h) => (
-            <li key={h.id} className="audit-history-item">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 16 16"
-                fill="none"
-                aria-hidden="true"
-                className="audit-history-item__icon"
-              >
-                <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" />
-                <path
-                  d="M8 5v3l2 2"
-                  stroke="currentColor"
-                  strokeWidth="1.4"
-                  strokeLinecap="round"
-                />
-              </svg>
+            <li key={h.id} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", fontSize: "var(--text-sm)" }}>
+              <span style={{ color: "var(--neutral-500)", marginTop: 2 }}><ClockIcon /></span>
               <div>
-                <span className="audit-history-item__desc">{h.description}</span>
-                {h.detail && (
-                  <span className="audit-history-item__detail"> {h.detail}</span>
-                )}
-                {h.date && (
-                  <div className="audit-history-item__date">{h.date}</div>
-                )}
+                <span style={{ color: "var(--neutral-700)" }}>{h.description}</span>
+                {h.detail && <span style={{ color: "var(--neutral-500)" }}> {h.detail}</span>}
+                {h.date && <div style={{ fontSize: "var(--text-xs)", color: "var(--neutral-500)" }}>{h.date}</div>}
               </div>
             </li>
           ))}
@@ -389,365 +208,224 @@ export function EvidencePanel({ attachments, history }: EvidencePanelProps) {
   );
 }
 
-// ── Expanded Row ──────────────────────────────────────────────────────────────
+// Expanded row – sub-table uses eco-datagrid CSS classes from EcoKit
 
-interface ExpandedRowProps {
-  entry: AuditEntry;
-}
-
-export function AuditExpandedRow({ entry }: ExpandedRowProps) {
+export function AuditExpandedRow({ entry }: { entry: AuditEntry }) {
   if (!entry.detail) return null;
   return (
-    <div className="audit-expanded" data-testid={`audit-expanded-${entry.id}`}>
-      <div className="audit-expanded__main">
-        <div className="audit-expanded__row-header">
-          <input type="checkbox" checked readOnly className="audit-expanded__checkbox" />
-          <strong className="audit-expanded__title">{entry.activity}</strong>
+    <div
+      style={{ display: "flex", gap: "1.5rem", padding: "1.5rem", background: "var(--neutral-100)" }}
+      data-testid={`audit-expanded-${entry.id}`}
+    >
+      <div style={{ flex: 1 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "1rem" }}>
+          <input type="checkbox" checked readOnly aria-label="Selected" />
+          <strong style={{ fontSize: "var(--text-md)", color: "var(--neutral-900)" }}>{entry.activity}</strong>
           <AuditStatusBadge status={entry.status} dropdown />
         </div>
-        <table className="audit-expanded__table" aria-label="Activity details">
-          <thead>
-            <tr>
-              <th>Activity Data</th>
-              <th>Transformation</th>
-              <th>Factor</th>
-              <th>Method</th>
-              <th>Result</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {entry.detail.rows.map((row, i) => (
-              <tr key={i}>
-                <td className="audit-expanded__label">{row.label}</td>
-                <td>{row.source || ""}</td>
-                <td>{row.factor || ""}</td>
-                <td>{row.method || ""}</td>
-                <td>{row.result || ""}</td>
-                <td>
-                  {row.status && <AuditStatusBadge status={row.status} />}
-                </td>
+
+        <div className="eco-datagrid__container">
+          <table className="eco-datagrid" aria-label="Activity details">
+            <thead className="eco-datagrid__head">
+              <tr>
+                {["Activity Data", "Transformation", "Factor", "Method", "Result", "Status"].map((h) => (
+                  <th key={h} className="eco-datagrid__cell eco-datagrid__cell--header">{h}</th>
+                ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-        <div className="audit-expanded__footer">
-          <span>Showing 1</span>
-          <button type="button">▼</button>
-          <span>1 to 4 of 20 entries</span>
-          <div className="dash-pagination">
-            <button type="button" className="dash-pagination__btn">‹</button>
-            <button type="button" className="dash-pagination__btn dash-pagination__btn--active">1</button>
-            <button type="button" className="dash-pagination__btn">›</button>
-          </div>
+            </thead>
+            <tbody className="eco-datagrid__body">
+              {entry.detail.rows.map((row, i) => (
+                <tr key={i} className="eco-datagrid__row">
+                  <td className="eco-datagrid__cell" style={{ fontWeight: "var(--font-weight-medium)" }}>{row.label}</td>
+                  <td className="eco-datagrid__cell">{row.source || ""}</td>
+                  <td className="eco-datagrid__cell">{row.factor || ""}</td>
+                  <td className="eco-datagrid__cell">{row.method || ""}</td>
+                  <td className="eco-datagrid__cell">{row.result || ""}</td>
+                  <td className="eco-datagrid__cell">
+                    {row.status && <AuditStatusBadge status={row.status} />}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       </div>
-      <EvidencePanel
-        attachments={EVIDENCE_ATTACHMENTS}
-        history={CHANGE_HISTORY}
-      />
+      <EvidencePanel attachments={EVIDENCE_ATTACHMENTS} history={CHANGE_HISTORY} />
     </div>
   );
 }
 
-// ── Main Audit Page ───────────────────────────────────────────────────────────
+// Main Audit Page
 
 export default function AuditPage() {
-  const [search, setSearch] = useState("");
-  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [globalFilter, setGlobalFilter] = useState("");
   const [expandedId, setExpandedId] = useState<string | null>("1");
-  const [page, setPage] = useState(1);
-  const totalPages = 2;
-  const totalEntries = 20;
 
-  const filteredEntries = AUDIT_ENTRIES.filter(
-    (e) =>
-      search === "" ||
-      e.activity.toLowerCase().includes(search.toLowerCase()) ||
-      e.category.toLowerCase().includes(search.toLowerCase())
+  const columns = useMemo<ColumnDef<AuditEntry>[]>(
+    () => [
+      {
+        id: "select",
+        header: "",
+        size: 40,
+        cell: ({ row }) => (
+          <input
+            type="checkbox"
+            aria-label={`Select ${row.original.activity}`}
+            onChange={() => {}}
+          />
+        ),
+      },
+      {
+        accessorKey: "activity",
+        header: "Activity",
+        cell: ({ getValue }) => <strong>{getValue<string>()}</strong>,
+      },
+      { accessorKey: "category", header: "Category" },
+      { accessorKey: "factor", header: "Factor" },
+      { accessorKey: "method", header: "Method" },
+      { accessorKey: "result", header: "Result" },
+      {
+        accessorKey: "status",
+        header: "Status",
+        cell: ({ getValue }) => <AuditStatusBadge status={getValue<AuditStatus>()} />,
+      },
+      {
+        id: "status-action",
+        header: "Status",
+        cell: ({ row }) => <AuditStatusBadge status={row.original.status} dropdown />,
+      },
+    ],
+    []
   );
 
-  const toggleSelect = (id: string) => {
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) {
-        next.delete(id);
-      } else {
-        next.add(id);
-      }
-      return next;
-    });
-  };
+  const table = useReactTable({
+    data: AUDIT_ENTRIES,
+    columns,
+    state: { globalFilter },
+    onGlobalFilterChange: setGlobalFilter,
+    getCoreRowModel: getCoreRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    initialState: { pagination: { pageSize: 10, pageIndex: 0 } },
+  });
 
   return (
-    <section className="dash-page" data-testid="audit-page">
-      {/* Page Header */}
-      <header className="dash-page__header">
+    <section className="eco-page" data-testid="audit-page">
+      <header className="eco-page__header">
         <div>
-          <h2 className="dash-page__title">Audit &amp; Data Lineage</h2>
-          <p className="dash-page__subtitle">
+          <h2 className="eco-page__title">Audit &amp; Data Lineage</h2>
+          <p className="eco-page__subtitle">
             Track the full journey from raw activity data to final emissions numbers.
           </p>
         </div>
-        <div style={{ display: "flex", gap: "0.75rem" }}>
-          <button className="dash-btn dash-btn--primary" type="button">
-            Export Audit Pack
-          </button>
-          <button className="dash-btn dash-btn--outline" type="button">
-            Download Evidence Index
-          </button>
+        <div className="eco-page__header-actions">
+          <button className="eco-btn" type="button">Export Audit Pack</button>
+          <button className="eco-btn eco-btn--secondary" type="button">Download Evidence Index</button>
         </div>
       </header>
 
-      {/* Toolbar */}
-      <div className="audit-toolbar">
-        <div className="audit-toolbar__search">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 20 20"
-            fill="none"
-            aria-hidden="true"
-            className="audit-toolbar__search-icon"
-          >
-            <circle
-              cx="9"
-              cy="9"
-              r="6"
-              stroke="#7A8C8E"
-              strokeWidth="1.8"
+      <div className="eco-datagrid__wrapper">
+        <div className="eco-datagrid__toolbar">
+          <div className="eco-datagrid__search">
+            <svg className="eco-datagrid__search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.35-4.35" />
+            </svg>
+            <input
+              type="search"
+              placeholder="Search"
+              className="eco-input eco-datagrid__search-input"
+              value={globalFilter}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              aria-label="Search audit entries"
             />
-            <path
-              d="M15 15l-3.5-3.5"
-              stroke="#7A8C8E"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-            />
-          </svg>
-          <input
-            type="search"
-            placeholder="Search"
-            className="audit-toolbar__search-input"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            aria-label="Search audit entries"
-          />
+          </div>
+          <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+            <button className="eco-btn eco-btn--secondary" type="button">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <rect x="2" y="2" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="1.6" />
+                <path d="M6 10h8M10 6v8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+              Export Audit Pack
+            </button>
+            <button className="eco-btn eco-btn--secondary" style={{ padding: "0.5rem", minWidth: "auto" }} type="button" aria-label="Refresh">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <path d="M4 10a6 6 0 1 1 1.5 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+                <path d="M4 14v-4h4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </button>
+            <button className="eco-btn eco-btn--secondary" style={{ padding: "0.5rem", minWidth: "auto" }} type="button" aria-label="Grid view">
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+                <rect x="2" y="2" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
+                <rect x="11" y="2" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
+                <rect x="2" y="11" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
+                <rect x="11" y="11" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
+              </svg>
+            </button>
+            <span style={{ fontSize: "var(--text-sm)", color: "var(--neutral-700)", fontWeight: "var(--font-weight-medium)", padding: "0 0.25rem" }}>
+              {table.getState().pagination.pageIndex + 1}
+            </span>
+            <select className="eco-filter-bar__select" aria-label="Next actions">
+              <option>Next</option>
+            </select>
+          </div>
         </div>
-        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-          <button className="dash-btn dash-btn--outline" type="button">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 20 20"
-              fill="none"
-              aria-hidden="true"
-            >
-              <rect
-                x="2"
-                y="2"
-                width="16"
-                height="16"
-                rx="2"
-                stroke="currentColor"
-                strokeWidth="1.6"
-              />
-              <path
-                d="M6 10h8M10 6v8"
-                stroke="currentColor"
-                strokeWidth="1.6"
-                strokeLinecap="round"
-              />
-            </svg>
-            Export Audit Pack
-          </button>
-          <button
-            className="dash-btn dash-btn--icon"
-            type="button"
-            aria-label="Refresh"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 20 20"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M4 10a6 6 0 1 1 1.5 4"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-              <path
-                d="M4 14v-4h4"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
-          <button
-            className="dash-btn dash-btn--icon"
-            type="button"
-            aria-label="Grid view"
-          >
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 20 20"
-              fill="none"
-              aria-hidden="true"
-            >
-              <rect x="2" y="2" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
-              <rect x="11" y="2" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
-              <rect x="2" y="11" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
-              <rect x="11" y="11" width="7" height="7" rx="1" stroke="currentColor" strokeWidth="1.6" />
-            </svg>
-          </button>
-          <span className="audit-toolbar__count">1</span>
-          <select className="dash-filter-bar__select" aria-label="Next actions">
-            <option>Next</option>
-          </select>
-        </div>
-      </div>
 
-      {/* Audit Table */}
-      <div className="audit-table-wrap">
-        <table className="audit-table" aria-label="Audit entries">
-          <thead>
-            <tr>
-              <th className="audit-table__th-check" />
-              <th>
-                Activity
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  aria-hidden="true"
-                  style={{ marginLeft: 4 }}
-                >
-                  <path
-                    d="M4 6l4 4 4-4"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </th>
-              <th>Category</th>
-              <th>Factor</th>
-              <th>Method</th>
-              <th>Result</th>
-              <th>Status</th>
-              <th>
-                Status
-                <svg
-                  width="12"
-                  height="12"
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  aria-hidden="true"
-                  style={{ marginLeft: 4 }}
-                >
-                  <path
-                    d="M4 6l4 4 4-4"
-                    stroke="currentColor"
-                    strokeWidth="1.4"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredEntries.map((entry) => (
-              <React.Fragment key={entry.id}>
-                <tr
-                  className={`audit-table__row ${
-                    expandedId === entry.id ? "audit-table__row--expanded" : ""
-                  }`}
-                  onClick={() =>
-                    setExpandedId(expandedId === entry.id ? null : entry.id)
-                  }
-                  aria-expanded={expandedId === entry.id}
-                >
-                  <td
-                    className="audit-table__td-check"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleSelect(entry.id);
-                    }}
-                  >
-                    <input
-                      type="checkbox"
-                      checked={selectedIds.has(entry.id)}
-                      onChange={() => toggleSelect(entry.id)}
-                      aria-label={`Select ${entry.activity}`}
-                    />
-                  </td>
-                  <td className="audit-table__activity">
-                    <strong>{entry.activity}</strong>
-                  </td>
-                  <td>{entry.category}</td>
-                  <td>{entry.factor}</td>
-                  <td>{entry.method}</td>
-                  <td className="audit-table__result">{entry.result}</td>
-                  <td>
-                    <AuditStatusBadge status={entry.status} />
-                  </td>
-                  <td>
-                    <AuditStatusBadge status={entry.status} dropdown />
-                  </td>
+        <div className="eco-datagrid__container">
+          <table className="eco-datagrid" aria-label="Audit entries">
+            <thead className="eco-datagrid__head">
+              {table.getHeaderGroups().map((hg) => (
+                <tr key={hg.id}>
+                  {hg.headers.map((header) => (
+                    <th key={header.id} className="eco-datagrid__cell eco-datagrid__cell--header">
+                      {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
                 </tr>
-                {expandedId === entry.id && entry.detail && (
-                  <tr className="audit-table__expand-row">
-                    <td colSpan={8} className="audit-table__expand-cell">
-                      <AuditExpandedRow entry={entry} />
-                    </td>
+              ))}
+            </thead>
+            <tbody className="eco-datagrid__body">
+              {table.getRowModel().rows.map((row) => (
+                <React.Fragment key={row.id}>
+                  <tr
+                    className={`eco-datagrid__row eco-datagrid__row--clickable${expandedId === row.original.id ? " eco-datagrid__row--expanded" : ""}`}
+                    onClick={() => setExpandedId(expandedId === row.original.id ? null : row.original.id)}
+                    aria-expanded={expandedId === row.original.id}
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td
+                        key={cell.id}
+                        className="eco-datagrid__cell"
+                        onClick={cell.column.id === "select" ? (e) => e.stopPropagation() : undefined}
+                      >
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
                   </tr>
-                )}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
+                  {expandedId === row.original.id && row.original.detail && (
+                    <tr>
+                      <td colSpan={columns.length} style={{ padding: 0, borderBottom: "2px solid var(--brand-green-600)" }}>
+                        <AuditExpandedRow entry={row.original} />
+                      </td>
+                    </tr>
+                  )}
+                </React.Fragment>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-        {/* Table Footer */}
-        <div className="dash-table__footer">
-          <span className="dash-table__info">
-            Showing 1 to {filteredEntries.length} of {totalEntries} entries
-          </span>
-          <div className="dash-pagination">
-            <button
-              className="dash-pagination__btn"
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page <= 1}
-              aria-label="Previous page"
-            >
-              ‹
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                className={`dash-pagination__btn ${
-                  p === page ? "dash-pagination__btn--active" : ""
-                }`}
-                onClick={() => setPage(p)}
-                aria-label={`Page ${p}`}
-                aria-current={p === page ? "page" : undefined}
-              >
-                {p}
-              </button>
-            ))}
-            <button
-              className="dash-pagination__btn"
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page >= totalPages}
-              aria-label="Next page"
-            >
-              ›
-            </button>
+        <div className="eco-datagrid__pagination">
+          <div className="eco-datagrid__pagination-info">
+            Showing {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} to{" "}
+            {Math.min((table.getState().pagination.pageIndex + 1) * table.getState().pagination.pageSize, AUDIT_ENTRIES.length)} of {AUDIT_ENTRIES.length} entries
+          </div>
+          <div className="eco-datagrid__pagination-buttons">
+            <button className="eco-btn eco-btn--secondary eco-datagrid__pagination-btn" onClick={() => table.previousPage()} disabled={!table.getCanPreviousPage()} aria-label="Previous page">\u2039</button>
+            <span className="eco-datagrid__pagination-page">
+              Page {table.getState().pagination.pageIndex + 1} of {table.getPageCount()}
+            </span>
+            <button className="eco-btn eco-btn--secondary eco-datagrid__pagination-btn" onClick={() => table.nextPage()} disabled={!table.getCanNextPage()} aria-label="Next page">\u203a</button>
           </div>
         </div>
       </div>

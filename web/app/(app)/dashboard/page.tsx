@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   PieChart,
   Pie,
@@ -14,6 +14,8 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
+import { ColumnDef } from "@tanstack/react-table";
+import EcoDataGrid from "@/components/EcoDataGrid";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -84,7 +86,7 @@ const TOP_EMITTERS: TopEmitter[] = [
     category: "Utilities",
     subcategory: "Electricity",
     co2e: 330,
-    unit: "CO₂",
+    unit: "CO\u2082",
     scope: "Diesel",
     status: "approved",
   },
@@ -93,7 +95,7 @@ const TOP_EMITTERS: TopEmitter[] = [
     category: "Utilities",
     subcategory: "Diesel",
     co2e: 150,
-    unit: "CO₂",
+    unit: "CO\u2082",
     scope: "Travel",
     status: "reviewed",
   },
@@ -102,7 +104,7 @@ const TOP_EMITTERS: TopEmitter[] = [
     category: "Travel",
     subcategory: "Flights",
     co2e: 150,
-    unit: "CO₂",
+    unit: "CO\u2082",
     scope: "Company",
     status: "reviewed",
   },
@@ -111,17 +113,22 @@ const TOP_EMITTERS: TopEmitter[] = [
     category: "Supplies",
     subcategory: "Company Vehicles",
     co2e: 130,
-    unit: "CO₂",
+    unit: "CO\u2082",
     scope: "Travel",
     status: "flagged",
   },
 ];
 
-const STATUS_COLORS: Record<TopEmitter["status"], string> = {
-  approved: "#138A4F",
-  reviewed: "#1A6F8A",
-  flagged: "#DB4437",
-  pending: "#F4B400",
+// ── Status badge variant map ──────────────────────────────────────────────────
+
+const STATUS_VARIANT: Record<
+  TopEmitter["status"],
+  "success" | "primary" | "warning" | "neutral"
+> = {
+  approved: "success",
+  reviewed: "primary",
+  flagged: "warning",
+  pending: "neutral",
 };
 
 // ── KPI Card ─────────────────────────────────────────────────────────────────
@@ -135,26 +142,26 @@ export function EmissionKpiCard({
   deltaPositive,
 }: EmissionKpiProps) {
   return (
-    <div className="dash-kpi-card" data-testid="kpi-card">
-      <div className="dash-kpi-card__header">
-        <span className="dash-kpi-card__label">{label}</span>
+    <div className="eco-kpi-card" data-testid="kpi-card">
+      <div className="eco-kpi-card__header">
+        <span className="eco-kpi-card__label">{label}</span>
         {delta && (
           <span
-            className={`dash-kpi-card__delta ${
+            className={`eco-kpi-card__delta ${
               deltaPositive
-                ? "dash-kpi-card__delta--up"
-                : "dash-kpi-card__delta--down"
+                ? "eco-kpi-card__delta--up"
+                : "eco-kpi-card__delta--down"
             }`}
           >
             {delta}
           </span>
         )}
       </div>
-      <div className="dash-kpi-card__value">
+      <div className="eco-kpi-card__value">
         {value}{" "}
-        <span className="dash-kpi-card__unit">{unit}</span>
+        <span className="eco-kpi-card__unit">{unit}</span>
       </div>
-      {sub && <div className="dash-kpi-card__sub">{sub}</div>}
+      {sub && <div className="eco-kpi-card__sub">{sub}</div>}
     </div>
   );
 }
@@ -169,9 +176,9 @@ interface FilterBarProps {
 
 export function DashboardFilterBar({ filters, onChange, onApply }: FilterBarProps) {
   return (
-    <div className="dash-filter-bar" data-testid="dashboard-filter-bar">
+    <div className="eco-filter-bar" data-testid="dashboard-filter-bar">
       <select
-        className="dash-filter-bar__select"
+        className="eco-filter-bar__select"
         aria-label="Year"
         value={filters.year}
         onChange={(e) => onChange({ ...filters, year: e.target.value })}
@@ -183,7 +190,7 @@ export function DashboardFilterBar({ filters, onChange, onApply }: FilterBarProp
       </select>
 
       <select
-        className="dash-filter-bar__select"
+        className="eco-filter-bar__select"
         aria-label="Location"
         value={filters.location}
         onChange={(e) => onChange({ ...filters, location: e.target.value })}
@@ -193,10 +200,10 @@ export function DashboardFilterBar({ filters, onChange, onApply }: FilterBarProp
         <option value="remote">Remote</option>
       </select>
 
-      <div className="dash-filter-bar__group">
-        <span className="dash-filter-bar__group-label">Scope</span>
+      <div className="eco-filter-bar__group">
+        <span className="eco-filter-bar__group-label">Scope</span>
         <select
-          className="dash-filter-bar__select"
+          className="eco-filter-bar__select"
           aria-label="Scope"
           value={filters.scope}
           onChange={(e) => onChange({ ...filters, scope: e.target.value })}
@@ -208,21 +215,21 @@ export function DashboardFilterBar({ filters, onChange, onApply }: FilterBarProp
         </select>
       </div>
 
-      <div className="dash-filter-bar__group">
-        <span className="dash-filter-bar__group-label">Unit</span>
+      <div className="eco-filter-bar__group">
+        <span className="eco-filter-bar__group-label">Unit</span>
         <select
-          className="dash-filter-bar__select"
+          className="eco-filter-bar__select"
           aria-label="Unit"
           value={filters.unit}
           onChange={(e) => onChange({ ...filters, unit: e.target.value })}
         >
-          <option value="tco2e">tCO₂e</option>
-          <option value="kgco2e">kgCO₂e</option>
+          <option value="tco2e">tCO\u2082e</option>
+          <option value="kgco2e">kgCO\u2082e</option>
         </select>
       </div>
 
       <button
-        className="dash-filter-bar__apply"
+        className="eco-filter-bar__apply"
         type="button"
         onClick={onApply}
         data-testid="filter-apply"
@@ -233,108 +240,82 @@ export function DashboardFilterBar({ filters, onChange, onApply }: FilterBarProp
   );
 }
 
-// ── Status Pill ───────────────────────────────────────────────────────────────
+// ── TanStack top-emitters columns ─────────────────────────────────────────────
 
-export function StatusPill({ status }: { status: TopEmitter["status"] }) {
-  const label = status.charAt(0).toUpperCase() + status.slice(1);
-  return (
-    <span
-      className="dash-status-pill"
-      style={{ background: STATUS_COLORS[status] }}
-      data-testid={`status-pill-${status}`}
-    >
-      {label}
-    </span>
-  );
-}
+const TOP_EMITTER_COLUMNS: ColumnDef<TopEmitter>[] = [
+  {
+    accessorKey: "category",
+    header: "Category",
+  },
+  {
+    accessorKey: "subcategory",
+    header: "Subcategory",
+  },
+  {
+    accessorKey: "co2e",
+    header: "CO\u2082e",
+    cell: ({ row }) => (
+      <>
+        {row.original.co2e}{" "}
+        <sub style={{ fontSize: "0.7em" }}>{row.original.unit}</sub>
+      </>
+    ),
+  },
+  {
+    accessorKey: "scope",
+    header: "Scope",
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const status = row.original.status;
+      const label = status.charAt(0).toUpperCase() + status.slice(1);
+      const variant = STATUS_VARIANT[status];
+      return (
+        <span
+          className={`eco-badge eco-badge--${variant}`}
+          data-testid={`status-pill-${status}`}
+        >
+          {label}
+        </span>
+      );
+    },
+  },
+];
 
-// ── Top Emitters Table ────────────────────────────────────────────────────────
+// ── Top Emitters Table (via EcoDataGrid / TanStack Table) ─────────────────────
 
 interface TopEmittersTableProps {
   data: TopEmitter[];
-  page: number;
-  totalPages: number;
-  onPageChange: (p: number) => void;
 }
 
-export function TopEmittersTable({
-  data,
-  page,
-  totalPages,
-  onPageChange,
-}: TopEmittersTableProps) {
+export function TopEmittersTable({ data }: TopEmittersTableProps) {
   return (
-    <div className="dash-card" data-testid="top-emitters-table">
-      <div className="dash-card__header">
-        <h3 className="dash-card__title">Top Emitters</h3>
-        <a href="#" className="dash-card__see-all">
-          See All →
+    <div className="eco-card" style={{ padding: "1.5rem" }} data-testid="top-emitters-table">
+      <div className="eco-page__section-header" style={{ marginBottom: "1rem" }}>
+        <h3 className="eco-page__section-title">Top Emitters</h3>
+        <a
+          href="#"
+          style={{
+            fontSize: "var(--text-sm)",
+            color: "var(--brand-green-600)",
+            textDecoration: "none",
+            fontWeight: "var(--font-weight-medium)",
+          }}
+        >
+          See All \u2192
         </a>
       </div>
 
-      <table className="dash-table" aria-label="Top emitters">
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Subcategory</th>
-            <th>CO₂e</th>
-            <th>Category</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((row) => (
-            <tr key={row.id}>
-              <td className="dash-table__category">{row.category}</td>
-              <td>{row.subcategory}</td>
-              <td className="dash-table__co2e">
-                {row.co2e} <sub>{row.unit}</sub>
-              </td>
-              <td>{row.scope}</td>
-              <td>
-                <StatusPill status={row.status} />
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-
-      <div className="dash-table__footer">
-        <span className="dash-table__info">
-          Showing 1 to {data.length} of {data.length * totalPages} emitters
-        </span>
-        <div className="dash-pagination">
-          <button
-            className="dash-pagination__btn"
-            onClick={() => onPageChange(page - 1)}
-            disabled={page <= 1}
-            aria-label="Previous page"
-          >
-            ‹
-          </button>
-          {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-            <button
-              key={p}
-              className={`dash-pagination__btn ${
-                p === page ? "dash-pagination__btn--active" : ""
-              }`}
-              onClick={() => onPageChange(p)}
-              aria-label={`Page ${p}`}
-              aria-current={p === page ? "page" : undefined}
-            >
-              {p}
-            </button>
-          ))}
-          <button
-            className="dash-pagination__btn"
-            onClick={() => onPageChange(page + 1)}
-            disabled={page >= totalPages}
-            aria-label="Next page"
-          >
-            ›
-          </button>
-        </div>
-      </div>
+      <EcoDataGrid<TopEmitter>
+        data={data}
+        columns={TOP_EMITTER_COLUMNS}
+        enableSorting
+        enablePagination
+        pageSize={5}
+        pageSizeOptions={[5, 10, 25]}
+      />
     </div>
   );
 }
@@ -348,14 +329,16 @@ export default function DashboardPage() {
     scope: "all",
     unit: "tco2e",
   });
-  const [page, setPage] = useState(1);
+
+  // Memoise so the grid reference stays stable on filter changes
+  const emitterData = useMemo(() => TOP_EMITTERS, []);
 
   return (
-    <section className="dash-page" data-testid="dashboard-page">
+    <section className="eco-page" data-testid="dashboard-page">
       {/* Page Header */}
-      <header className="dash-page__header">
-        <h2 className="dash-page__title">Dashboard</h2>
-        <button className="dash-btn dash-btn--outline" type="button">
+      <header className="eco-page__header">
+        <h2 className="eco-page__title">Dashboard</h2>
+        <button className="eco-btn eco-btn--outline" type="button">
           <svg
             width="16"
             height="16"
@@ -399,45 +382,45 @@ export default function DashboardPage() {
       <DashboardFilterBar filters={filters} onChange={setFilters} onApply={() => {}} />
 
       {/* KPI Cards */}
-      <div className="dash-kpi-row">
+      <div className="eco-kpi-row">
         <EmissionKpiCard
           label="Total Emissions"
           value="1,203"
-          unit="CO₂e"
-          sub="3,1 t,120₂e"
+          unit="CO\u2082e"
+          sub="3,1 t,120\u2082e"
         />
-        <div className="dash-kpi-card" data-testid="kpi-card">
-          <div className="dash-kpi-card__header">
-            <span className="dash-kpi-card__label">Scope 1</span>
-            <span className="dash-kpi-card__delta dash-kpi-card__delta--up">
-              +·77%
+        <div className="eco-kpi-card" data-testid="kpi-card">
+          <div className="eco-kpi-card__header">
+            <span className="eco-kpi-card__label">Scope 1</span>
+            <span className="eco-kpi-card__delta eco-kpi-card__delta--up">
+              +77%
             </span>
           </div>
-          <div className="dash-kpi-card__value">
-            500t <span className="dash-kpi-card__unit">CO₂</span>
+          <div className="eco-kpi-card__value">
+            500t <span className="eco-kpi-card__unit">CO\u2082</span>
           </div>
-          <div className="dash-kpi-card__sub">10%</div>
-          <div className="dash-kpi-card__scope-row">
-            <div className="dash-kpi-card__scope-item">
-              <span className="dash-kpi-card__scope-dot dash-kpi-card__scope-dot--blue" />
+          <div className="eco-kpi-card__sub">10%</div>
+          <div className="eco-kpi-card__detail-row">
+            <div className="eco-kpi-card__detail-item">
+              <span className="eco-kpi-card__dot eco-kpi-card__dot--blue" />
               10%, TOY{" "}
-              <strong style={{ color: "#1A6F8A", marginLeft: 4 }}>
-                1 100%
-              </strong>
+              <strong className="eco-kpi-card__highlight">1 100%</strong>
             </div>
-            <div className="dash-kpi-card__scope-item">
+            <div className="eco-kpi-card__detail-item">
               Coverage &gt; 2{" "}
-              <strong style={{ color: "#138A4F", marginLeft: 4 }}>60%</strong>
+              <strong className="eco-kpi-card__highlight--green">60%</strong>
             </div>
           </div>
         </div>
       </div>
 
       {/* Charts Row */}
-      <div className="dash-charts-row">
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1.5rem" }}>
         {/* Emissions by Category */}
-        <div className="dash-card dash-card--chart">
-          <h3 className="dash-card__title">Emissions by Category</h3>
+        <div className="eco-card">
+          <h3 className="eco-page__section-title" style={{ marginBottom: "1rem" }}>
+            Emissions by Category
+          </h3>
           <ResponsiveContainer width="100%" height={260}>
             <PieChart>
               <Pie
@@ -459,14 +442,25 @@ export default function DashboardPage() {
               <Legend />
             </PieChart>
           </ResponsiveContainer>
-          <a href="/analyze" className="dash-card__link">
-            View Full Analysis →
+          <a
+            href="/analyze"
+            style={{
+              display: "block",
+              marginTop: "0.75rem",
+              fontSize: "var(--text-sm)",
+              color: "var(--brand-blue-600)",
+              textDecoration: "none",
+            }}
+          >
+            View Full Analysis \u2192
           </a>
         </div>
 
         {/* Emissions Over Time */}
-        <div className="dash-card dash-card--chart">
-          <h3 className="dash-card__title">Emissions Over Time</h3>
+        <div className="eco-card">
+          <h3 className="eco-page__section-title" style={{ marginBottom: "1rem" }}>
+            Emissions Over Time
+          </h3>
           <ResponsiveContainer width="100%" height={260}>
             <BarChart
               data={TIME_DATA}
@@ -506,13 +500,8 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Top Emitters */}
-      <TopEmittersTable
-        data={TOP_EMITTERS}
-        page={page}
-        totalPages={2}
-        onPageChange={setPage}
-      />
+      {/* Top Emitters - TanStack Table via EcoDataGrid */}
+      <TopEmittersTable data={emitterData} />
     </section>
   );
 }

@@ -36,11 +36,12 @@ describe('AuditStatusBadge', () => {
     expect(screen.getByTestId('audit-status-reviewed')).toHaveTextContent('Reviewed');
   });
 
-  it('renders "Flagged" badge with amber background', () => {
+  it('renders "Flagged" badge', () => {
     render(<AuditStatusBadge status="flagged" />);
     const badge = screen.getByTestId('audit-status-flagged');
     expect(badge).toHaveTextContent('Flagged');
-    expect(badge).toHaveStyle('background: #F4B400');
+    // Uses eco-badge--warning class from EcoKit design system
+    expect(badge.className).toContain('eco-badge--warning');
   });
 
   it('shows dropdown chevron when dropdown=true', () => {
@@ -170,9 +171,10 @@ describe('AuditPage', () => {
     expect(screen.queryByTestId('evidence-panel')).not.toBeInTheDocument();
   });
 
-  it('renders pagination with correct page buttons', () => {
+  it('renders pagination controls', () => {
     render(<AuditPage />);
-    expect(screen.getByLabelText('Page 1')).toBeInTheDocument();
-    expect(screen.getByLabelText('Page 2')).toBeInTheDocument();
+    // TanStack Table renders Previous/Next page controls
+    expect(screen.getByLabelText('Previous page')).toBeInTheDocument();
+    expect(screen.getByLabelText('Next page')).toBeInTheDocument();
   });
 });

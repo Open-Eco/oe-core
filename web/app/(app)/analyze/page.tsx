@@ -72,7 +72,7 @@ const EXPORT_CARDS: ExportCard[] = [
     description: "Exportthis acaea 1 and activities",
     progress: 65,
     primaryAction: "Details",
-    badge: "£ CSQ + CO₂·e",
+    badge: "\u00a3 CSQ + CO\u2082\u00b7e",
   },
   {
     id: "crrd-export",
@@ -99,7 +99,7 @@ const EXPORT_CARDS: ExportCard[] = [
     description: "Export to Comage Vehicles",
     progress: 55,
     primaryAction: "Details",
-    badge: "£ CSQ + CO₂·e",
+    badge: "\u00a3 CSQ + CO\u2082\u00b7e",
   },
   {
     id: "cp-export",
@@ -122,61 +122,58 @@ const EXPORT_CARDS: ExportCard[] = [
 ];
 
 // ── Export Card Component ──────────────────────────────────────────────────────
+// Uses eco-card, eco-progress, eco-badge, eco-btn from the EcoKit design system.
 
 export function AnalyzeExportCard({ card }: { card: ExportCard }) {
   return (
-    <div className="analyze-card" data-testid={`export-card-${card.id}`}>
-      <div className="analyze-card__header">
-        <div className="analyze-card__icon">{card.icon}</div>
-        <h4 className="analyze-card__title">{card.title}</h4>
-        <button className="analyze-card__expand" aria-label="Expand" type="button">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-            <path
-              d="M6 4l4 4-4 4"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
+    <div className="eco-card" data-testid={`export-card-${card.id}`}>
+      <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+          <div style={{ width: 40, height: 40, display: "flex", alignItems: "center", justifyContent: "center", background: "var(--neutral-100)", borderRadius: "var(--radius-md)", flexShrink: 0 }}>
+            {card.icon}
+          </div>
+          <h4 style={{ fontSize: "var(--text-md)", fontWeight: "var(--font-weight-bold)", color: "var(--neutral-900)", margin: 0 }}>
+            {card.title}
+          </h4>
+        </div>
+        <button className="eco-btn eco-btn--secondary" style={{ padding: "0.25rem 0.5rem", fontSize: "var(--text-xs)", minWidth: "auto" }} aria-label="Expand" type="button">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+            <path d="M6 4l4 4-4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
           </svg>
         </button>
       </div>
-      <p className="analyze-card__desc">{card.description}</p>
+
+      <p style={{ fontSize: "var(--text-sm)", color: "var(--neutral-500)", marginBottom: "0.75rem" }}>
+        {card.description}
+      </p>
+
       {card.progress !== undefined && (
-        <div className="analyze-card__progress">
-          <div
-            className="analyze-card__progress-bar"
-            role="progressbar"
-            aria-valuenow={card.progress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            style={{ width: `${card.progress}%` }}
-          />
+        <div style={{ marginBottom: "1rem" }}>
+          <div className="eco-progress eco-progress--sm">
+            <div
+              className="eco-progress__bar"
+              role="progressbar"
+              aria-valuenow={card.progress}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              style={{ width: `${card.progress}%` }}
+            />
+          </div>
         </div>
       )}
-      <div className="analyze-card__actions">
+
+      <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", flexWrap: "wrap" }}>
         {card.badge && (
-          <span className="analyze-card__badge">{card.badge}</span>
+          <span className="eco-badge eco-badge--outline">{card.badge}</span>
         )}
-        <button className="analyze-card__btn analyze-card__btn--primary" type="button">
+        <button className="eco-btn" style={{ padding: "0.375rem 0.875rem", fontSize: "var(--text-sm)" }} type="button">
           {card.primaryAction}
         </button>
         {card.secondaryAction && (
-          <button className="analyze-card__btn analyze-card__btn--secondary" type="button">
-            <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-              <path
-                d="M8 2v8M5 7l3 3 3-3"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
-              <rect
-                x="2"
-                y="12"
-                width="12"
-                height="2"
-                rx="1"
-                fill="currentColor"
-              />
+          <button className="eco-btn eco-btn--secondary" style={{ padding: "0.375rem 0.875rem", fontSize: "var(--text-sm)" }} type="button">
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M8 2v8M5 7l3 3 3-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              <rect x="2" y="12" width="12" height="2" rx="1" fill="currentColor" />
             </svg>
             {card.secondaryAction}
           </button>
@@ -186,7 +183,7 @@ export function AnalyzeExportCard({ card }: { card: ExportCard }) {
   );
 }
 
-// ── Tab Component ─────────────────────────────────────────────────────────────
+// ── Tab Component (eco-tabs from EcoKit) ─────────────────────────────────────
 
 interface AnalyzeTabsProps {
   active: AnalyzeTab;
@@ -201,20 +198,22 @@ export function AnalyzeTabs({ active, onChange }: AnalyzeTabsProps) {
   ];
 
   return (
-    <nav className="analyze-tabs" role="tablist" aria-label="Analyze sections">
-      {tabs.map((tab) => (
-        <button
-          key={tab.id}
-          role="tab"
-          aria-selected={active === tab.id}
-          className={`analyze-tab ${active === tab.id ? "analyze-tab--active" : ""}`}
-          onClick={() => onChange(tab.id)}
-          type="button"
-        >
-          {tab.label}
-        </button>
-      ))}
-    </nav>
+    <div className="eco-tabs" role="tablist" aria-label="Analyze sections">
+      <div className="eco-tabs__list">
+        {tabs.map((tab) => (
+          <button
+            key={tab.id}
+            role="tab"
+            aria-selected={active === tab.id}
+            className="eco-tabs__trigger"
+            onClick={() => onChange(tab.id)}
+            type="button"
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -224,51 +223,23 @@ export default function AnalyzePage() {
   const [activeTab, setActiveTab] = useState<AnalyzeTab>("reduction-plans");
 
   return (
-    <section className="dash-page" data-testid="analyze-page">
-      <header className="dash-page__header">
-        <h2 className="dash-page__title">Analyze</h2>
-        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
-          <button className="dash-btn dash-btn--outline" type="button">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 20 20"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M10 14V6M6 10l4-4 4 4"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                strokeLinecap="round"
-              />
-              <rect
-                x="3"
-                y="16"
-                width="14"
-                height="1.5"
-                rx="0.75"
-                fill="currentColor"
-              />
+    <section className="eco-page" data-testid="analyze-page">
+      <header className="eco-page__header">
+        <h2 className="eco-page__title">Analyze</h2>
+        <div className="eco-page__header-actions">
+          <button className="eco-btn eco-btn--secondary" type="button">
+            <svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+              <path d="M10 14V6M6 10l4-4 4 4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+              <rect x="3" y="16" width="14" height="1.5" rx="0.75" fill="currentColor" />
             </svg>
             Export
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden="true"
-            >
-              <path
-                d="M4 6l4 4 4-4"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-              />
+            <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 6l4 4 4-4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
             </svg>
           </button>
           <button
-            className="dash-btn dash-btn--icon"
+            className="eco-btn eco-btn--secondary"
+            style={{ padding: "0.5rem", minWidth: "auto" }}
             type="button"
             aria-label="More options"
           >
@@ -284,7 +255,7 @@ export default function AnalyzePage() {
       <AnalyzeTabs active={activeTab} onChange={setActiveTab} />
 
       <div
-        className="analyze-grid"
+        style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}
         role="tabpanel"
         aria-label={activeTab}
       >
