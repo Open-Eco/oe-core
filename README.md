@@ -73,7 +73,7 @@ Here's what OpenEco looks like:
 
 <div align="center">
 
-![OpenEco Dashboard Mockup 1](./_mockups/Mock1.png)
+![OpenEco Dashboard Mockup 1](https://github.com/user-attachments/assets/10d13e1d-130c-4b2e-81c7-6e4af4a31d2f)
 
 *Overview Dashboard - Executive view with emissions breakdown and key metrics*
 
