@@ -14,12 +14,10 @@ import type {
 const CollectEmissionsSchema = z.object({
   organizationId: z.string().min(1, "Organization ID is required"),
   periodStart: z.date({
-    required_error: "Period start date is required",
-    invalid_type_error: "Period start must be a valid date",
+    message: "Period start must be a valid date",
   }),
   periodEnd: z.date({
-    required_error: "Period end date is required",
-    invalid_type_error: "Period end must be a valid date",
+    message: "Period end must be a valid date",
   }),
 }).refine(
   (data) => data.periodEnd > data.periodStart,
@@ -32,12 +30,10 @@ const CollectEmissionsSchema = z.object({
 const CollectActivityDataSchema = z.object({
   organizationId: z.string().min(1, "Organization ID is required"),
   periodStart: z.date({
-    required_error: "Period start date is required",
-    invalid_type_error: "Period start must be a valid date",
+    message: "Period start must be a valid date",
   }),
   periodEnd: z.date({
-    required_error: "Period end date is required",
-    invalid_type_error: "Period end must be a valid date",
+    message: "Period end must be a valid date",
   }),
 }).refine(
   (data) => data.periodEnd > data.periodStart,
@@ -82,7 +78,7 @@ export class ReportDataCollector {
     })
 
     if (!validation.success) {
-      validation.error.errors.forEach((err) => {
+      validation.error.issues.forEach((err) => {
         errors.push({
           field: err.path.join("."),
           message: err.message,
@@ -209,7 +205,7 @@ export class ReportDataCollector {
     })
 
     if (!validation.success) {
-      validation.error.errors.forEach((err) => {
+      validation.error.issues.forEach((err) => {
         errors.push({
           field: err.path.join("."),
           message: err.message,
@@ -323,7 +319,7 @@ export class ReportDataCollector {
     })
 
     if (!validation.success) {
-      validation.error.errors.forEach((err) => {
+      validation.error.issues.forEach((err) => {
         errors.push({
           field: err.path.join("."),
           message: err.message,
@@ -342,7 +338,6 @@ export class ReportDataCollector {
             select: {
               id: true,
               name: true,
-              location: true,
             },
           },
         },
