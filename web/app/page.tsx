@@ -70,7 +70,10 @@ export default function Home() {
 
           <div className="eco-landing__hero-panel">
             <div className="eco-card eco-landing__hero-card">
-              <h2 className="eco-card__title">Designed for enterprises</h2>
+              <h2 className="eco-card__title">Built for medium-sized businesses</h2>
+              <p className="eco-card__meta">
+                {"Sustainability reporting shouldn't require an enterprise budget. OpenEco gives growing companies the tools that were previously only accessible to large enterprises — at no cost."}
+              </p>
               <ul className="eco-landing__list">
                 <li>Self-hosted on your own Kubernetes/OKD clusters</li>
                 <li>One isolated PostgreSQL database per company</li>
