@@ -114,6 +114,45 @@ export default function Home() {
             </article>
           </div>
         </section>
+
+        <section className="eco-landing__section">
+          <h2 className="eco-landing__section-title">Dashboard overview</h2>
+          <div className="eco-landing__preview-layout">
+            <div className="eco-landing__preview-image-wrap">
+              <Image
+                src="/mock1.png"
+                alt="OpenEco dashboard showing emissions overview, charts, and analysis views"
+                width={880}
+                height={1200}
+                className="eco-landing__preview-image"
+              />
+            </div>
+            <ul className="eco-landing__capabilities">
+              <li>
+                <strong>Measurement</strong> — Log activity data and emissions
+                factors across Scope 1, 2, and 3 categories. See total
+                CO₂e at a glance with per-scope coverage metrics.
+              </li>
+              <li>
+                <strong>Publication</strong> — Share verified climate data with
+                internal stakeholders or the public via a consistent,
+                comparable data model. Export in CSV, PDF, and JSON formats.
+              </li>
+              <li>
+                <strong>Analysis</strong> — Drill into emissions by category,
+                supplier, and time period using pie charts, stacked bar charts,
+                and top-emitter tables. Export reports in CSRD, CDP, GRI, and
+                TCFD formats directly from the Analyze view.
+              </li>
+              <li>
+                <strong>Self-hosted by design</strong> — Run on your own
+                Kubernetes or OKD clusters using OCI containers and Helm
+                charts. No vendor lock-in, no per-seat fees, full data
+                sovereignty.
+              </li>
+            </ul>
+          </div>
+        </section>
       </main>
     </div>
   );
