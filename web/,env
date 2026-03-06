@@ -1,1 +1,0 @@
-DATABASE_URL="postgresql://postgres:passwordD@localhost:5432/openeco?schema=public"
