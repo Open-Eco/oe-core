@@ -35,6 +35,10 @@
 @import './components/sidebar.css';
 @import './components/grid.css';
 @import './components/datagrid.css';
+/* Added for app pages – not yet in upstream EcoKit */
+@import './components/kpi-cards.css';
+@import './components/filter-bar.css';
+@import './components/page-layout.css';
 
 /* Utilities */
 @import './utilities/spacing.css';
