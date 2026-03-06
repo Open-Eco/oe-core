@@ -1,0 +1,84 @@
+/* EcoKit Filter Bar Component
+ *
+ * Added to support horizontal filter toolbars used on dashboard and data
+ * pages (year, location, scope, unit selectors + Apply CTA).
+ *
+ * Usage:
+ *   <div class="eco-filter-bar">
+ *     <select class="eco-filter-bar__select" aria-label="Year">…</select>
+ *     <div class="eco-filter-bar__group">
+ *       <span class="eco-filter-bar__group-label">Scope</span>
+ *       <select class="eco-filter-bar__select">…</select>
+ *     </div>
+ *     <button class="eco-filter-bar__apply" type="button">Apply</button>
+ *   </div>
+ */
+
+.eco-filter-bar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-3) var(--space-5);
+  background: white;
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.eco-filter-bar__select {
+  padding: var(--space-2) var(--space-8) var(--space-2) var(--space-3);
+  border: 1px solid var(--neutral-300);
+  border-radius: var(--radius-md);
+  background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='%237A8C8E' stroke-width='1.5' stroke-linecap='round' fill='none'/%3E%3C/svg%3E") no-repeat right var(--space-3) center;
+  appearance: none;
+  font-size: var(--text-sm);
+  font-family: var(--font-sans);
+  color: var(--neutral-900);
+  cursor: pointer;
+  transition: border-color var(--duration-fast) var(--easing-ease-out);
+  min-width: 100px;
+}
+
+.eco-filter-bar__select:focus {
+  outline: none;
+  border-color: var(--brand-blue-600);
+  box-shadow: 0 0 0 3px rgba(26, 111, 138, 0.1);
+}
+
+.eco-filter-bar__group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.eco-filter-bar__group-label {
+  font-size: var(--text-sm);
+  color: var(--neutral-500);
+  white-space: nowrap;
+}
+
+.eco-filter-bar__apply {
+  margin-left: auto;
+  padding: var(--space-2) var(--space-5);
+  background: transparent;
+  border: none;
+  color: var(--brand-green-600);
+  font-size: var(--text-sm);
+  font-weight: var(--font-weight-bold);
+  font-family: var(--font-sans);
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  transition: background-color var(--duration-fast) var(--easing-ease-out);
+}
+
+.eco-filter-bar__apply:hover {
+  background: rgba(19, 138, 79, 0.08);
+}
+
+.eco-filter-bar__divider {
+  width: 1px;
+  height: 20px;
+  background: var(--neutral-300);
+  flex-shrink: 0;
+}

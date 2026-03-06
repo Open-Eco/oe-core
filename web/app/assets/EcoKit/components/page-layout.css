@@ -1,0 +1,94 @@
+/* EcoKit Page Layout Component
+ *
+ * Added to provide consistent page-level layout primitives used by all
+ * app pages: page wrapper, header, title/subtitle, section blocks.
+ *
+ * Usage:
+ *   <section class="eco-page">
+ *     <header class="eco-page__header">
+ *       <div>
+ *         <h2 class="eco-page__title">Dashboard</h2>
+ *         <p class="eco-page__subtitle">…</p>
+ *       </div>
+ *       <button class="eco-btn eco-btn--outline">Action</button>
+ *     </header>
+ *     <div class="eco-page__section">…</div>
+ *   </section>
+ */
+
+.eco-page {
+  padding: var(--space-8);
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.eco-page__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+  flex-wrap: wrap;
+}
+
+.eco-page__title {
+  font-size: var(--text-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--neutral-900);
+  margin: 0 0 var(--space-1);
+}
+
+.eco-page__subtitle {
+  font-size: var(--text-sm);
+  color: var(--neutral-500);
+  margin: 0;
+}
+
+.eco-page__header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  flex-shrink: 0;
+}
+
+.eco-page__section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.eco-page__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.eco-page__section-title {
+  font-size: var(--text-md);
+  font-weight: var(--font-weight-bold);
+  color: var(--neutral-900);
+  margin: 0;
+}
+
+/* Two-column layout for pages like Roles & Permissions */
+.eco-page__two-col {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+@media (max-width: 1024px) {
+  .eco-page__two-col {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .eco-page {
+    padding: var(--space-4);
+    gap: var(--space-4);
+  }
+}
