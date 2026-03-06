@@ -114,7 +114,7 @@ export function ChangeHistory({
                   Reason: {event.reason}
                 </div>
               )}
-              {event.changes !== undefined && event.changes !== null && (
+              {event.changes != null && (
                 <details className="change-history-details">
                   <summary>View changes</summary>
                   <pre>{JSON.stringify(event.changes, null, 2)}</pre>
