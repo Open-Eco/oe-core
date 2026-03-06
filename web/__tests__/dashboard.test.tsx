@@ -8,19 +8,20 @@ import '@testing-library/jest-dom';
 
 // Mock recharts to avoid canvas issues in jsdom
 jest.mock('recharts', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const React = require('react');
   return {
-    PieChart: ({ children }: any) => <div data-testid="pie-chart">{children}</div>,
+    PieChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="pie-chart">{children}</div>,
     Pie: () => null,
     Cell: () => null,
-    BarChart: ({ children }: any) => <div data-testid="bar-chart">{children}</div>,
+    BarChart: ({ children }: { children?: React.ReactNode }) => <div data-testid="bar-chart">{children}</div>,
     Bar: () => null,
     XAxis: () => null,
     YAxis: () => null,
     CartesianGrid: () => null,
     Tooltip: () => null,
     Legend: () => null,
-    ResponsiveContainer: ({ children }: any) => (
+    ResponsiveContainer: ({ children }: { children?: React.ReactNode }) => (
       <div data-testid="responsive-container">{children}</div>
     ),
   };

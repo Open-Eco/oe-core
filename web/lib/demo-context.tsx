@@ -47,7 +47,7 @@ export type DemoActivity = {
   periodStart: string;
   periodEnd: string;
   source: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: string;
 };
 
@@ -115,12 +115,13 @@ export function DemoProvider({ children }: { children: ReactNode }) {
 
   // Load from sessionStorage on mount
   useEffect(() => {
-    const loaded = loadFromStorage();
-    setOrganizations(loaded.organizations);
-    setFacilities(loaded.facilities);
-    setActivities(loaded.activities);
-    setCurrentOrgIdState(loaded.currentOrgId);
-    setInitialized(true);
+    Promise.resolve(loadFromStorage()).then((loaded) => {
+      setOrganizations(loaded.organizations);
+      setFacilities(loaded.facilities);
+      setActivities(loaded.activities);
+      setCurrentOrgIdState(loaded.currentOrgId);
+      setInitialized(true);
+    });
   }, []);
 
   // Save to sessionStorage whenever data changes

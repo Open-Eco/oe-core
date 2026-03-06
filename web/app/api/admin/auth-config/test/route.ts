@@ -40,6 +40,7 @@ export async function POST(request: NextRequest) {
     // Test OIDC connection
     try {
       // Dynamic import to avoid Next.js static analysis issues
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const oidc = await import("openid-client") as any;
       const discoveredIssuer = await oidc.Issuer.discover(issuer);
       
@@ -62,13 +63,13 @@ export async function POST(request: NextRequest) {
         tokenEndpoint: discoveredIssuer.metadata.token_endpoint,
         userInfoEndpoint: discoveredIssuer.metadata.userinfo_endpoint,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       return NextResponse.json(
-        { error: `OIDC connection failed: ${error.message}` },
+        { error: `OIDC connection failed: ${error instanceof Error ? error.message : 'Unknown error'}` },
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error testing auth config:", error);
     return NextResponse.json(
       { error: "Internal server error" },

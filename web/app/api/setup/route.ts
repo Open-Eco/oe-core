@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       isComplete: orgCount > 0,
       organizationCount: orgCount,
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error checking setup status:", error);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
         : null,
       message: "Setup completed successfully",
     });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error.issues },

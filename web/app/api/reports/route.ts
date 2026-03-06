@@ -38,16 +38,9 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ reports: [] })
     }
 
-    const where: any = {
-      organizationId: { in: orgIds },
-    }
-
-    if (organizationId && orgIds.includes(organizationId)) {
-      where.organizationId = organizationId
-    }
-
-    if (status) {
-      where.status = status
+    const where = {
+      organizationId: organizationId && orgIds.includes(organizationId) ? organizationId : { in: orgIds },
+      ...(status ? { status } : {}),
     }
 
     const reports = await prisma.report.findMany({

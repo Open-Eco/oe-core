@@ -44,26 +44,14 @@ export async function GET(request: NextRequest) {
     }
 
     // Build query
-    const where: any = {
-      organizationId: { in: orgIds },
-    }
-
-    if (organizationId && orgIds.includes(organizationId)) {
-      where.organizationId = organizationId
-    }
-
-    if (scope) {
-      where.scope = scope
-    }
-
-    if (startDate || endDate) {
-      where.AND = []
-      if (startDate) {
-        where.AND.push({ periodStart: { gte: new Date(startDate) } })
-      }
-      if (endDate) {
-        where.AND.push({ periodEnd: { lte: new Date(endDate) } })
-      }
+    const andClauses = [
+      ...(startDate ? [{ periodStart: { gte: new Date(startDate) } }] : []),
+      ...(endDate ? [{ periodEnd: { lte: new Date(endDate) } }] : []),
+    ]
+    const where = {
+      organizationId: organizationId && orgIds.includes(organizationId) ? organizationId : { in: orgIds },
+      ...(scope ? { scope } : {}),
+      ...(andClauses.length > 0 ? { AND: andClauses } : {}),
     }
 
     const emissions = await prisma.emissionResult.findMany({

@@ -44,7 +44,7 @@ export interface OrganizationProfile {
     facilities: string[]
     organizational: string[]
   }
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface ReportDataBundle {

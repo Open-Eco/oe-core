@@ -10,7 +10,17 @@ export default function AuthenticationConfigPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [authConfig, setAuthConfig] = useState<any>(null);
+  const [authConfig, setAuthConfig] = useState<{
+    provider: string;
+    enabled: boolean;
+    issuer?: string;
+    clientId?: string;
+    clientSecret?: string;
+    authorizationEndpoint?: string;
+    tokenEndpoint?: string;
+    userInfoEndpoint?: string;
+    audience?: string;
+  } | null>(null);
   const [organizationId, setOrganizationId] = useState<string | null>(null);
 
   useEffect(() => {
