@@ -63,8 +63,8 @@ export function AuthConfigForm({ organizationId, initialConfig }: AuthConfigForm
 
       router.refresh();
       setTestResult("Configuration saved successfully!");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setLoading(false);
     }
@@ -92,8 +92,8 @@ export function AuthConfigForm({ organizationId, initialConfig }: AuthConfigForm
       }
 
       setTestResult("Connection successful! OIDC configuration is valid.");
-    } catch (err: any) {
-      setTestResult(`Connection failed: ${err.message}`);
+    } catch (err) {
+      setTestResult(`Connection failed: ${err instanceof Error ? err.message : String(err)}`);
     } finally {
       setTesting(false);
     }
@@ -136,7 +136,7 @@ export function AuthConfigForm({ organizationId, initialConfig }: AuthConfigForm
           required
         />
         <p className="eco-form__help">
-          Your OIDC provider's issuer URL (usually ends with /realms/your-realm)
+          Your OIDC provider&apos;s issuer URL (usually ends with /realms/your-realm)
         </p>
       </div>
 
@@ -169,7 +169,7 @@ export function AuthConfigForm({ organizationId, initialConfig }: AuthConfigForm
           required
         />
         <p className="eco-form__help">
-          Keep this secret secure. It's stored encrypted in the database.
+          Keep this secret secure. It&apos;s stored encrypted in the database.
         </p>
       </div>
 

@@ -19,7 +19,7 @@ export async function GET(request: NextRequest) {
       isComplete: orgCount > 0,
       organizationCount: orgCount,
     });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error checking setup status:", error);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -85,7 +85,7 @@ export async function POST(request: NextRequest) {
         : null,
       message: "Setup completed successfully",
     });
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error.issues },
@@ -93,15 +93,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Handle unique constraint violations
-    if (error.code === "P2002") {
-      if (error.meta?.target?.includes("slug")) {
+    // Handle unique constraint violations (Prisma error shape)
+    const prismaError = error as { code?: string; meta?: { target?: string[] } };
+    if (prismaError.code === "P2002") {
+      if (prismaError.meta?.target?.includes("slug")) {
         return NextResponse.json(
           { error: "Organization slug already exists" },
           { status: 400 }
         );
       }
-      if (error.meta?.target?.includes("email")) {
+      if (prismaError.meta?.target?.includes("email")) {
         return NextResponse.json(
           { error: "Email already registered" },
           { status: 400 }

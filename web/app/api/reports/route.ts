@@ -38,7 +38,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ reports: [] })
     }
 
-    const where: any = {
+    const where: Record<string, unknown> = {
       organizationId: { in: orgIds },
     }
 

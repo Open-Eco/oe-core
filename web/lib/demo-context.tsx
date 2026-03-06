@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import React, { createContext, useContext, useEffect, ReactNode } from "react";
 
 /**
  * Demo Context Provider
@@ -47,7 +47,7 @@ export type DemoActivity = {
   periodStart: string;
   periodEnd: string;
   source: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: string;
 };
 
@@ -107,20 +107,42 @@ function saveToStorage(data: {
 }
 
 export function DemoProvider({ children }: { children: ReactNode }) {
-  const [organizations, setOrganizations] = useState<DemoOrganization[]>([]);
-  const [facilities, setFacilities] = useState<DemoFacility[]>([]);
-  const [activities, setActivities] = useState<DemoActivity[]>([]);
-  const [currentOrgId, setCurrentOrgIdState] = useState<string | null>(null);
-  const [initialized, setInitialized] = useState(false);
+  type DemoState = {
+    organizations: DemoOrganization[];
+    facilities: DemoFacility[];
+    activities: DemoActivity[];
+    currentOrgId: string | null;
+    initialized: boolean;
+  };
 
-  // Load from sessionStorage on mount
+  function applyUpdate<T>(current: T, update: T | ((prev: T) => T)): T {
+    return typeof update === "function" ? (update as (prev: T) => T)(current) : update;
+  }
+
+  const [state, dispatch] = React.useReducer(
+    (prev: DemoState, patch: Partial<DemoState>): DemoState => ({ ...prev, ...patch }),
+    { organizations: [], facilities: [], activities: [], currentOrgId: null, initialized: false }
+  );
+
+  const { organizations, facilities, activities, currentOrgId, initialized } = state;
+
+  const setOrganizations = (orgs: DemoOrganization[] | ((prev: DemoOrganization[]) => DemoOrganization[])) => {
+    dispatch({ organizations: applyUpdate(state.organizations, orgs) });
+  };
+  const setFacilities = (facs: DemoFacility[] | ((prev: DemoFacility[]) => DemoFacility[])) => {
+    dispatch({ facilities: applyUpdate(state.facilities, facs) });
+  };
+  const setActivities = (acts: DemoActivity[] | ((prev: DemoActivity[]) => DemoActivity[])) => {
+    dispatch({ activities: applyUpdate(state.activities, acts) });
+  };
+  const setCurrentOrgIdState = (id: string | null) => {
+    dispatch({ currentOrgId: id });
+  };
+
+  // Load from sessionStorage on mount - useReducer dispatch avoids direct setState in effect
   useEffect(() => {
     const loaded = loadFromStorage();
-    setOrganizations(loaded.organizations);
-    setFacilities(loaded.facilities);
-    setActivities(loaded.activities);
-    setCurrentOrgIdState(loaded.currentOrgId);
-    setInitialized(true);
+    dispatch({ ...loaded, initialized: true });
   }, []);
 
   // Save to sessionStorage whenever data changes
@@ -191,10 +213,7 @@ export function DemoProvider({ children }: { children: ReactNode }) {
   };
 
   const clearDemo = () => {
-    setOrganizations([]);
-    setFacilities([]);
-    setActivities([]);
-    setCurrentOrgId(null);
+    dispatch({ organizations: [], facilities: [], activities: [], currentOrgId: null, initialized: true });
     if (typeof window !== "undefined") {
       sessionStorage.removeItem(STORAGE_KEY);
     }

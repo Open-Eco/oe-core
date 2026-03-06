@@ -22,7 +22,7 @@ export interface EditableCellMeta {
   editable?: boolean;
   editInputType?: EditInputType;
   selectOptions?: { value: string; label: string }[];
-  validate?: (value: any) => boolean | string;
+  validate?: (value: unknown) => boolean | string;
   min?: number;
   max?: number;
   step?: number;
@@ -32,14 +32,14 @@ export interface CellEditEvent<TData> {
   rowIndex: number;
   rowId: string;
   columnId: string;
-  oldValue: any;
-  newValue: any;
+  oldValue: unknown;
+  newValue: unknown;
   row: TData;
 }
 
 export interface EcoDataGridProps<TData> {
   data: TData[];
-  columns: ColumnDef<TData, any>[];
+  columns: ColumnDef<TData, unknown>[];
   enableSorting?: boolean;
   enableFiltering?: boolean;
   enablePagination?: boolean;
@@ -58,7 +58,7 @@ export interface EcoDataGridProps<TData> {
 
 // Editable Cell Component
 interface EditableCellProps<TData> {
-  value: any;
+  value: unknown;
   row: TData;
   rowIndex: number;
   rowId: string;
@@ -66,10 +66,10 @@ interface EditableCellProps<TData> {
   meta?: EditableCellMeta;
   isEditing: boolean;
   onStartEdit: () => void;
-  onSave: (value: any) => void;
+  onSave: (value: unknown) => void;
   onCancel: () => void;
-  renderDisplay?: (props: CellContext<TData, any>) => React.ReactNode;
-  cellContext: CellContext<TData, any>;
+  renderDisplay?: (props: CellContext<TData, unknown>) => React.ReactNode;
+  cellContext: CellContext<TData, unknown>;
 }
 
 function EditableCell<TData>({
@@ -168,7 +168,7 @@ function EditableCell<TData>({
         <select
           ref={inputRef as React.RefObject<HTMLSelectElement>}
           className="eco-datagrid__edit-input eco-datagrid__edit-select"
-          value={editValue}
+          value={editValue as string | number | undefined}
           onChange={(e) => setEditValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
@@ -196,7 +196,7 @@ function EditableCell<TData>({
           ref={inputRef as React.RefObject<HTMLInputElement>}
           type={inputType}
           className={`eco-datagrid__edit-input ${error ? "eco-datagrid__edit-input--error" : ""}`}
-          value={editValue ?? ""}
+          value={(editValue != null ? editValue : "") as string | number}
           onChange={(e) => {
             const val = inputType === "number" ? parseFloat(e.target.value) || 0 : e.target.value;
             setEditValue(val);
@@ -280,7 +280,7 @@ export function EcoDataGrid<TData>({
   });
 
   const handleCellEdit = useCallback(
-    (rowIndex: number, rowId: string, columnId: string, oldValue: any, newValue: any, row: TData) => {
+    (rowIndex: number, rowId: string, columnId: string, oldValue: unknown, newValue: unknown, row: TData) => {
       if (oldValue !== newValue && onCellEdit) {
         onCellEdit({
           rowIndex,

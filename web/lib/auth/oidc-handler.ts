@@ -23,6 +23,27 @@ async function calculateCodeChallenge(verifier: string): Promise<string> {
   return hash;
 }
 
+// Internal types for openid-client legacy (Issuer-based) API
+interface OIDCClient {
+  authorizationUrl(params: Record<string, string>): string;
+  callback(
+    redirectUri: string,
+    params: Record<string, unknown>,
+    checks: Record<string, unknown>
+  ): Promise<{ access_token?: string }>;
+  userinfo(token: string): Promise<Record<string, unknown>>;
+}
+interface OIDCIssuer {
+  Client: new (config: Record<string, string | string[] | undefined>) => OIDCClient;
+  metadata: Record<string, string>;
+}
+interface LegacyOIDCModule {
+  Issuer: {
+    new (config: Record<string, string | undefined>): OIDCIssuer;
+    discover(url: string): Promise<OIDCIssuer>;
+  };
+}
+
 /**
  * Initialize OIDC client for an organization
  */
@@ -32,10 +53,10 @@ export async function getOIDCClient(organizationId: string, baseUrl: string) {
     throw new Error("OIDC not configured for this organization");
   }
 
-  const oidc = await getOIDCModule() as any;
+  const oidc = await getOIDCModule() as unknown as LegacyOIDCModule;
 
   // Discover issuer if endpoints not provided
-  let issuer: any;
+  let issuer: OIDCIssuer;
   if (config.authorizationEndpoint && config.tokenEndpoint) {
     // Use provided endpoints
     issuer = new oidc.Issuer({
@@ -72,7 +93,7 @@ export async function getAuthorizationURL(
   const codeChallenge = await calculateCodeChallenge(codeVerifier);
   const generatedState = state || randomBytes(32).toString("base64url");
 
-  const params: any = {
+  const params: Record<string, string> = {
     redirect_uri: getOIDCCallbackURL(baseUrl, organizationId),
     scope: "openid email profile",
     state: generatedState,
@@ -147,7 +168,7 @@ export async function handleOIDCCallback(
 
   // Resolve role from mappings
   const groups = userInfo.groups as string[] | undefined;
-  const attributes = userInfo as Record<string, any>;
+  const attributes = userInfo as Record<string, unknown>;
   const roleResult = await resolveUserRole(organizationId, email, groups, attributes);
 
   // Get or create organization user with resolved role

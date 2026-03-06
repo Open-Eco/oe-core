@@ -52,10 +52,10 @@ export async function GET(request: NextRequest) {
     response.cookies.delete(`oidc_${organizationId}_state`);
 
     return response;
-  } catch (error: any) {
+  } catch (error) {
     console.error("OIDC callback error:", error);
     return NextResponse.redirect(
-      new URL(`/auth/signin?error=${encodeURIComponent(error.message)}`, request.url)
+      new URL(`/auth/signin?error=${encodeURIComponent(error instanceof Error ? error.message : "Callback failed")}`, request.url)
     );
   }
 }

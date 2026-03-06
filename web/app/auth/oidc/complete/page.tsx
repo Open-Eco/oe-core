@@ -8,11 +8,11 @@ function OIDCCompleteContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const userId = searchParams.get("userId");
-  const [error, setError] = useState<string | null>(null);
+  const [signInError, setSignInError] = useState<string | null>(null);
+  const error = !userId ? "Missing user ID" : signInError;
 
   useEffect(() => {
     if (!userId) {
-      setError("Missing user ID");
       setTimeout(() => router.push("/auth/signin?error=missing_user_id"), 2000);
       return;
     }
@@ -23,7 +23,7 @@ function OIDCCompleteContent() {
       redirect: false,
     }).then((result) => {
       if (result?.error) {
-        setError("Failed to sign in");
+        setSignInError("Failed to sign in");
         setTimeout(() => router.push("/auth/signin?error=signin_failed"), 2000);
       } else {
         router.push("/dashboard");

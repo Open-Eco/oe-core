@@ -155,7 +155,7 @@ export async function PATCH(
     }
 
     // Build update data
-    const updateData: any = {}
+    const updateData: Record<string, unknown> = {}
     if (updates.facilityId !== undefined) updateData.facilityId = updates.facilityId
     if (updates.reportingPeriodId !== undefined) updateData.reportingPeriodId = updates.reportingPeriodId
     if (updates.category) updateData.category = updates.category
@@ -201,7 +201,7 @@ export async function PATCH(
             unit: activity.unit,
             status: activity.status,
           },
-          after: updateData,
+          after: updateData as Record<string, string | number | boolean | null>,
         },
       },
     })

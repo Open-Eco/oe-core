@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 export default function DashboardPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [organizations, setOrganizations] = useState<any[]>([]);
+  const [organizations, setOrganizations] = useState<{ id: string; name: string; slug: string; verified?: boolean }[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

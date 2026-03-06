@@ -12,7 +12,7 @@ export async function resolveUserRole(
   organizationId: string,
   email: string,
   groups?: string[],
-  attributes?: Record<string, any>
+  attributes?: Record<string, unknown>
 ): Promise<RoleMappingResult> {
   // Get all role mappings for this organization's auth config
   const authConfig = await prisma.authConfig.findUnique({
