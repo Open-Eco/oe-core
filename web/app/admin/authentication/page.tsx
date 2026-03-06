@@ -87,7 +87,7 @@ export default function AuthenticationConfigPage() {
             Configure OpenID Connect (OIDC) to allow users to sign in via your identity provider
             (Keycloak, Azure AD, Okta, etc.).
           </p>
-          <AuthConfigForm organizationId={organizationId} initialConfig={authConfig} />
+          <AuthConfigForm organizationId={organizationId} initialConfig={authConfig ?? undefined} />
         </div>
       </div>
 

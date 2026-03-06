@@ -57,13 +57,14 @@ export async function GET(request: NextRequest) {
     }
 
     if (startDate || endDate) {
-      where.AND = []
+      const andClauses: Record<string, unknown>[] = []
       if (startDate) {
-        where.AND.push({ periodStart: { gte: new Date(startDate) } })
+        andClauses.push({ periodStart: { gte: new Date(startDate) } })
       }
       if (endDate) {
-        where.AND.push({ periodEnd: { lte: new Date(endDate) } })
+        andClauses.push({ periodEnd: { lte: new Date(endDate) } })
       }
+      where.AND = andClauses
     }
 
     const emissions = await prisma.emissionResult.findMany({

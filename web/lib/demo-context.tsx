@@ -107,28 +107,33 @@ function saveToStorage(data: {
 }
 
 export function DemoProvider({ children }: { children: ReactNode }) {
-  type DemoSlice = {
+  type DemoState = {
     organizations: DemoOrganization[];
     facilities: DemoFacility[];
     activities: DemoActivity[];
     currentOrgId: string | null;
     initialized: boolean;
   };
+
+  function applyUpdate<T>(current: T, update: T | ((prev: T) => T)): T {
+    return typeof update === "function" ? (update as (prev: T) => T)(current) : update;
+  }
+
   const [state, dispatch] = React.useReducer(
-    (prev: DemoSlice, patch: Partial<DemoSlice>): DemoSlice => ({ ...prev, ...patch }),
+    (prev: DemoState, patch: Partial<DemoState>): DemoState => ({ ...prev, ...patch }),
     { organizations: [], facilities: [], activities: [], currentOrgId: null, initialized: false }
   );
 
   const { organizations, facilities, activities, currentOrgId, initialized } = state;
 
   const setOrganizations = (orgs: DemoOrganization[] | ((prev: DemoOrganization[]) => DemoOrganization[])) => {
-    dispatch({ organizations: typeof orgs === "function" ? orgs(state.organizations) : orgs });
+    dispatch({ organizations: applyUpdate(state.organizations, orgs) });
   };
   const setFacilities = (facs: DemoFacility[] | ((prev: DemoFacility[]) => DemoFacility[])) => {
-    dispatch({ facilities: typeof facs === "function" ? facs(state.facilities) : facs });
+    dispatch({ facilities: applyUpdate(state.facilities, facs) });
   };
   const setActivities = (acts: DemoActivity[] | ((prev: DemoActivity[]) => DemoActivity[])) => {
-    dispatch({ activities: typeof acts === "function" ? acts(state.activities) : acts });
+    dispatch({ activities: applyUpdate(state.activities, acts) });
   };
   const setCurrentOrgIdState = (id: string | null) => {
     dispatch({ currentOrgId: id });

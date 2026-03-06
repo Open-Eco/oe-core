@@ -201,7 +201,7 @@ export async function PATCH(
             unit: activity.unit,
             status: activity.status,
           },
-          after: updateData,
+          after: updateData as Record<string, string | number | boolean | null>,
         },
       },
     })
