@@ -14,9 +14,8 @@ interface TopNavProps {
 
 const navItems = [
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/measure", label: "Measure" },
-  { href: "/manage", label: "Manage" },
-  { href: "/analyze", label: "Analyze" },
+  { href: "/measure", label: "Data Collection" },
+  { href: "/manage", label: "Calculations" },
   { href: "/act", label: "Act" },
   { href: "/report", label: "Report" },
   { href: "/admin", label: "Admin" },
