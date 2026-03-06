@@ -9,7 +9,7 @@ interface ChangeEvent {
   action: string;
   resourceType: string;
   resourceId: string;
-  changes: any;
+  changes: unknown;
   reason: string | null;
   timestamp: string;
 }
@@ -114,7 +114,7 @@ export function ChangeHistory({
                   Reason: {event.reason}
                 </div>
               )}
-              {event.changes && (
+              {event.changes != null && (
                 <details className="change-history-details">
                   <summary>View changes</summary>
                   <pre>{JSON.stringify(event.changes, null, 2)}</pre>

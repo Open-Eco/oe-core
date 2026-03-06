@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ config });
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error("Error fetching auth config:", error);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -90,11 +90,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Encrypt client secret (simple approach - in production use proper encryption)
-    let encryptedSecret = data.clientSecret;
-    if (data.clientSecret && data.provider === "oidc") {
-      // For now, store as-is (in production, encrypt with a key)
-      // encryptedSecret = await encrypt(data.clientSecret);
-    }
+    const encryptedSecret = data.clientSecret; // For now, store as-is (in production, encrypt with a key)
 
     // Upsert auth config
     const config = await prisma.authConfig.upsert({
@@ -125,7 +121,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ config });
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error.issues },

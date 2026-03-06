@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { Prisma } from "@prisma/client"
 
 const updateActivityDataSchema = z.object({
   facilityId: z.string().optional().nullable(),
@@ -155,7 +156,7 @@ export async function PATCH(
     }
 
     // Build update data
-    const updateData: any = {}
+    const updateData: Prisma.RawActivityDataUncheckedUpdateInput = {}
     if (updates.facilityId !== undefined) updateData.facilityId = updates.facilityId
     if (updates.reportingPeriodId !== undefined) updateData.reportingPeriodId = updates.reportingPeriodId
     if (updates.category) updateData.category = updates.category
@@ -201,8 +202,8 @@ export async function PATCH(
             unit: activity.unit,
             status: activity.status,
           },
-          after: updateData,
-        },
+          after: updateData as Record<string, unknown>,
+        } as Prisma.InputJsonValue,
       },
     })
 

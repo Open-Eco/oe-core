@@ -7,24 +7,21 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 
 // Mock recharts to avoid canvas issues in jsdom
-jest.mock('recharts', () => {
-  const React = require('react');
-  return {
-    PieChart: ({ children }: any) => <div data-testid="pie-chart">{children}</div>,
-    Pie: () => null,
-    Cell: () => null,
-    BarChart: ({ children }: any) => <div data-testid="bar-chart">{children}</div>,
-    Bar: () => null,
-    XAxis: () => null,
-    YAxis: () => null,
-    CartesianGrid: () => null,
-    Tooltip: () => null,
-    Legend: () => null,
-    ResponsiveContainer: ({ children }: any) => (
-      <div data-testid="responsive-container">{children}</div>
-    ),
-  };
-});
+jest.mock('recharts', () => ({
+  PieChart: ({ children }: { children: React.ReactNode }) => <div data-testid="pie-chart">{children}</div>,
+  Pie: () => null,
+  Cell: () => null,
+  BarChart: ({ children }: { children: React.ReactNode }) => <div data-testid="bar-chart">{children}</div>,
+  Bar: () => null,
+  XAxis: () => null,
+  YAxis: () => null,
+  CartesianGrid: () => null,
+  Tooltip: () => null,
+  Legend: () => null,
+  ResponsiveContainer: ({ children }: { children: React.ReactNode }) => (
+    <div data-testid="responsive-container">{children}</div>
+  ),
+}));
 
 import DashboardPage, {
   EmissionKpiCard,

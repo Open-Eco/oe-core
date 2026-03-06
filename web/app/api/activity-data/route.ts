@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { Prisma } from "@prisma/client"
 
 const createActivityDataSchema = z.object({
   organizationId: z.string(),
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Build query
-    const where: any = {
+    const where: Prisma.RawActivityDataWhereInput = {
       organizationId: { in: orgIds },
     }
 
