@@ -22,9 +22,9 @@ export default function Home() {
           />
         </div>
         <nav className="eco-landing__nav">
-          <span className="eco-landing__nav-link" style={{ opacity: 0.6, cursor: 'default' }}>
-            Demo (Coming Soon!)
-          </span>
+          <Link href="/demo" className="eco-landing__nav-link">
+            Demo
+          </Link>
           <Link href="/docs" className="eco-landing__nav-link">
             Docs
           </Link>
@@ -49,13 +49,12 @@ export default function Home() {
               infrastructure. The future of our planet is priceless.
             </p>
             <div className="eco-landing__actions">
-              <button
+              <Link
+                href="/demo"
                 className="eco-button eco-button--primary"
-                disabled
-                style={{ opacity: 0.6, cursor: 'not-allowed' }}
               >
-                Try the demo (Coming Soon!)
-              </button>
+                Try the demo
+              </Link>
               <a
                 href="https://open-eco.github.io/oe-core/deployment/installation"
                 className="eco-button eco-button--ghost"

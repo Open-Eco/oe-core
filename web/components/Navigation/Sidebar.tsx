@@ -125,13 +125,68 @@ const sidebarItems: SidebarItem[] = [
   },
 ];
 
+// Demo-specific navigation items
+const demoSidebarItems: SidebarItem[] = [
+  {
+    href: "/demo/dashboard",
+    label: "Dashboard",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="2" y="2" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.6" />
+        <rect x="11" y="2" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.6" />
+        <rect x="2" y="11" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.6" />
+        <rect x="11" y="11" width="7" height="7" rx="1.5" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    ),
+  },
+  {
+    href: "/demo/activity",
+    label: "Activity Entry",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <rect x="2" y="2" width="16" height="16" rx="2" stroke="currentColor" strokeWidth="1.6" />
+        <path d="M6 14V8M10 14V10M14 14V6" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+  {
+    href: "/demo/organizations/new",
+    label: "Organizations",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M4 5h12M4 9h12M4 13h12M4 17h12" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+      </svg>
+    ),
+  },
+];
+
 export default function Sidebar() {
   const pathname = usePathname();
+  const isDemoMode = pathname?.startsWith("/demo");
+  const items = isDemoMode ? demoSidebarItems : sidebarItems;
 
   return (
     <aside className="sidebar">
+      {isDemoMode && (
+        <div
+          style={{
+            margin: "0 1rem 1rem",
+            padding: "0.5rem 0.75rem",
+            background: "var(--warning-500)",
+            borderRadius: "var(--radius-md)",
+            fontSize: "var(--text-xs)",
+            fontWeight: "var(--font-weight-bold)",
+            color: "#fff",
+            letterSpacing: "0.04em",
+            textTransform: "uppercase",
+            textAlign: "center",
+          }}
+        >
+          Demo Mode
+        </div>
+      )}
       <nav className="sidebar__nav">
-        {sidebarItems.map((item) => {
+        {items.map((item) => {
           const isActive = pathname?.startsWith(item.href);
           const hasChildren = item.children && item.children.length > 0;
 
@@ -165,6 +220,26 @@ export default function Sidebar() {
           );
         })}
       </nav>
+      {isDemoMode && (
+        <div style={{ padding: "1.5rem 1rem 0" }}>
+          <Link
+            href="/"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "0.5rem",
+              fontSize: "var(--text-sm)",
+              color: "var(--neutral-500)",
+              textDecoration: "none",
+            }}
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M10 4L6 8l4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            Back to home
+          </Link>
+        </div>
+      )}
     </aside>
   );
 }

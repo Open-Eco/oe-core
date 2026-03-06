@@ -23,13 +23,14 @@ const navItems = [
 
 export default function TopNav({ user }: TopNavProps) {
   const pathname = usePathname();
+  const isDemoMode = pathname?.startsWith("/demo");
 
   return (
     <header className="top-nav">
       <div className="top-nav__container">
         {/* Logo and Brand */}
         <div className="top-nav__brand">
-          <Link href="/dashboard" className="top-nav__brand-link">
+          <Link href={isDemoMode ? "/demo/dashboard" : "/dashboard"} className="top-nav__brand-link">
             <Image
               src="/logo.png"
               alt="OpenEco"
@@ -39,95 +40,134 @@ export default function TopNav({ user }: TopNavProps) {
             />
             <span className="top-nav__brand-text">OpenEco</span>
           </Link>
+          {isDemoMode && (
+            <span
+              style={{
+                marginLeft: "0.75rem",
+                padding: "0.125rem 0.5rem",
+                background: "var(--warning-500)",
+                color: "#fff",
+                borderRadius: "var(--radius-full)",
+                fontSize: "var(--text-xs)",
+                fontWeight: "var(--font-weight-bold)",
+                letterSpacing: "0.04em",
+                textTransform: "uppercase",
+              }}
+            >
+              Demo
+            </span>
+          )}
         </div>
 
-        {/* Main Navigation */}
-        <nav className="top-nav__main">
-          {navItems.map((item) => {
-            const isActive = pathname?.startsWith(item.href);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`top-nav__link ${isActive ? "top-nav__link--active" : ""}`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
-        </nav>
+        {/* Main Navigation – hidden in demo mode to avoid navigating to auth-protected routes */}
+        {!isDemoMode && (
+          <nav className="top-nav__main">
+            {navItems.map((item) => {
+              const isActive = pathname?.startsWith(item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`top-nav__link ${isActive ? "top-nav__link--active" : ""}`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
+          </nav>
+        )}
 
         {/* Right Side Actions */}
         <div className="top-nav__actions">
-          {/* Search Icon */}
-          <button
-            className="top-nav__icon-btn"
-            aria-label="Search"
-            type="button"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16ZM18 18l-4.35-4.35"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+          {!isDemoMode && (
+            <>
+              {/* Search Icon */}
+              <button
+                className="top-nav__icon-btn"
+                aria-label="Search"
+                type="button"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16ZM18 18l-4.35-4.35"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
 
-          {/* Notifications Icon */}
-          <button
-            className="top-nav__icon-btn"
-            aria-label="Notifications"
-            type="button"
-          >
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M15 13H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2Z"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M7 13v1a3 3 0 0 0 6 0v-1"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </svg>
-          </button>
+              {/* Notifications Icon */}
+              <button
+                className="top-nav__icon-btn"
+                aria-label="Notifications"
+                type="button"
+              >
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 20 20"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M15 13H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2Z"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M7 13v1a3 3 0 0 0 6 0v-1"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              </button>
 
-          {/* User Avatar */}
-          <div className="top-nav__user">
-            {user?.image ? (
-              <Image
-                src={user.image}
-                alt={user.name || "User"}
-                width={32}
-                height={32}
-                className="top-nav__avatar"
-              />
-            ) : (
-              <div className="top-nav__avatar-placeholder">
-                {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U"}
+              {/* User Avatar */}
+              <div className="top-nav__user">
+                {user?.image ? (
+                  <Image
+                    src={user.image}
+                    alt={user.name || "User"}
+                    width={32}
+                    height={32}
+                    className="top-nav__avatar"
+                  />
+                ) : (
+                  <div className="top-nav__avatar-placeholder">
+                    {user?.name?.charAt(0).toUpperCase() || user?.email?.charAt(0).toUpperCase() || "U"}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
+
+          {isDemoMode && (
+            <Link
+              href="/"
+              style={{
+                fontSize: "var(--text-sm)",
+                color: "var(--neutral-500)",
+                textDecoration: "none",
+                padding: "0.375rem 0.75rem",
+                borderRadius: "var(--radius-md)",
+                transition: "color var(--duration-fast)",
+              }}
+            >
+              ← Back to home
+            </Link>
+          )}
         </div>
       </div>
     </header>
