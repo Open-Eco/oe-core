@@ -11,7 +11,6 @@ const config = {
   },
   testMatch: ['**/__tests__/**/*.[jt]s?(x)', '**/?(*.)+(spec|test).[jt]s?(x)'],
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  setupFilesAfterFramework: ['@testing-library/jest-dom'],
   setupFilesAfterEnv: ['<rootDir>/jest.setup.ts'],
 };
 
