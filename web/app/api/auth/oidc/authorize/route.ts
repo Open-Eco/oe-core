@@ -55,10 +55,10 @@ export async function GET(request: NextRequest) {
     });
 
     return response;
-  } catch (error: any) {
+  } catch (error) {
     console.error("OIDC authorization error:", error);
     return NextResponse.json(
-      { error: error.message || "Failed to initiate OIDC flow" },
+      { error: error instanceof Error ? error.message : "Failed to initiate OIDC flow" },
       { status: 500 }
     );
   }

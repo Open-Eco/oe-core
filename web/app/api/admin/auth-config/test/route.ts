@@ -40,7 +40,8 @@ export async function POST(request: NextRequest) {
     // Test OIDC connection
     try {
       // Dynamic import to avoid Next.js static analysis issues
-      const oidc = await import("openid-client") as any;
+      type LegacyOIDCModule = { Issuer: { discover(url: string): Promise<{ Client: new(c: Record<string, string>) => unknown; metadata: Record<string, string> }> } };
+      const oidc = await import("openid-client") as unknown as LegacyOIDCModule;
       const discoveredIssuer = await oidc.Issuer.discover(issuer);
       
       // Verify issuer is valid
@@ -62,13 +63,13 @@ export async function POST(request: NextRequest) {
         tokenEndpoint: discoveredIssuer.metadata.token_endpoint,
         userInfoEndpoint: discoveredIssuer.metadata.userinfo_endpoint,
       });
-    } catch (error: any) {
+    } catch (error) {
       return NextResponse.json(
-        { error: `OIDC connection failed: ${error.message}` },
+        { error: `OIDC connection failed: ${error instanceof Error ? error.message : String(error)}` },
         { status: 400 }
       );
     }
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error testing auth config:", error);
     return NextResponse.json(
       { error: "Internal server error" },

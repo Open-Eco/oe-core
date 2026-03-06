@@ -40,7 +40,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Build query
-    const where: any = { organizationId };
+    const where: Record<string, unknown> = { organizationId };
     if (resourceType) where.resourceType = resourceType;
     if (resourceId) where.resourceId = resourceId;
 

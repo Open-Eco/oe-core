@@ -206,7 +206,7 @@ function SignInContent() {
         </form>
 
         <p style={{ marginTop: "1.5rem", textAlign: "center", fontSize: "0.875rem" }}>
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <a href="/auth/signup" style={{ color: "#0070f3" }}>
             Sign up
           </a>

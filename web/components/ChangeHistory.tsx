@@ -9,7 +9,7 @@ interface ChangeEvent {
   action: string;
   resourceType: string;
   resourceId: string;
-  changes: any;
+  changes: unknown;
   reason: string | null;
   timestamp: string;
 }

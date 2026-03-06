@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     })
 
     return NextResponse.json({
-      organizations: organizations.map((ou: { organization: any }) => ou.organization),
+      organizations: organizations.map((ou: { organization: { id: string; name: string; slug: string } }) => ou.organization),
     })
   } catch (error) {
     console.error("Error fetching organizations:", error)

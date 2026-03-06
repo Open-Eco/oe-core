@@ -61,7 +61,7 @@ export async function GET(request: NextRequest) {
     });
 
     return NextResponse.json({ mappings });
-  } catch (error: any) {
+  } catch (error) {
     console.error("Error fetching role mappings:", error);
     return NextResponse.json(
       { error: "Internal server error" },
@@ -138,7 +138,7 @@ export async function POST(request: NextRequest) {
     });
 
     return NextResponse.json({ mappings, count: created.count });
-  } catch (error: any) {
+  } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         { error: "Validation error", details: error.issues },
