@@ -11,6 +11,7 @@ export default function AuthenticationConfigPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [authConfig, setAuthConfig] = useState<{
+    id?: string;
     provider: string;
     enabled: boolean;
     issuer?: string;
@@ -20,7 +21,14 @@ export default function AuthenticationConfigPage() {
     tokenEndpoint?: string;
     userInfoEndpoint?: string;
     audience?: string;
-  } | null>(null);
+    roleMappings?: Array<{
+      id?: string;
+      type: "email_domain" | "group" | "attribute";
+      matchValue: string;
+      role: string;
+      priority: number;
+    }>;
+  } | undefined>(undefined);
   const [organizationId, setOrganizationId] = useState<string | null>(null);
 
   useEffect(() => {

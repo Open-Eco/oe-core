@@ -107,10 +107,11 @@ function saveToStorage(data: {
 }
 
 export function DemoProvider({ children }: { children: ReactNode }) {
-  const [organizations, setOrganizations] = useState<DemoOrganization[]>(() => loadFromStorage().organizations);
-  const [facilities, setFacilities] = useState<DemoFacility[]>(() => loadFromStorage().facilities);
-  const [activities, setActivities] = useState<DemoActivity[]>(() => loadFromStorage().activities);
-  const [currentOrgId, setCurrentOrgIdState] = useState<string | null>(() => loadFromStorage().currentOrgId);
+  const [initialData] = useState(loadFromStorage);
+  const [organizations, setOrganizations] = useState<DemoOrganization[]>(initialData.organizations);
+  const [facilities, setFacilities] = useState<DemoFacility[]>(initialData.facilities);
+  const [activities, setActivities] = useState<DemoActivity[]>(initialData.activities);
+  const [currentOrgId, setCurrentOrgIdState] = useState<string | null>(initialData.currentOrgId);
 
   // Save to sessionStorage whenever data changes
   useEffect(() => {

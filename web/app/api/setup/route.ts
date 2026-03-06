@@ -94,14 +94,20 @@ export async function POST(request: NextRequest) {
     }
 
     // Handle unique constraint violations
-    if (error.code === "P2002") {
-      if (error.meta?.target?.includes("slug")) {
+    if (
+      typeof error === "object" &&
+      error !== null &&
+      "code" in error &&
+      (error as { code: string }).code === "P2002"
+    ) {
+      const prismaError = error as { code: string; meta?: { target?: string[] } };
+      if (prismaError.meta?.target?.includes("slug")) {
         return NextResponse.json(
           { error: "Organization slug already exists" },
           { status: 400 }
         );
       }
-      if (error.meta?.target?.includes("email")) {
+      if (prismaError.meta?.target?.includes("email")) {
         return NextResponse.json(
           { error: "Email already registered" },
           { status: 400 }

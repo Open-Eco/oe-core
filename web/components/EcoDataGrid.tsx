@@ -168,7 +168,7 @@ function EditableCell<TData>({
         <select
           ref={inputRef as React.RefObject<HTMLSelectElement>}
           className="eco-datagrid__edit-input eco-datagrid__edit-select"
-          value={editValue}
+          value={editValue as string | number | readonly string[] | undefined}
           onChange={(e) => setEditValue(e.target.value)}
           onKeyDown={handleKeyDown}
           onBlur={handleBlur}
@@ -196,7 +196,7 @@ function EditableCell<TData>({
           ref={inputRef as React.RefObject<HTMLInputElement>}
           type={inputType}
           className={`eco-datagrid__edit-input ${error ? "eco-datagrid__edit-input--error" : ""}`}
-          value={editValue ?? ""}
+          value={(editValue ?? "") as string | number | readonly string[]}
           onChange={(e) => {
             const val = inputType === "number" ? parseFloat(e.target.value) || 0 : e.target.value;
             setEditValue(val);
