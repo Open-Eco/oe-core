@@ -31,12 +31,10 @@ function OIDCCompleteContent() {
     });
   }, [userId, router]);
 
-  const displayError = !userId ? "Missing user ID" : error;
-
   return (
     <div>
-      {displayError ? (
-        <div style={{ color: "#c33" }}>{displayError}</div>
+      {(!userId || error) ? (
+        <div style={{ color: "#c33" }}>{!userId ? "Missing user ID" : error}</div>
       ) : (
         <div>Completing sign in...</div>
       )}
