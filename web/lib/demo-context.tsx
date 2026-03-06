@@ -160,7 +160,7 @@ const initialDemoState: DemoState = {
 export function DemoProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(demoReducer, initialDemoState);
 
-  // Load from sessionStorage on mount – dispatch a single action (avoids set-state-in-effect lint rule)
+  // Load from sessionStorage on mount – dispatch a single action (avoid set-state-in-effect lint rule)
   useEffect(() => {
     const loaded = loadFromStorage();
     dispatch({ type: "INIT", payload: loaded });
