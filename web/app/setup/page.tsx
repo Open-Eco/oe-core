@@ -100,8 +100,8 @@ export default function SetupPage() {
         // OIDC only - redirect to auth config
         router.push("/admin/authentication");
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : String(err));
     } finally {
       setSubmitting(false);
     }
@@ -124,7 +124,7 @@ export default function SetupPage() {
       <header className="eco-page__header">
         <h1 className="eco-page__title">Welcome to OpenEco</h1>
         <p className="eco-page__subtitle">
-          Let's set up your organization. This will only take a few minutes.
+          Let&apos;s set up your organization. This will only take a few minutes.
         </p>
       </header>
 

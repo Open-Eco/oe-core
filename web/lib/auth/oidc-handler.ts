@@ -8,6 +8,38 @@ const getOIDCModule = async () => {
   return await import("openid-client");
 };
 
+// Minimal interfaces for the legacy openid-client v4-style API used in this file
+interface LegacyOIDCClient {
+  authorizationUrl(params: Record<string, string | undefined>): string;
+  callback(
+    redirectUri: string,
+    params: Record<string, string>,
+    checks: { code_verifier: string; state: string }
+  ): Promise<{ access_token?: string }>;
+  userinfo(accessToken: string): Promise<Record<string, unknown>>;
+}
+
+interface LegacyOIDCIssuer {
+  Client: new (config: {
+    client_id: string;
+    client_secret: string | null;
+    redirect_uris?: string[];
+    response_types?: string[];
+  }) => LegacyOIDCClient;
+}
+
+interface LegacyOIDCModule {
+  Issuer: {
+    discover(issuer: string): Promise<LegacyOIDCIssuer>;
+    new (config: {
+      issuer: string;
+      authorization_endpoint?: string | null;
+      token_endpoint?: string | null;
+      userinfo_endpoint?: string | null;
+    }): LegacyOIDCIssuer;
+  };
+}
+
 /**
  * Generate a random code verifier for PKCE
  */
@@ -32,10 +64,10 @@ export async function getOIDCClient(organizationId: string, baseUrl: string) {
     throw new Error("OIDC not configured for this organization");
   }
 
-  const oidc = await getOIDCModule() as any;
+  const oidc = (await getOIDCModule()) as unknown as LegacyOIDCModule;
 
   // Discover issuer if endpoints not provided
-  let issuer: any;
+  let issuer: LegacyOIDCIssuer;
   if (config.authorizationEndpoint && config.tokenEndpoint) {
     // Use provided endpoints
     issuer = new oidc.Issuer({
@@ -72,7 +104,7 @@ export async function getAuthorizationURL(
   const codeChallenge = await calculateCodeChallenge(codeVerifier);
   const generatedState = state || randomBytes(32).toString("base64url");
 
-  const params: any = {
+  const params: Record<string, string | undefined> = {
     redirect_uri: getOIDCCallbackURL(baseUrl, organizationId),
     scope: "openid email profile",
     state: generatedState,
@@ -147,7 +179,7 @@ export async function handleOIDCCallback(
 
   // Resolve role from mappings
   const groups = userInfo.groups as string[] | undefined;
-  const attributes = userInfo as Record<string, any>;
+  const attributes = userInfo as Record<string, unknown>;
   const roleResult = await resolveUserRole(organizationId, email, groups, attributes);
 
   // Get or create organization user with resolved role

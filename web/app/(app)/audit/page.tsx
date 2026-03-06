@@ -129,6 +129,17 @@ export function AuditStatusBadge({
   );
 }
 
+// Clock icon used in EvidencePanel
+
+function ClockIcon() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" />
+      <path d="M8 5v3l2 2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 // Evidence & History Panel - uses eco-card from EcoKit
 
 export function EvidencePanel({
@@ -138,12 +149,6 @@ export function EvidencePanel({
   attachments: EvidenceAttachment[];
   history: ChangeHistoryEntry[];
 }) {
-  const ClockIcon = () => (
-    <svg width="12" height="12" viewBox="0 0 16 16" fill="none" aria-hidden="true">
-      <circle cx="8" cy="8" r="6" stroke="currentColor" strokeWidth="1.4" />
-      <path d="M8 5v3l2 2" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" />
-    </svg>
-  );
 
   return (
     <div className="eco-card" style={{ minWidth: 260, flexShrink: 0 }} data-testid="evidence-panel">

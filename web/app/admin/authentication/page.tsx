@@ -6,11 +6,33 @@ import { useRouter } from "next/navigation";
 import { AuthConfigForm } from "@/components/admin/AuthConfigForm";
 import { RoleMappingEditor } from "@/components/admin/RoleMappingEditor";
 
+interface RoleMapping {
+  id?: string;
+  type: "email_domain" | "group" | "attribute";
+  matchValue: string;
+  role: string;
+  priority: number;
+}
+
+interface AuthConfigData {
+  id?: string;
+  provider: string;
+  enabled: boolean;
+  issuer?: string;
+  clientId?: string;
+  clientSecret?: string;
+  authorizationEndpoint?: string;
+  tokenEndpoint?: string;
+  userInfoEndpoint?: string;
+  audience?: string;
+  roleMappings?: RoleMapping[];
+}
+
 export default function AuthenticationConfigPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [authConfig, setAuthConfig] = useState<any>(null);
+  const [authConfig, setAuthConfig] = useState<AuthConfigData | null>(null);
   const [organizationId, setOrganizationId] = useState<string | null>(null);
 
   useEffect(() => {
@@ -75,7 +97,7 @@ export default function AuthenticationConfigPage() {
             Configure OpenID Connect (OIDC) to allow users to sign in via your identity provider
             (Keycloak, Azure AD, Okta, etc.).
           </p>
-          <AuthConfigForm organizationId={organizationId} initialConfig={authConfig} />
+          <AuthConfigForm organizationId={organizationId} initialConfig={authConfig ?? undefined} />
         </div>
       </div>
 

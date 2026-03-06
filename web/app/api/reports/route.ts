@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth"
 import { authOptions } from "@/lib/auth"
 import { prisma } from "@/lib/prisma"
 import { z } from "zod"
+import { Prisma } from "@prisma/client"
 
 const createReportSchema = z.object({
   organizationId: z.string(),
@@ -38,7 +39,7 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ reports: [] })
     }
 
-    const where: any = {
+    const where: Prisma.ReportWhereInput = {
       organizationId: { in: orgIds },
     }
 

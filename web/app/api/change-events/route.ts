@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
+import { Prisma } from '@prisma/client';
 
 // GET /api/change-events - Get change history
 export async function GET(request: NextRequest) {
@@ -40,7 +41,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Build query
-    const where: any = { organizationId };
+    const where: Prisma.ChangeEventWhereInput = { organizationId };
     if (resourceType) where.resourceType = resourceType;
     if (resourceId) where.resourceId = resourceId;
 
