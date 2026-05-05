@@ -76,6 +76,30 @@ Always respect `prefers-reduced-motion`:
 - Ignore screen reader users
 - Auto-play media without controls
 
+## Cognitive Accessibility
+
+### Plain Language
+- Write at a Flesch-Kincaid Grade 8 or lower for all UI copy
+- Avoid jargon without inline explanations (e.g., provide glossary tooltips for "Scope 3", "tCO₂e")
+- Break long tasks into clearly labeled steps with progress indicators
+
+### Reducing Cognitive Load
+- Limit choices per screen — use progressive disclosure for advanced options
+- Group related controls and data into clearly labeled sections
+- Surface the most important action first; deprioritize secondary actions visually
+- Provide sensible defaults so users rarely need to configure from scratch
+- Show confirmation before irreversible actions (delete, revoke, submit final)
+
+### Error Prevention
+- Validate inputs inline before form submission
+- Use clear placeholder text and helper text on every input
+- Prevent the user from entering invalid data formats (date pickers, numeric masks)
+
+### Memory Support
+- Persist filter and view preferences across sessions
+- Surface "last saved" or "last submitted" timestamps near relevant actions
+- Show history or audit logs so users can reconstruct what happened
+
 ## Testing Checklist
 
 - [ ] All interactive elements keyboard accessible
@@ -87,4 +111,8 @@ Always respect `prefers-reduced-motion`:
 - [ ] Motion respects user preferences
 - [ ] No keyboard traps
 - [ ] Logical tab order
-
+- [ ] UI copy meets plain language standard (Grade 8 or lower)
+- [ ] Technical terms have inline glossary support
+- [ ] Multi-step flows have clear progress indicators
+- [ ] Confirmation dialogs shown before irreversible actions
+- [ ] Charts and data visualizations have accessible text alternatives
