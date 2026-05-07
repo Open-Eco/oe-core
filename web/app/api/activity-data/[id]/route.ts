@@ -155,23 +155,19 @@ export async function PATCH(
     }
 
     // Build update data
-    const updateData: any = {}
-    if (updates.facilityId !== undefined) updateData.facilityId = updates.facilityId
-    if (updates.reportingPeriodId !== undefined) updateData.reportingPeriodId = updates.reportingPeriodId
-    if (updates.category) updateData.category = updates.category
-    if (updates.subcategory !== undefined) updateData.subcategory = updates.subcategory
-    if (updates.activityType) updateData.activityType = updates.activityType
-    if (updates.quantity) updateData.quantity = updates.quantity
-    if (updates.unit) updateData.unit = updates.unit
-    if (updates.periodStart) updateData.periodStart = new Date(updates.periodStart)
-    if (updates.periodEnd) updateData.periodEnd = new Date(updates.periodEnd)
-    if (updates.metadata !== undefined) updateData.metadata = updates.metadata
-
-    // If activity was submitted and user edits it, revert to draft
-    if (activity.status === 'submitted') {
-      updateData.status = 'draft'
-      updateData.submittedAt = null
-      updateData.submittedBy = null
+    const updateData = {
+      ...(updates.facilityId !== undefined ? { facilityId: updates.facilityId } : {}),
+      ...(updates.reportingPeriodId !== undefined ? { reportingPeriodId: updates.reportingPeriodId } : {}),
+      ...(updates.category ? { category: updates.category } : {}),
+      ...(updates.subcategory !== undefined ? { subcategory: updates.subcategory } : {}),
+      ...(updates.activityType ? { activityType: updates.activityType } : {}),
+      ...(updates.quantity ? { quantity: updates.quantity } : {}),
+      ...(updates.unit ? { unit: updates.unit } : {}),
+      ...(updates.periodStart ? { periodStart: new Date(updates.periodStart) } : {}),
+      ...(updates.periodEnd ? { periodEnd: new Date(updates.periodEnd) } : {}),
+      ...(updates.metadata !== undefined ? { metadata: updates.metadata } : {}),
+      // If activity was submitted and user edits it, revert to draft
+      ...(activity.status === 'submitted' ? { status: 'draft', submittedAt: null, submittedBy: null } : {}),
     }
 
     const updatedActivity = await prisma.rawActivityData.update({

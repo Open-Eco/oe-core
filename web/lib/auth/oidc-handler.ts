@@ -32,9 +32,11 @@ export async function getOIDCClient(organizationId: string, baseUrl: string) {
     throw new Error("OIDC not configured for this organization");
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const oidc = await getOIDCModule() as any;
 
   // Discover issuer if endpoints not provided
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let issuer: any;
   if (config.authorizationEndpoint && config.tokenEndpoint) {
     // Use provided endpoints
@@ -72,6 +74,7 @@ export async function getAuthorizationURL(
   const codeChallenge = await calculateCodeChallenge(codeVerifier);
   const generatedState = state || randomBytes(32).toString("base64url");
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const params: any = {
     redirect_uri: getOIDCCallbackURL(baseUrl, organizationId),
     scope: "openid email profile",
@@ -147,7 +150,7 @@ export async function handleOIDCCallback(
 
   // Resolve role from mappings
   const groups = userInfo.groups as string[] | undefined;
-  const attributes = userInfo as Record<string, any>;
+  const attributes = userInfo as Record<string, unknown>;
   const roleResult = await resolveUserRole(organizationId, email, groups, attributes);
 
   // Get or create organization user with resolved role

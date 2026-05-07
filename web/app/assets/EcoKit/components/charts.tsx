@@ -47,7 +47,7 @@ interface ChartProps {
   title?: string;
   subtitle?: string;
   height?: 'compact' | 'standard' | 'large' | 'tall' | number;
-  data: any[];
+  data: unknown[];
   className?: string;
 }
 

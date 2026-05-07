@@ -63,7 +63,7 @@ export function RoleMappingEditor({
     ]);
   };
 
-  const handleUpdate = (index: number, field: keyof RoleMapping, value: any) => {
+  const handleUpdate = (index: number, field: keyof RoleMapping, value: RoleMapping[keyof RoleMapping]) => {
     const updated = [...mappings];
     updated[index] = { ...updated[index], [field]: value };
     setMappings(updated);
@@ -100,8 +100,8 @@ export function RoleMappingEditor({
       }
 
       await loadMappings();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      setError(err instanceof Error ? err.message : 'Unknown error');
     } finally {
       setLoading(false);
     }

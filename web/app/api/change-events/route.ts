@@ -40,9 +40,11 @@ export async function GET(request: NextRequest) {
     }
 
     // Build query
-    const where: any = { organizationId };
-    if (resourceType) where.resourceType = resourceType;
-    if (resourceId) where.resourceId = resourceId;
+    const where = {
+      organizationId,
+      ...(resourceType ? { resourceType } : {}),
+      ...(resourceId ? { resourceId } : {}),
+    };
 
     const [events, total] = await Promise.all([
       prisma.changeEvent.findMany({

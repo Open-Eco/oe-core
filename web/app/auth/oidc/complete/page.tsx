@@ -12,7 +12,6 @@ function OIDCCompleteContent() {
 
   useEffect(() => {
     if (!userId) {
-      setError("Missing user ID");
       setTimeout(() => router.push("/auth/signin?error=missing_user_id"), 2000);
       return;
     }
@@ -34,8 +33,8 @@ function OIDCCompleteContent() {
 
   return (
     <div>
-      {error ? (
-        <div style={{ color: "#c33" }}>{error}</div>
+      {(!userId || error) ? (
+        <div style={{ color: "#c33" }}>{!userId ? "Missing user ID" : error}</div>
       ) : (
         <div>Completing sign in...</div>
       )}

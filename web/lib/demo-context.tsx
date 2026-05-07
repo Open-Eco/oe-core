@@ -47,7 +47,7 @@ export type DemoActivity = {
   periodStart: string;
   periodEnd: string;
   source: string;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
   createdAt: string;
 };
 
@@ -107,33 +107,21 @@ function saveToStorage(data: {
 }
 
 export function DemoProvider({ children }: { children: ReactNode }) {
-  const [organizations, setOrganizations] = useState<DemoOrganization[]>([]);
-  const [facilities, setFacilities] = useState<DemoFacility[]>([]);
-  const [activities, setActivities] = useState<DemoActivity[]>([]);
-  const [currentOrgId, setCurrentOrgIdState] = useState<string | null>(null);
-  const [initialized, setInitialized] = useState(false);
-
-  // Load from sessionStorage on mount
-  useEffect(() => {
-    const loaded = loadFromStorage();
-    setOrganizations(loaded.organizations);
-    setFacilities(loaded.facilities);
-    setActivities(loaded.activities);
-    setCurrentOrgIdState(loaded.currentOrgId);
-    setInitialized(true);
-  }, []);
+  const [initialData] = useState(loadFromStorage);
+  const [organizations, setOrganizations] = useState<DemoOrganization[]>(initialData.organizations);
+  const [facilities, setFacilities] = useState<DemoFacility[]>(initialData.facilities);
+  const [activities, setActivities] = useState<DemoActivity[]>(initialData.activities);
+  const [currentOrgId, setCurrentOrgIdState] = useState<string | null>(initialData.currentOrgId);
 
   // Save to sessionStorage whenever data changes
   useEffect(() => {
-    if (initialized) {
-      saveToStorage({
-        organizations,
-        facilities,
-        activities,
-        currentOrgId,
-      });
-    }
-  }, [organizations, facilities, activities, currentOrgId, initialized]);
+    saveToStorage({
+      organizations,
+      facilities,
+      activities,
+      currentOrgId,
+    });
+  }, [organizations, facilities, activities, currentOrgId]);
 
   const setCurrentOrgId = (id: string | null) => {
     setCurrentOrgIdState(id);

@@ -5,7 +5,7 @@ import { prisma } from "@/lib/prisma"
 
 // GET /api/organizations/[id] - Get organization details
 // Note: Next.js 16 route handlers may pass params as a Promise; keep typing flexible.
-export async function GET(request: NextRequest, context: any) {
+export async function GET(request: NextRequest, context: { params: Promise<{ id: string }> | { id: string } }) {
   try {
     const { id } = await context?.params
 
