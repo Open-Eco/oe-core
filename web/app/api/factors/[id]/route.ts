@@ -56,6 +56,8 @@ export async function PATCH(
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
+    // Authorization: any ORG_ADMIN may manage the global factor library.
+    // TODO: introduce a dedicated SYSTEM_ADMIN role before multi-tenant production use.
     const adminMembership = await prisma.organizationUser.findFirst({
       where: { userId: session.user.id, role: 'ORG_ADMIN' },
     });

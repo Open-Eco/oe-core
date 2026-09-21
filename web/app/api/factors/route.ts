@@ -23,6 +23,9 @@ const createFactorSchema = z.object({
   metadata: z.record(z.string(), z.unknown()).optional(),
 });
 
+/** Maximum number of factors returned per query. Refine filters for larger datasets. */
+const MAX_FACTORS_RESULT = 200;
+
 // GET /api/factors — list datasets and their factors
 // Query params:
 //   ?datasetVersionId=<id>  — filter by dataset
@@ -61,7 +64,7 @@ export async function GET(request: NextRequest) {
       where,
       include: { datasetVersion: { select: { name: true, version: true } } },
       orderBy: [{ category: 'asc' }, { activityType: 'asc' }],
-      take: 200,
+      take: MAX_FACTORS_RESULT,
     });
 
     return NextResponse.json({ factors });
@@ -83,7 +86,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    // Only org admins may manage factors
+    // Authorization: any ORG_ADMIN may manage the global factor library.
+    // TODO: introduce a dedicated SYSTEM_ADMIN role before multi-tenant production use
+    // so that org admins of one organization cannot modify factors for all organizations.
     const adminMembership = await prisma.organizationUser.findFirst({
       where: { userId: session.user.id, role: 'ORG_ADMIN' },
     });

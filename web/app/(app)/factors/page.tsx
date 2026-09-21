@@ -2,6 +2,9 @@
 
 import React, { useState, useEffect, useCallback } from "react";
 
+/** Must match the `take` limit in GET /api/factors */
+const MAX_FACTORS_RESULT = 200;
+
 // ── Types ────────────────────────────────────────────────────────────────────
 
 interface DatasetVersion {
@@ -38,6 +41,7 @@ export default function FactorsPage() {
   const [activityFilter, setActivityFilter] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
 
   // ── Load datasets on mount ───────────────────────────────────────────────
 
@@ -87,14 +91,20 @@ export default function FactorsPage() {
 
   // ── Delete a factor ──────────────────────────────────────────────────────
 
-  async function deleteFactor(id: string) {
-    if (!confirm("Delete this emission factor? This cannot be undone.")) return;
+  function requestDelete(id: string) {
+    setPendingDeleteId(id);
+  }
+
+  async function confirmDelete() {
+    if (!pendingDeleteId) return;
+    const id = pendingDeleteId;
+    setPendingDeleteId(null);
     try {
       const res = await fetch(`/api/factors/${id}`, { method: "DELETE" });
       if (!res.ok) throw new Error(await res.text());
       setFactors((prev) => prev.filter((f) => f.id !== id));
     } catch (err) {
-      alert("Failed to delete factor.");
+      setError("Failed to delete factor.");
       console.error(err);
     }
   }
@@ -344,7 +354,7 @@ export default function FactorsPage() {
                   </td>
                   <td style={{ padding: "var(--space-3) var(--space-4)" }}>
                     <button
-                      onClick={() => void deleteFactor(f.id)}
+                      onClick={() => requestDelete(f.id)}
                       style={{
                         background: "none",
                         border: "none",
@@ -364,8 +374,78 @@ export default function FactorsPage() {
           </table>
           <p style={{ marginTop: "var(--space-4)", color: "var(--neutral-400)", fontSize: "var(--text-sm)" }}>
             Showing {factors.length} factor{factors.length !== 1 ? "s" : ""}
-            {factors.length === 200 ? " (limit reached — refine your filters)" : ""}.
+            {factors.length === MAX_FACTORS_RESULT ? " (limit reached — refine your filters)" : ""}.
           </p>
+        </div>
+      )}
+
+      {/* Inline delete confirmation */}
+      {pendingDeleteId && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="delete-confirm-title"
+          style={{
+            position: "fixed",
+            inset: 0,
+            background: "rgba(0,0,0,0.5)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 1000,
+          }}
+        >
+          <div
+            style={{
+              background: "var(--background)",
+              borderRadius: "var(--radius-lg)",
+              padding: "var(--space-8)",
+              maxWidth: "400px",
+              width: "90%",
+              boxShadow: "var(--shadow-lg)",
+            }}
+          >
+            <h2
+              id="delete-confirm-title"
+              style={{ fontSize: "var(--text-lg)", fontWeight: "var(--font-weight-bold)", marginTop: 0 }}
+            >
+              Delete emission factor?
+            </h2>
+            <p style={{ color: "var(--neutral-600)", marginBottom: "var(--space-6)" }}>
+              This action cannot be undone. The factor will be permanently removed
+              from the library.
+            </p>
+            <div style={{ display: "flex", gap: "var(--space-3)", justifyContent: "flex-end" }}>
+              <button
+                onClick={() => setPendingDeleteId(null)}
+                style={{
+                  padding: "var(--space-2) var(--space-4)",
+                  borderRadius: "var(--radius-md)",
+                  border: "1px solid var(--neutral-300)",
+                  background: "var(--background)",
+                  cursor: "pointer",
+                  fontSize: "var(--text-sm)",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={() => void confirmDelete()}
+                style={{
+                  padding: "var(--space-2) var(--space-4)",
+                  borderRadius: "var(--radius-md)",
+                  border: "none",
+                  background: "var(--error-500, #ef4444)",
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontSize: "var(--text-sm)",
+                  fontWeight: "var(--font-weight-medium)",
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>
