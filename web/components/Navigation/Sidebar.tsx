@@ -97,6 +97,16 @@ const sidebarItems: SidebarItem[] = [
     ),
   },
   {
+    href: "/factors",
+    label: "Factor Library",
+    icon: (
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M3 5h14M3 10h14M3 15h8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        <circle cx="16" cy="15" r="2.5" stroke="currentColor" strokeWidth="1.6" />
+      </svg>
+    ),
+  },
+  {
     href: "/roles",
     label: "Roles & Permissions",
     icon: (
