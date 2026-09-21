@@ -1,0 +1,62 @@
+# OpenEco Production Docker Compose
+#
+# Usage:
+#   1. Copy deploy/.env.example to deploy/.env and fill in all values.
+#   2. Build the web image:
+#        docker build -f web/Containerfile -t openeco-web:latest web/
+#      or with Podman:
+#        podman build -f web/Containerfile -t openeco-web:latest web/
+#   3. Start services:
+#        docker compose --env-file deploy/.env -f deploy/compose.yml up -d
+#
+# Upgrades:
+#   1. Pull or build the new image tag.
+#   2. Update IMAGE_TAG in deploy/.env (or set it in your shell).
+#   3. Run: docker compose --env-file deploy/.env -f deploy/compose.yml up -d
+#      Database migrations run automatically on container startup.
+
+services:
+  db:
+    image: postgres:15
+    container_name: openeco-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    ports:
+      - "${DB_HOST_PORT:-5432}:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  web:
+    image: ${IMAGE_NAME:-openeco-web}:${IMAGE_TAG:-latest}
+    container_name: openeco-web
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}?schema=public
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+      NEXT_PUBLIC_APP_URL: ${NEXTAUTH_URL}
+      NEXT_PUBLIC_APP_NAME: ${APP_NAME:-OpenEco}
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+    ports:
+      - "${WEB_HOST_PORT:-3000}:3000"
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  db_data:

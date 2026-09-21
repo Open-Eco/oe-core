@@ -984,19 +984,66 @@ Value: open-eco.github.io
 
 ## Upgrades and Rollbacks
 
-### Upgrades
+### Checking for Updates
 
-1. Build and push new image version (`:v1.1.0`)
-2. Update `image:` tag in manifests or compose file
-3. Apply: `kubectl apply -f` or `podman-compose up -d`
+OpenEco uses a **pull-based, no-telemetry** update model. Your instance never phones home. To check whether a new version is available:
 
-Kubernetes/OKD performs rolling updates automatically.
+1. **Check your running version:**
+   ```
+   curl https://your-domain.com/api/version
+   # → {"version":"0.1.0","releasesFeedUrl":"https://api.github.com/repos/Open-Eco/oe-core/releases/latest"}
+   ```
+
+2. **Check the latest release upstream:**
+   ```
+   curl https://api.github.com/repos/Open-Eco/oe-core/releases/latest | grep tag_name
+   ```
+
+   If the upstream tag is newer, an update is available.
+
+### Single-Host Upgrade (Docker / Podman Compose)
+
+Database migrations run **automatically** on every container startup via the entrypoint script, so upgrades are safe to do with a simple image swap:
+
+```bash
+# 1. Pull or build the new image
+docker build -f web/Containerfile -t openeco-web:v1.1.0 web/
+# or: podman build -f web/Containerfile -t openeco-web:v1.1.0 web/
+
+# 2. Update the IMAGE_TAG in your deploy/.env file
+#    IMAGE_TAG=v1.1.0
+
+# 3. Restart with the new image (zero-downtime if running behind a proxy)
+docker compose --env-file deploy/.env -f deploy/compose.yml up -d
+
+# 4. Verify the new version is running
+curl http://localhost:3000/api/version
+curl http://localhost:3000/api/health
+```
+
+### Kubernetes / OKD Upgrade
+
+```bash
+# 1. Build and push the new image
+docker build -f web/Containerfile -t registry.example.com/openeco-web:v1.1.0 web/
+docker push registry.example.com/openeco-web:v1.1.0
+
+# 2. Update the image tag in your manifests (or use `kubectl set image`)
+kubectl set image deployment/openeco-web web=registry.example.com/openeco-web:v1.1.0
+
+# Kubernetes performs a rolling update automatically.
+```
 
 ### Rollbacks
 
-- Keep older image tags (`:v1.0.0`)
-- Change `image:` back to previous tag
-- Re-apply manifests
+- Keep older image tags (e.g. `:v1.0.0`)
+- Update `IMAGE_TAG` in `deploy/.env` back to the previous tag (single-host)
+  or update the Deployment manifest (Kubernetes)
+- Re-apply: `docker compose up -d` / `kubectl apply -f`
+
+> **Note:** Prisma migrations are applied forward only. If a rollback is required
+> after a schema migration, restore the database from a backup taken before the
+> upgrade.
 
 ---
 
